@@ -1,22 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_point.h                                         :+:      :+:    :+:   */
+/*   ft_sqrt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 11:37:25 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/16 17:10:42 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/09/13 11:21:33 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/13 11:38:51 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_POINT_H
-# define FT_POINT_H
-
-typedef struct test_point
+/*
+#include <stdlib.h>
+#include <stdio.h>
+*/
+int	ft_sqrt(int nb)
 {
-	int	x;
-	int	y;
-}	t_point;
+	int	nb_sqrt;
 
-#endif
+	nb_sqrt = 1;
+	if (nb <= 0)
+		return (0);
+	while (nb_sqrt * nb_sqrt < nb)
+	{
+		nb_sqrt++;
+	}
+	if (nb_sqrt * nb_sqrt == nb)
+		return (nb_sqrt);
+	else
+		return (0);
+}
+/*
+int	main(int argc, char *argv[])
+{
+	int	n;
+
+	if (argc != 2)
+		return (1);
+	n = atoi(argv[1]);
+	n = ft_sqrt(n);
+	printf("El sqrt es %d\n", n);
+	return (0);
+}
+*/

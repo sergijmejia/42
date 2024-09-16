@@ -1,13 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_abs.h                                           :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 11:37:25 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/16 16:50:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:15:22 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define ABS(Value) ((Value >= 0) ? (Value) : ((-1) * Value))
+/*#include <unistd.h>
+*/
+void	ft_putchar(char c);
+/*{
+	write(1, &c, 1);
+}
+*/
+
+void	ft_putstr(char *str)
+{
+	while (*str != '\0')
+	{
+		ft_putchar(*str);
+		str++;
+	}
+}
+/*
+int	main(int argc, char *argv[])
+{
+	if (argc != 2)
+		return (1);
+	ft_putstr(argv[1]);
+	return (0);
+}
+*/
