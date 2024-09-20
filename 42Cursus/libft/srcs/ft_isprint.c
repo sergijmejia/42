@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/19 12:00:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/20 14:52:36 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/09/20 11:48:42 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/20 14:53:47 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*#include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include "libft.h"
-*/
-int	ft_isdigit(int c)
+#include "libft.h"*/
+
+int	ft_isprint(int c)
 {
-	if ((c >= '0') && (c <= '9'))
+	if ((c >= 32) && (c <= 126))
 		return (1);
 	return (0);
 }
@@ -34,14 +34,14 @@ int	main(int argc, char *argv[])
 		printf("Cantidad de caracteres incorrecta\n");
 		return (1);
 	}
-	if (ft_isdigit(*argv[1]))
-		printf("la funcion ft_isdigit dice que SI es un digito\n");
+	if (ft_isascii(*argv[1]))
+		printf("la funcion ft_isprint dice que SI es un caracter imprimible\n");
 	else
-		printf("la funcion ft_isdigit dice que NO es un digito\n");
-	if (isdigit(*argv[1]))
-		printf("la funcion isdigit dice que SI es un digito\n");
+		printf("la funcion ft_isprint dice que NO es un caracter imprimible\n");
+	if (isascii(*argv[1]))
+		printf("la funcion isprint dice que SI es un caracter imprimible\n");
 	else
-		printf("la funcion isdigit dice que NO es un digito\n");
+		printf("la funcion isprint dice que NO es un caracter imprimible\n");
 	return (0);
 }
 */

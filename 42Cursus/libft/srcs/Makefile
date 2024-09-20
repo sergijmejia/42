@@ -6,18 +6,21 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/09/19 13:39:39 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/09/20 13:14:10 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_isalnum
+TARGET	= ft_memset
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
 OBJS	= $(OBJ_DIR)/ft_isalpha.o \
 	  $(OBJ_DIR)/ft_isdigit.o \
 	  $(OBJ_DIR)/ft_isalnum.o \
-	  $(OBJ_DIR)/ft_strlen.o
+	  $(OBJ_DIR)/ft_isascii.o \
+	  $(OBJ_DIR)/ft_isprint.o \
+	  $(OBJ_DIR)/ft_strlen.o  \
+	  $(OBJ_DIR)/ft_memset.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc

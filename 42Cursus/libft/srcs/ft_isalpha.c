@@ -6,14 +6,15 @@
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:09:43 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/19 12:15:12 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:51:16 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*#include <stdio.h>
-#include <ctype.h>*/
+#include <ctype.h>
+#include <string.h>
 #include "libft.h"
-
+*/
 int	ft_isalpha(int c)
 {
 	if (((c >= 65) && (c <= 90)) || ((c >= 97) && (c <= 122)))

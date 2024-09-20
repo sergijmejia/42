@@ -6,12 +6,13 @@
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:26:36 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/19 13:46:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:44:05 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*#include <ctype.h>
 #include <stdio.h>*/
+#include <string.h>
 #include "libft.h"
 
 int	ft_isalnum(int c)
