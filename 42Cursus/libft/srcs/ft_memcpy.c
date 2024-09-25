@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/20 13:59:25 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/25 13:22:38 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/09/25 11:20:27 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/25 14:23:43 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 /*#include <stdio.h>
 #include <string.h>
-#include "libft.h"*/
+#include "libft.h"
+#include <stdlib.h>*/
 
-void	*ft_memset(void *ptr, int value, size_t num)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	unsigned char	*aux;
+	unsigned char	*aux_dest;
+	unsigned char	*aux_src;
 	size_t			i;
 
-	if (ptr == NULL)
+	if ((dest == NULL) || (src == NULL))
 		return (NULL);
-	if (num == 1)
-		return (ptr);
-	aux = (unsigned char *) ptr;
-	i = 1;
-	while (i < num)
+	aux_dest = (unsigned char *) dest;
+	aux_src = (unsigned char *) src;
+	i = 0;
+	while (i < n)
 	{
-		*aux = (unsigned char) value;
-		aux++;
+		aux_dest[i] = aux_src[i];
 		i++;
 	}
-	*aux = (unsigned char) value;
-	return (ptr);
+	return (dest);
 }
 /*
 int	main(int argc, char *argv[])
@@ -46,10 +45,11 @@ int	main(int argc, char *argv[])
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	new_strft = ft_memset(argv[1], 'A', ft_strlen(argv[1]));
-	new_str = memset(argv[1], 'A', ft_strlen(argv[1]));
+	new_strft = (char *) malloc (ft_strlen(argv[1]) * sizeof(char));
+	new_str = (char *) malloc (ft_strlen(argv[1]) * sizeof(char));
+	new_strft = ft_memcpy(new_strft, argv[1], 5);
+	new_str = memcpy(new_str, argv[1], 5);
 	printf("El nuevo string con la funcion ft es %s\n", new_strft);
 	printf("El nuevo string con la cuncion m es %s\n", new_str);
 	return (0);
-}
-*/
+}*/

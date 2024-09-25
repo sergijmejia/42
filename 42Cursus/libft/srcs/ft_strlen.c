@@ -6,15 +6,16 @@
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:22:26 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/20 14:47:06 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 18:31:35 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*#include <stdio.h>
-*/
-int	ft_strlen(char *str)
+#include <stddef.h>
+/*#include <stdio.h>*/
+
+size_t	ft_strlen(char *str)
 {
-	int	l;
+	size_t	l;
 
 	l = 0;
 	while (*str != '\0')
@@ -31,7 +32,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 		return (1);
-	n = ft_strlen(argv[1]);
+	n = (int)ft_strlen(argv[1]);
 	printf("La longitud es de %d caracteres \n", n);
 	return (0);
 }

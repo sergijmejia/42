@@ -1,39 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/20 13:59:25 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/25 13:22:38 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/09/25 09:54:54 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/25 11:17:37 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
-/*#include <stdio.h>
-#include <string.h>
-#include "libft.h"*/
+#include "libft.h"
+/*#include <string.h>
+#include <stdio.h>*/
 
-void	*ft_memset(void *ptr, int value, size_t num)
+void	ft_bzero(void *ptr, size_t num)
 {
-	unsigned char	*aux;
-	size_t			i;
-
-	if (ptr == NULL)
-		return (NULL);
-	if (num == 1)
-		return (ptr);
-	aux = (unsigned char *) ptr;
-	i = 1;
-	while (i < num)
-	{
-		*aux = (unsigned char) value;
-		aux++;
-		i++;
-	}
-	*aux = (unsigned char) value;
-	return (ptr);
+	ptr = ft_memset(ptr, 0, num);
 }
 /*
 int	main(int argc, char *argv[])
@@ -46,10 +30,12 @@ int	main(int argc, char *argv[])
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	new_strft = ft_memset(argv[1], 'A', ft_strlen(argv[1]));
-	new_str = memset(argv[1], 'A', ft_strlen(argv[1]));
-	printf("El nuevo string con la funcion ft es %s\n", new_strft);
-	printf("El nuevo string con la cuncion m es %s\n", new_str);
+	new_strft = argv[1];
+	ft_bzero(new_strft, ft_strlen(new_strft));
+	new_str = argv[1];
+	bzero(new_str, ft_strlen(new_str));
+	printf("El nuevo string con la funcion ft_bzero es %s\n", new_strft);
+	printf("El nuevo string con la cuncion bzero es %s\n", new_str);
 	return (0);
 }
 */

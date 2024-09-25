@@ -6,11 +6,11 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/09/20 13:14:10 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/09/25 18:57:31 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_memset
+TARGET	= ft_strlcpy
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
@@ -20,7 +20,11 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o \
 	  $(OBJ_DIR)/ft_isascii.o \
 	  $(OBJ_DIR)/ft_isprint.o \
 	  $(OBJ_DIR)/ft_strlen.o  \
-	  $(OBJ_DIR)/ft_memset.o
+	  $(OBJ_DIR)/ft_memset.o  \
+	  $(OBJ_DIR)/ft_bzero.o   \
+	  $(OBJ_DIR)/ft_memcpy.o  \
+	  $(OBJ_DIR)/ft_memmove.o \
+	  $(OBJ_DIR)/ft_strlcpy.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc
