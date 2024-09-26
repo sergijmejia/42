@@ -1,41 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 12:22:26 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/26 19:11:20 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/09/26 15:25:11 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/26 19:58:52 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
-/*#include <stdio.h>*/
 
-size_t	ft_strlen(char *str)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	size_t	l;
+	size_t			len_d;
+	size_t			len_s;
+	size_t			len_need;
+	unsigned char	*d;
 
-	l = 0;
-	if (str == NULL)
-		return (0);
-	while (*str != '\0')
+	len_d = ft_strlen(dst);
+	len_s = ft_strles(src);
+	len_need = len_d + len_s + 1;
+	d = dest[len_d];
+	if (len_need <= size)
 	{
-		l++;
-		str++;
+		while (src != '\0')
+		{
+			*d = *src;
+			src++;
+		}
 	}
-	return (l);
+	else
+	{
+		while (len_d < size)
+		{
+			d[len_d] = *src;
+			len_d++;
+			src++;
+		}
+	}
+	return (len_need);
 }
-/*
-int	main(int argc, char *argv[])
-{
-	int	n;
-
-	if (argc != 2)
-		return (1);
-	n = (int)ft_strlen(argv[1]);
-	printf("La longitud es de %d caracteres \n", n);
-	return (0);
-}
-*/

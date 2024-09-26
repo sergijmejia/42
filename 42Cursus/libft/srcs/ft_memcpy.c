@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+        */
+/*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:20:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/25 14:23:43 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:14:39 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ int	main(int argc, char *argv[])
 	new_str = memcpy(new_str, argv[1], 5);
 	printf("El nuevo string con la funcion ft es %s\n", new_strft);
 	printf("El nuevo string con la cuncion m es %s\n", new_str);
+	free(new_str);
+	free(new_strft);
 	return (0);
 }*/

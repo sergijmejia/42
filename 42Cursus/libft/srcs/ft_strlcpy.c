@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:06:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/25 19:05:48 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:17:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ int	main(int argc, char *argv[])
 	printf("La longitud de la frase original medida con ft es  %d\n", n_ft);
 	//printf("El nuevo string con la cuncion s es %s\n", new_str);
 	//printf("La longitud de la frase original medida con s es  %d\n", n);
+	free(new_strft);
+	//free(new_str);
 	return (0);
 }*/
