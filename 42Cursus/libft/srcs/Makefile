@@ -6,11 +6,11 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/09/26 15:56:57 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/09/27 19:08:37 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_memmove
+TARGET	= ft_strchr
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
@@ -24,7 +24,11 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o \
 	  $(OBJ_DIR)/ft_bzero.o   \
 	  $(OBJ_DIR)/ft_memcpy.o  \
 	  $(OBJ_DIR)/ft_memmove.o \
-	  $(OBJ_DIR)/ft_strlcpy.o
+	  $(OBJ_DIR)/ft_strlcpy.o \
+	  $(OBJ_DIR)/ft_strlcat.o \
+	  $(OBJ_DIR)/ft_toupper.o \
+	  $(OBJ_DIR)/ft_tolower.o \
+	  $(OBJ_DIR)/ft_strchr.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc
