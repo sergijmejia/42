@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_strchr
+TARGET	= ft_strncmp
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
@@ -28,7 +28,9 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o \
 	  $(OBJ_DIR)/ft_strlcat.o \
 	  $(OBJ_DIR)/ft_toupper.o \
 	  $(OBJ_DIR)/ft_tolower.o \
-	  $(OBJ_DIR)/ft_strchr.o
+	  $(OBJ_DIR)/ft_strchr.o  \
+	  $(OBJ_DIR)/ft_strrchr.o \
+	  $(OBJ_DIR)/ft_strncmp.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc
