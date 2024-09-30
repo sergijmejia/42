@@ -1,9 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/30 15:54:12 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/09/30 16:34:56 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-#include <stddef.h>
 #include "libft.h"
-/*#include <string.h>
-#include <stdio.h>*/
+//#include <string.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 
 char	*ft_strrchr(const char *s, int c)
 {
