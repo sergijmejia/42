@@ -6,39 +6,44 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/10/02 16:19:12 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/10/03 18:07:28 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_strjoin
+TARGET	= ft_itoa
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
-OBJS	= $(OBJ_DIR)/ft_isalpha.o \
-	  $(OBJ_DIR)/ft_isdigit.o \
-	  $(OBJ_DIR)/ft_isalnum.o \
-	  $(OBJ_DIR)/ft_isascii.o \
-	  $(OBJ_DIR)/ft_isprint.o \
-	  $(OBJ_DIR)/ft_strlen.o  \
-	  $(OBJ_DIR)/ft_memset.o  \
-	  $(OBJ_DIR)/ft_bzero.o   \
-	  $(OBJ_DIR)/ft_memcpy.o  \
-	  $(OBJ_DIR)/ft_memmove.o \
-	  $(OBJ_DIR)/ft_strlcpy.o \
-	  $(OBJ_DIR)/ft_strlcat.o \
-	  $(OBJ_DIR)/ft_toupper.o \
-	  $(OBJ_DIR)/ft_tolower.o \
-	  $(OBJ_DIR)/ft_strchr.o  \
-	  $(OBJ_DIR)/ft_strrchr.o \
-	  $(OBJ_DIR)/ft_strncmp.o \
-	  $(OBJ_DIR)/ft_memchr.o  \
-	  $(OBJ_DIR)/ft_memcmp.o  \
-	  $(OBJ_DIR)/ft_strnstr.o \
-	  $(OBJ_DIR)/ft_atoi.o    \
-	  $(OBJ_DIR)/ft_calloc.o  \
-	  $(OBJ_DIR)/ft_strdup.o  \
-	  $(OBJ_DIR)/ft_substr.o  \
-	  $(OBJ_DIR)/ft_strjoin.o 
+OBJS	= $(OBJ_DIR)/ft_isalpha.o     \
+	  $(OBJ_DIR)/ft_isdigit.o     \
+	  $(OBJ_DIR)/ft_isalnum.o     \
+	  $(OBJ_DIR)/ft_isascii.o     \
+	  $(OBJ_DIR)/ft_isprint.o     \
+	  $(OBJ_DIR)/ft_strlen.o      \
+	  $(OBJ_DIR)/ft_memset.o      \
+	  $(OBJ_DIR)/ft_bzero.o       \
+	  $(OBJ_DIR)/ft_memcpy.o      \
+	  $(OBJ_DIR)/ft_memmove.o     \
+	  $(OBJ_DIR)/ft_strlcpy.o     \
+	  $(OBJ_DIR)/ft_strlcat.o     \
+	  $(OBJ_DIR)/ft_toupper.o     \
+	  $(OBJ_DIR)/ft_tolower.o     \
+	  $(OBJ_DIR)/ft_strchr.o      \
+	  $(OBJ_DIR)/ft_strrchr.o     \
+	  $(OBJ_DIR)/ft_strncmp.o     \
+	  $(OBJ_DIR)/ft_memchr.o      \
+	  $(OBJ_DIR)/ft_memcmp.o      \
+	  $(OBJ_DIR)/ft_strnstr.o     \
+	  $(OBJ_DIR)/ft_atoi.o        \
+	  $(OBJ_DIR)/ft_calloc.o      \
+	  $(OBJ_DIR)/ft_strdup.o      \
+	  $(OBJ_DIR)/ft_substr.o      \
+	  $(OBJ_DIR)/ft_strjoin.o     \
+	  $(OBJ_DIR)/ft_strcontains.o \
+	  $(OBJ_DIR)/ft_strtrim.o     \
+	  $(OBJ_DIR)/ft_countchar.o   \
+	  $(OBJ_DIR)/ft_split.o       \
+	  $(OBJ_DIR)/ft_itoa.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc
