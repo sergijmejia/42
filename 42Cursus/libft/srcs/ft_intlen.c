@@ -1,53 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_countchar.c                                     :+:      :+:    :+:   */
+/*   ft_intlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/03 15:53:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/04 16:57:56 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/04 16:59:56 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/04 17:12:07 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-//#include <stdio.h>
-
-int	ft_countchar(const char *s, char c)
+/*#include "libft.h"
+#include <stdio.h>
+*/
+int	ft_intlen(int n)
 {
-	int	i;
-	int	aux;
+	int	len;
 
-	if (s == NULL)
-		return (0);
-	i = 0;
-	aux = 0;
-	while (s[i])
+	len = 0;
+	if (n < 0)
+		len++;
+	while (n != 0)
 	{
-		if (s[i] == c)
-			aux++;
-		i++;
+		n = n / 10;
+		len++;
 	}
-	return (aux);
+	return (len);
 }
 /*
 int	main(int argc, char *argv[])
 {
 	int	num;
+	int	len;
 
-	if (argc != 3)
+	if (argc != 2)
 	{
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	if (ft_strlen(argv[2]) > 1)
-	{
-		printf("Cantidad de caracteres incorrecta\n");
-		return (1);
-	}
-	num = ft_countchar(argv[1], *argv[2]);
-	printf("Segun ft_countchar %c se puede encontrar ");
-	printf("%d veces en %s\n", *argv[2], num, argv[1]);
+	num = ft_atoi(argv[1]);
+	len = ft_intlen(num);
+	printf("El numero tiene %d digitos.\n", len);
 	return (0);
 }
 */

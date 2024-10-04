@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/03 18:08:28 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/04 17:16:20 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int		ft_strcontains(const char *str, char c);
 char	*ft_strtrim(const char *s1, const char *set);
 int		ft_countchar(const char *s, char c);
 char	**ft_split(const char *s, char c);
+int		ft_intlen(int n);
+int		ft_abs(int num);
 char	*ft_itoa(int n);
 
 #endif

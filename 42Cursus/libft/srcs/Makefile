@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/10/03 18:07:28 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/10/04 17:21:14 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,8 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o     \
 	  $(OBJ_DIR)/ft_strtrim.o     \
 	  $(OBJ_DIR)/ft_countchar.o   \
 	  $(OBJ_DIR)/ft_split.o       \
+	  $(OBJ_DIR)/ft_intlen.o      \
+	  $(OBJ_DIR)/ft_abs.o         \
 	  $(OBJ_DIR)/ft_itoa.o
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)

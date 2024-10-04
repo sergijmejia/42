@@ -1,53 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_countchar.c                                     :+:      :+:    :+:   */
+/*   ft_abs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/03 15:53:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/04 16:57:56 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/04 17:12:44 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/04 17:20:33 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 //#include <stdio.h>
 
-int	ft_countchar(const char *s, char c)
+int	ft_abs(int num)
 {
-	int	i;
-	int	aux;
-
-	if (s == NULL)
-		return (0);
-	i = 0;
-	aux = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			aux++;
-		i++;
-	}
-	return (aux);
+	if (num == INT_MIN)
+		return (num);
+	if (num < 0)
+		num = (-1) * num;
+	return (num);
 }
 /*
 int	main(int argc, char *argv[])
 {
 	int	num;
+	int	abs;
 
-	if (argc != 3)
+	if (argc != 2)
 	{
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	if (ft_strlen(argv[2]) > 1)
-	{
-		printf("Cantidad de caracteres incorrecta\n");
-		return (1);
-	}
-	num = ft_countchar(argv[1], *argv[2]);
-	printf("Segun ft_countchar %c se puede encontrar ");
-	printf("%d veces en %s\n", *argv[2], num, argv[1]);
+	num = ft_atoi(argv[1]);
+	abs = ft_abs(num);
+	printf("El valor absoluto es: %d\n", abs);
 	return (0);
 }
 */
