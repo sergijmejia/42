@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/03 17:03:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/05 02:56:00 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/05 02:08:39 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/05 02:43:48 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 //#include <stdio.h>
 
-char	*ft_itoa(int n)
+void	ft_putnbr_fd(int n, int fd)
 {
-	char	*str;
+	char	str[12];
 	int		len;
 	int		num;
 
 	len = ft_intlen(n);
-	str = ft_calloc((size_t)(len + 1), 1);
-	if (str == NULL)
-		return (NULL);
 	num = ft_abs(n);
 	if (num == -2147483648)
 	{
-		ft_strlcpy(str, "-2147483648", (size_t)(len + 1));
-		return (str);
+		ft_strlcpy(str, "-2147483648", 12);
+		ft_putstr_fd(str, fd);
+		return ;
 	}
+	str[len] = '\0';
 	while (len > 1)
 	{
 		str[len - 1] = (num % 10) + '0';
@@ -39,13 +38,12 @@ char	*ft_itoa(int n)
 		str[0] = '-';
 	else
 		str[0] = num + '0';
-	return (str);
+	ft_putstr_fd(str, fd);
 }
 /*
 int	main(int argc, char *argv[])
 {
-	int		num;
-	char	*str;
+	int	num;
 
 	if (argc != 2)
 	{
@@ -53,9 +51,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	num = ft_atoi(argv[1]);
-	str = ft_itoa(num);
-	printf("El numero recibido con ft es %s\n", str);
-	free(str);
+	ft_putnbr_fd(num, 1);
 	return (0);
 }
 */

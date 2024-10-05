@@ -1,48 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_intlen.c                                        :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/04 16:59:56 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/05 02:41:54 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/05 00:48:16 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/05 01:44:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*#include "libft.h"
 #include <stdio.h>
-*/
-int	ft_intlen(int n)
-{
-	int	len;
 
-	len = 0;
-	if (n == 0)
-		return (1);
-	if (n < 0)
-		len++;
-	while (n != 0)
+void	prueba(unsigned int i, char *c)
+{
+	(void)i;
+	if ((*c >= 97) && (*c <= 122))
+		*c = *c - ('a' - 'A');
+}
+*/
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+{
+	unsigned int	i;
+	char			*c;
+
+	i = 0;
+	while (s[i] != '\0')
 	{
-		n = n / 10;
-		len++;
+		c = &s[i];
+		f(i, c);
+		i++;
 	}
-	return (len);
 }
 /*
 int	main(int argc, char *argv[])
 {
-	int	num;
-	int	len;
-
 	if (argc != 2)
 	{
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	num = ft_atoi(argv[1]);
-	len = ft_intlen(num);
-	printf("El numero tiene %d digitos.\n", len);
+	printf("El string orignal es: %s\n", argv[1]);
+	ft_striteri(argv[1], prueba);
+	printf("El string despues de ft_striteri es: %s\n", argv[1]);
 	return (0);
 }
 */

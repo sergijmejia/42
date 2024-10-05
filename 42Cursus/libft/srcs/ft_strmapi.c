@@ -1,50 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/03 17:03:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/05 02:56:00 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/05 00:03:56 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/05 00:47:29 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-//#include <stdio.h>
+/*#include <stdio.h>
 
-char	*ft_itoa(int n)
+static char	prueba(unsigned int i, char c)
 {
-	char	*str;
-	int		len;
-	int		num;
+	(void)i;
+	return (ft_toupper(c));
+}*/
 
-	len = ft_intlen(n);
-	str = ft_calloc((size_t)(len + 1), 1);
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+{
+	char			*str;
+	unsigned int	i;
+
+	if (s == NULL)
+		return (NULL);
+	str = (char *) malloc (ft_strlen(s) + 1);
 	if (str == NULL)
 		return (NULL);
-	num = ft_abs(n);
-	if (num == -2147483648)
+	i = 0;
+	while (s[i] != '\0')
 	{
-		ft_strlcpy(str, "-2147483648", (size_t)(len + 1));
-		return (str);
+		str[i] = f(i, s[i]);
+		i++;
 	}
-	while (len > 1)
-	{
-		str[len - 1] = (num % 10) + '0';
-		num = num / 10;
-		len--;
-	}
-	if (n < 0)
-		str[0] = '-';
-	else
-		str[0] = num + '0';
+	str[i] = '\0';
 	return (str);
 }
 /*
 int	main(int argc, char *argv[])
 {
-	int		num;
 	char	*str;
 
 	if (argc != 2)
@@ -52,10 +48,10 @@ int	main(int argc, char *argv[])
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	num = ft_atoi(argv[1]);
-	str = ft_itoa(num);
-	printf("El numero recibido con ft es %s\n", str);
-	free(str);
+	printf("El string orignal es: %s\n", argv[1]);
+	str = ft_strmapi(argv[1], prueba);
+	printf("El string despues de ft_strmapi es: %s\n", str);
+	free (str);
 	return (0);
 }
 */
