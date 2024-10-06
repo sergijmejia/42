@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tolower.c                                       :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/27 18:20:52 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/06 02:52:20 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/06 01:29:01 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/06 03:39:15 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*#include <stdio.h>
 #include "libft.h"
-*/
-int	ft_tolower(int c)
+//#include <stdio.h>
+
+t_list	*ft_lstnew(void *content)
 {
-	if ((c >= 'A') && (c <= 'Z'))
-		c = c + ('a' - 'A');
-	return (c);
+	t_list	*new_node;
+
+	new_node = malloc (sizeof(t_list));
+	if (new_node == NULL)
+		return (NULL);
+	new_node->content = content;
+	new_node->next = NULL;
+	return (new_node);
 }
 /*
 int	main(int argc, char *argv[])
 {
-	char	c;
+	t_list	*new_list;
 
 	if (argc != 2)
 	{
 		printf("Cantidad de argumentos incorrecta\n");
 		return (1);
 	}
-	if (ft_strlen(argv[1]) > 1)
-	{
-		printf("Cantidad de caracteres incorrecta\n");
-		return (1);
-	}
-	printf("El caracter orignal es: %s\n", argv[1]);
-	c = ft_tolower(*argv[1]);
-	printf("El caracter despues de ft_lower es: %c\n", c);
+	new_list = ft_lstnew(argv[1]);
+	printf("El mensaje almacenado en el nuevo nodo es: %s\n", (char *) new_list->content);
+	free(new_list);
 	return (0);
 }
 */
