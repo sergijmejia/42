@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 02:52:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/08 14:59:35 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/08 09:35:53 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/08 14:57:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 //#include <stdio.h>
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
+	t_list	*aux;
+
 	if ((lst == NULL) || (new == NULL))
 		return ;
-	
-	new->next = *lst;
-	*lst = new;
+
+	if (*lst == NULL)
+		*lst = new;
+	else
+	{
+		aux = ft_lstlast(*lst);
+		aux->next = new;
+	}
 }
 /*
 int	main(void)
@@ -28,7 +35,7 @@ int	main(void)
 	t_list	*second;
 	t_list	*third;
 	t_list	**pnt;
-
+	
 	first = ft_lstnew("first");
 	if (!first)
 		return (1);
@@ -38,11 +45,13 @@ int	main(void)
 	third = ft_lstnew("third");
 	if (!third)
 		return (1);
-	second->next = third;
-	pnt = &second;
-	ft_lstadd_front(pnt, first);
-	printf("El texto en el primer nodo es: %s\n", (char *) (*pnt)->content);
-	//ft_lstclear(pnt, free);
+	first->next = second;
+	pnt = &first;
+	ft_lstadd_back(pnt, third);
+	printf("El texto en el ultimo puntero es: %s\n", (char *) (ft_lstlast(*pnt))->content);
+	free(first);
+	free(second);
+	free(third);
 	return (0);
 }
 */
