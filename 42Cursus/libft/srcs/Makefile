@@ -6,11 +6,11 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/10/08 13:32:46 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/10/09 12:55:25 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= ft_lstclear
+TARGET	= ft_lstmap
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
@@ -28,6 +28,7 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o     \
 	  $(OBJ_DIR)/ft_strlcat.o     \
 	  $(OBJ_DIR)/ft_toupper.o     \
 	  $(OBJ_DIR)/ft_tolower.o     \
+	  $(OBJ_DIR)/ft_strtoupper.o  \
 	  $(OBJ_DIR)/ft_strchr.o      \
 	  $(OBJ_DIR)/ft_strrchr.o     \
 	  $(OBJ_DIR)/ft_strncmp.o     \
@@ -57,10 +58,12 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o     \
 	  $(OBJ_DIR)/ft_lstadd_back.o \
 	  $(OBJ_DIR)/ft_lstdelone.o   \
 	  $(OBJ_DIR)/ft_lstclear.o    \
-	  $(OBJ_DIR)/ft_lstlast.o     \
-	  $(OBJ_DIR)/ft_lstsize.o
+	  $(OBJ_DIR)/ft_lstsize.o     \
+	  $(OBJ_DIR)/ft_lstiter.o     \
+	  $(OBJ_DIR)/ft_lstmap.o      \
+	  $(OBJ_DIR)/ft_lstlast.o
 
-OBJS_BONUS = $(OBJ_DIR)/ft_lstsize.o  
+OBJS_BONUS =  
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 09:35:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/08 14:57:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:52:30 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 
 	if ((lst == NULL) || (new == NULL))
 		return ;
-
 	if (*lst == NULL)
 		*lst = new;
 	else
@@ -48,7 +47,8 @@ int	main(void)
 	first->next = second;
 	pnt = &first;
 	ft_lstadd_back(pnt, third);
-	printf("El texto en el ultimo puntero es: %s\n", (char *) (ft_lstlast(*pnt))->content);
+	printf("El texto en el ultimo puntero es: ");
+	printf("%s\n", (char *)(ft_lstlast(*pnt))->content);
 	free(first);
 	free(second);
 	free(third);

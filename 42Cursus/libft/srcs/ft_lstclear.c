@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:25:41 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/08 14:53:34 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:32:40 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,14 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 
 	if ((lst == NULL) || (*lst == NULL) || (del == NULL))
 		return ;
-
 	begin = *lst;
 	while (begin != NULL)
 	{
 		aux = (begin)->next;
 		ft_lstdelone((begin), del);
-		(begin) = aux;
+		begin = aux;
 	}
-	*lst = begin;
+	*lst = NULL;
 }
 /*
 int main(void)
@@ -38,18 +37,29 @@ int main(void)
 	t_list	*third;
 	t_list	**pnt;
 	t_list	*lst;
+	t_list	*lst2;
+	char	*aux1;
+	char    *aux2;
+	char    *aux3;
 
 	lst = NULL;
-	first = ft_lstnew("first");
-	second = ft_lstnew("second");
-	third = ft_lstnew("third");
+	aux1 = (char *) malloc (7);
+	aux2 = (char *) malloc (7);
+	aux3 = (char *) malloc (7);
+	ft_strlcpy(aux1, "first", 7); 
+	first = ft_lstnew(aux1);
+	ft_strlcpy(aux2, "second", 7);
+	second = ft_lstnew(aux2);
+	ft_strlcpy(aux3, "third", 7);
+	third = ft_lstnew(aux3);
 	pnt = &lst;
 	ft_lstadd_back(pnt, first);
 	ft_lstadd_back(pnt, second);
 	ft_lstadd_back(pnt, third);
-	printf("La longitud de la lista antes de ft es %d\n", ft_lstsize(*pnt));
+	lst2 = lst;
+	printf("La longitud de la lista antes de ft es %d\n", ft_lstsize(lst2));
 	ft_lstclear(pnt, free);
-	printf("La longitud de la lista despues de ft es %d\n", ft_lstsize(*pnt));
+	printf("La longitud de la lista despues de ft es %d\n", ft_lstsize(lst));
 	return (0);
 }
 */

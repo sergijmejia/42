@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 02:52:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/08 14:59:35 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:48:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if ((lst == NULL) || (new == NULL))
 		return ;
-	
 	new->next = *lst;
 	*lst = new;
 }

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/08 11:55:48 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:46:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,10 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 char	*strnstr(const char *big, const char *little, size_t len);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
-char	*ft_strdup(const char *s);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
-int		ft_strcontains(const char *str, char c);
 char	*ft_strtrim(const char *s1, const char *set);
-int		ft_countchar(const char *s, char c);
 char	**ft_split(const char *s, char c);
-int		ft_intlen(int n);
-int		ft_abs(int num);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -69,6 +64,13 @@ t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
+void	ft_lstiter(t_list *lst, void (*f)(void *));
+t_list  *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
+void	ft_strtoupper(void *str);
+int             ft_strcontains(const char *str, char c);
+int             ft_countchar(const char *s, char c);
+int             ft_intlen(int n);
+int             ft_abs(int num);
 
 #endif

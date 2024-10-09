@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 16:01:07 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/02 16:26:05 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:23:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len_s1;
 	size_t	len_s2;
-	size_t	aux;
 	char	*str;
 
 	len_s1 = ft_strlen(s1);
@@ -25,7 +24,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str = ft_substr(s1, 0, len_s1 + len_s2 + 1);
 	if (str == NULL)
 		return (NULL);
-	aux = ft_strlcat(str, s2, len_s1 + len_s2 + 1);
+	ft_strlcat(str, s2, len_s1 + len_s2 + 1);
 	return (str);
 }
 /*
