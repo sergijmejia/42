@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:25:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/27 17:51:49 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:14:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,23 @@
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	len_d;
+	size_t	len_s;
 	int		i;
 
 	len_d = ft_strlen(dst);
-	i = 0;
+	len_s = ft_strlen(src);
 	if ((dst == NULL) || (src == NULL))
-		return (len_d + ft_strlen(src) + 1);
-	if ((len_d + ft_strlen(src) +1) <= size)
+		return (len_d + len_s);
+	if (size <= len_d)
+		return (size + len_s);
+	i = 0;
+	while (src[i] && ((len_d + i + 1) < size))
 	{
-		while (src[i] != '\0')
-		{
-			dst[len_d + i] = src[i];
-			i++;
-		}
-	}
-	else
-	{
-		while (size - len_d - i - 1)
-		{
-			dst[len_d + i] = src[i];
-			i++;
-		}
+		dst[len_d + i] = src[i];
+		i++;
 	}
 	dst[len_d + i] = '\0';
-	return (len_d + ft_strlen(src) + 1);
+	return (len_d + len_s);
 }
 /*
 int	main(int argc, char *argv[])

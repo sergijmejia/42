@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 09:32:39 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/09 14:23:50 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:58:12 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	pnt = &f_lst;
 	while (lst)
 	{
-		
 		aux = ft_lstnew(f(lst->content));
 		if (aux == NULL)
 		{

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:06:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/02 14:10:28 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:15:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	size_t	n;
 
 	n = ft_strlen(src);
-	if ((dst == NULL) || (src == NULL))
+	if ((dst == NULL) || (src == NULL) || (size == 0))
 		return (n);
 	if (n >= (size - 1))
 	{

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:20:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/26 19:14:39 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:20:43 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	size_t			i;
 
 	if ((dest == NULL) || (src == NULL))
-		return (NULL);
+		return (dest);
 	aux_dest = (unsigned char *) dest;
 	aux_src = (unsigned char *) src;
 	i = 0;
