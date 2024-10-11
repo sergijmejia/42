@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 16:27:02 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/03 11:53:30 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:32:28 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,16 @@ char	*ft_strtrim(const char *s1, const char *set)
 {
 	size_t	start;
 	size_t	end;
-	char	*str;
 
+	if (s1 == NULL || set == NULL)
+		return (NULL);
 	end = ft_strlen(s1);
 	start = 0;
-	while (start < end)
-	{
-		if (!ft_strcontains(set, s1[start]))
-		{
-			s1 = &s1[start];
-			break ;
-		}
+	while (s1[start] && ft_strcontains(set, s1[start]))
 		start++;
-	}
-	end = end - start;
-	while (end > start)
-	{
-		if (!ft_strcontains(set, s1[end - 1]))
-			break ;
+	while (end > start && ft_strcontains(set, s1[end - 1]))
 		end--;
-	}
-	str = (char *) malloc (end + 1);
-	start = ft_strlcpy(str, s1, end + 1);
-	return (str);
+	return (ft_substr(s1, start, end - start));
 }
 /*
 int	main(int argc, char *argv[])

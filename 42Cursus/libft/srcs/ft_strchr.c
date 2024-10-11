@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 18:29:40 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/27 20:08:07 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:46:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,23 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	const char	*str;
+	unsigned char	chr;
+	const char		*str;
 
-	if ((s == NULL) || (!ft_isascii(c)))
+	if (s == NULL)
 		return (NULL);
 	str = NULL;
+	chr = (unsigned char) c;
 	while (*s != '\0')
 	{
-		if (*s == c)
+		if (*s == chr)
 		{
 			str = s;
 			break ;
 		}
 		s++;
 	}
-	if (c == '\0')
+	if (chr == '\0')
 		str = s;
 	return ((char *) str);
 }

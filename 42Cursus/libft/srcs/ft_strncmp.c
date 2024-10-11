@@ -6,30 +6,35 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 13:34:47 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/28 13:55:50 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:39:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
-/*#include <stdio.h>
-#include "libft.h"*/
+//#include <stdio.h>
+#include "libft.h"
 
-int	ft_strncmp(char *s1, char *s2, size_t n)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	int	num;
+	size_t			num;
+	unsigned char	c_s1;
+	unsigned char	c_s2;
 
 	num = 0;
-	while (num < ((int) n))
+	while (num < n)
 	{
-		if (*s1 == *s2)
+		c_s1 = (unsigned char) *s1;
+		c_s2 = (unsigned char) *s2;
+		if (c_s1 == c_s2)
 		{
+			if (c_s1 == '\0')
+				return (0);
 			s1++;
 			s2++;
 			num++;
 		}
 		else
 		{
-			return (*s1 - *s2);
+			return (c_s1 - c_s2);
 		}
 	}
 	return (0);

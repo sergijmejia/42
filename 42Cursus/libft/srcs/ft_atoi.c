@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 01:17:47 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/02 02:13:04 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:51:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_atoi(const char *nptr)
 
 	negative = 1;
 	res = 0;
-	while (*nptr && *nptr == ' ')
+	while (*nptr && ((*nptr >= '\t' && *nptr <= '\r') || (*nptr == ' ')))
 		nptr++;
 	if (*nptr == '-')
 		negative = -1;

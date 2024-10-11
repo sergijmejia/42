@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/10 15:57:38 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 20:26:33 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,13 @@ int		ft_toupper(int c);
 int		ft_tolower(int c);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strrchr(const char *s, int c);
-int		ft_strncmp(char *s1, char *s2, size_t n);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
-char	*strnstr(const char *big, const char *little, size_t len);
+char	*ft_strnstr(const char *big, const char *little, size_t len);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_strdup(const char *s);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(const char *s1, const char *set);
@@ -70,6 +71,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	ft_strtoupper(void *str);
 int		ft_strcontains(const char *str, char c);
 int		ft_countchar(const char *s, char c);
+int		ft_countwords(const char *s, char c);
 int		ft_intlen(int n);
 int		ft_abs(int num);
 

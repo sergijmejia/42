@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 16:01:07 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/09 14:22:37 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:59:18 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	len_s2;
 	char	*str;
 
-	len_s1 = ft_strlen(s1);
-	len_s2 = ft_strlen(s2);
-	str = ft_substr(s1, 0, len_s1 + len_s2 + 1);
-	if (str == NULL)
+	if (s1 == NULL && s2 == NULL)
 		return (NULL);
-	ft_strlcat(str, s2, len_s1 + len_s2 + 1);
+	if (s1 == NULL)
+		str = ft_strdup(s2);
+	if (s2 == NULL)
+		str = ft_strdup(s1);
+	if (s1 != NULL && s2 != NULL)
+	{
+		len_s1 = ft_strlen(s1);
+		len_s2 = ft_strlen(s2);
+		str = (char *) malloc (len_s1 + len_s2 + 1);
+		if (str == NULL)
+			return (NULL);
+		ft_strlcpy(str, s1, len_s1 + len_s2 + 1);
+		ft_strlcat(str, s2, len_s1 + len_s2 + 1);
+	}
 	return (str);
 }
 /*
