@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:42:38 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/11 23:36:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 03:40:44 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ static char	*ft_worddup(const char *start, const char *end)
 
 static void	ft_findwords(const char *s, char c, char **split)
 {
-	size_t	i;
-	char	*start;
+	size_t		i;
+	const char	*start;
 
 	i = 0;
 	start = NULL;
 	while (*s)
 	{
 		if (*s != c && !start)
-			start = (char *) s;
+			start = s;
 		else if ((*s == c || *(s + 1) == '\0') && start)
 		{
 			if (*s == c)
@@ -59,18 +59,24 @@ char	**ft_split(const char *s, char c)
 {
 	char	**split;
 	size_t	words_s;
+	char	*str;
 
 	if (s == NULL)
 		return (NULL);
-	words_s = ft_countwords(s, c);
+	str = ft_strtrim(s, &c);
+	if (str == NULL)
+		return (NULL);
+	words_s = ft_countwords(str, c);
 	split = (char **) malloc ((words_s + 1) * sizeof (char *));
 	if (split == NULL)
 		return (NULL);
-	ft_findwords(s, c, split);
+	ft_findwords(str, c, split);
+	free(str);
 	return (split);
 }
 /*
-int	main(int argc, char *argv[])
+//int	main(int argc, char *argv[])
+int	main(void)
 {
 	char	**str;
 	size_t	num;
@@ -86,6 +92,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	str = ft_split(argv[1], *argv[2]);
+	//str = ft_split("hello!", ' ');
 	num = 0;
 	printf("La funcion ft_split divide en varios strings:\n");
 	while (str[num])

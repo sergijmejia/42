@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 09:32:39 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/10 15:58:12 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 03:31:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,35 @@ void	*test_function(void *str)
 		aux++;
 	}
 	return (str);
-}*/
+}
+*/
+
+static void	*fn(t_list *l, void *(*f)(void *), void (*d)(void *), t_list **p)
+{
+	void	*new_content;
+	t_list	*aux;
+
+	new_content = f(l->content);
+	if (new_content == NULL)
+	{
+		ft_lstclear(p, d);
+		return (NULL);
+	}
+	aux = ft_lstnew(new_content);
+	if (aux == NULL)
+	{
+		d(new_content);
+		ft_lstclear(p, d);
+		return (NULL);
+	}
+	ft_lstadd_back(p, aux);
+	return (new_content);
+}
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
 	t_list	**pnt;
 	t_list	*f_lst;
-	t_list	*aux;
 
 	if ((lst == NULL) || (f == NULL) || (del == NULL))
 		return (NULL);
@@ -40,17 +62,13 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	pnt = &f_lst;
 	while (lst)
 	{
-		aux = ft_lstnew(f(lst->content));
-		if (aux == NULL)
-		{
-			ft_lstclear(pnt, del);
+		if (fn(lst, f, del, pnt) == NULL)
 			return (NULL);
-		}
-		ft_lstadd_back(pnt, aux);
 		lst = lst->next;
 	}
 	return (f_lst);
 }
+
 /*
 int main(void)
 {
