@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/10/09 14:10:42 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/10/14 20:09:21 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ OBJS	= $(OBJ_DIR)/ft_isalpha.o     \
 	  $(OBJ_DIR)/ft_strcontains.o \
 	  $(OBJ_DIR)/ft_strtrim.o     \
 	  $(OBJ_DIR)/ft_countchar.o   \
+	  $(OBJ_DIR)/ft_countwords.o  \
 	  $(OBJ_DIR)/ft_split.o       \
 	  $(OBJ_DIR)/ft_intlen.o      \
 	  $(OBJ_DIR)/ft_abs.o         \

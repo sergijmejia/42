@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:22:26 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/26 19:11:20 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:38:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ size_t	ft_strlen(char *str)
 	size_t	l;
 
 	l = 0;
-	if (str == NULL)
-		return (0);
 	while (*str != '\0')
 	{
 		l++;

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 18:29:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/30 19:57:29 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:23:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	unsigned char	*ptr2;
 	int				num;
 
-	if ((s1 == NULL) && (s2 == NULL))
-		return (0);
-	if (s1 == NULL)
-		return (0 - *((unsigned char *) s2));
-	if (s2 == NULL)
-		return (*((unsigned char *) s1));
 	ptr1 = (unsigned char *) s1;
 	ptr2 = (unsigned char *) s2;
 	num = 0;

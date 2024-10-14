@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:37:26 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/09/30 19:03:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:07:56 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	unsigned char	*str;
 	size_t			i;
 
-	if (s == NULL)
-		return (NULL);
 	c = (unsigned char) c;
 	str = (unsigned char *) s;
 	i = 0;

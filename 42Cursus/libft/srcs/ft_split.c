@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 11:42:38 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/14 03:40:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:39:44 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,65 +14,55 @@
 //#include <stdio.h>
 //#include <string.h>
 
-static char	*ft_worddup(const char *start, const char *end)
+static char	**free_split(char **split)
 {
-	char	*word;
-	size_t	i;
+	int	i;
 
-	word = (char *) malloc (end - start + 1);
-	if (!word)
-		return (NULL);
 	i = 0;
-	while (start < end)
-		word[i++] = *start++;
-	word[i] = '\0';
-	return (word);
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+	return (NULL);
 }
 
-static void	ft_findwords(const char *s, char c, char **split)
+static char	**create_split(char const *s, char **split, char c)
 {
-	size_t		i;
-	const char	*start;
+	char	*start;
+	int		num;
 
-	i = 0;
-	start = NULL;
+	num = 0;
 	while (*s)
 	{
-		if (*s != c && !start)
-			start = s;
-		else if ((*s == c || *(s + 1) == '\0') && start)
+		while (*s == c)
+			s++;
+		if (*s)
 		{
-			if (*s == c)
-				split[i++] = ft_worddup(start, s);
-			else
-				split[i++] = ft_worddup(start, s + 1);
-			start = NULL;
+			start = (char *)s;
+			while (*s && (*s != c))
+				s++;
+			split[num] = ft_substr(start, 0, s - start);
+			if (split[num] == NULL)
+				return (free_split(split));
+			num++;
 		}
-		s++;
 	}
-	if (start)
-		split[i++] = ft_worddup(start, s);
-	split[i] = NULL;
+	split[num] = NULL;
+	return (split);
 }
 
-char	**ft_split(const char *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**split;
-	size_t	words_s;
-	char	*str;
 
 	if (s == NULL)
 		return (NULL);
-	str = ft_strtrim(s, &c);
-	if (str == NULL)
-		return (NULL);
-	words_s = ft_countwords(str, c);
-	split = (char **) malloc ((words_s + 1) * sizeof (char *));
+	split = ft_calloc(ft_countwords(s, c) + 1, sizeof(char *));
 	if (split == NULL)
 		return (NULL);
-	ft_findwords(str, c, split);
-	free(str);
-	return (split);
+	return (create_split(s, split, c));
 }
 /*
 //int	main(int argc, char *argv[])

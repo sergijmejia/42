@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 18:29:40 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/11 15:46:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:06:35 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ char	*ft_strchr(const char *s, int c)
 	unsigned char	chr;
 	const char		*str;
 
-	if (s == NULL)
-		return (NULL);
 	str = NULL;
 	chr = (unsigned char) c;
 	while (*s != '\0')

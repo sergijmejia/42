@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:30:42 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/11 17:34:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:24:28 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	size_t	i;
 
 	little_len = ft_strlen(little);
-	if ((big == NULL) || (little_len > len))
-		return (NULL);
 	if (*little == '\0')
 		return ((char *)big);
 	i = 0;
