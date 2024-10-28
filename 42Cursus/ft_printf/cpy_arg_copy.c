@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 14:50:09 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/28 18:41:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:55:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,101 +82,15 @@ int	numlen(unsigned long long n, int base)
 	return (len);
 }
 
-/*FUNCIONES PARA CALCULAR PRECISION Y MIN_FIELD*/
-
-size_t	cal_prec(char *s)
-{
-	char	*str;
-	size_t	prec;
-
-	prec = 0;
-	if (ft_strcontains(s, '.'))
-	{
-		str = ft_strrchr(s, '.') + 1;
-		while (ft_isdigit(*str))
-		{
-			prec = prec * 10 + (*str - '0');
-			str++;
-		}
-	}
-	return (prec);
-}
-
-size_t	cal_min_field(char *s)
-{
-	size_t	min_field;
-
-	min_field = 0;
-	while (ft_strcontains("-0# +", *s))
-		s++;
-	while (ft_isdigit(*s))
-	{
-		min_field = min_field * 10 + (*s - '0');
-		s++;
-	}
-	return (min_field);
-}
-
-/*FUNCIONES PARA SABER SI CONTIENE LAS FLAGS*/
-
-int	flag(char *s, char c)
-{
-	while (!ft_strcontains(".123456789cspdiuxX", *s))
-	{
-		if (*s == c)
-			return (1);
-		s++;
-	}
-	return (0);
-}
-
 /*FUNCIONES PARA IDENTFICAR EL TIPO DE ARGUMENTO A IMPRIMIR*/
 
-char	*character(char *s, va_list args)
+char	*character(va_list args)
 {
 	char	*str;
-	size_t	min_field;
-	size_t	len;
 
-	min_field = cal_min_field(s);
-	if (flag(s, '-') && (min_field > 1))
-		len = min_field;
-	else
-		len = 1;
-	str = (char *) malloc (len + 1);
-	if (!str)
-		return (NULL);
-	ft_memset(str, ' ', len);
+	str = (char *) malloc (2);
 	str[0] = (char) va_arg(args, int);
-	str[len] = '\0';
-	return (str);
-}
-
-char	*string(char *s, va_list args)
-{
-	char	*str;
-	char	*str_2;
-	size_t	min_field;
-	size_t	len;
-
-	min_field = cal_min_field(s);
-	str = va_arg(args, char *);
-	if (ft_strcontains(s, '.'))
-		len = cal_prec(s); 
-	else 
-		len = ft_strlen(str);
-	str_2 = (char *) malloc (len + 1);
-	ft_strlcpy(str_2, str, len + 1);
-	if (min_field > len)
-		str = (char *) malloc (min_field + 1);
-	else
-		return (str_2);
-	ft_memset(str, ' ', min_field);
-	if (flag(s, '-'))
-		ft_memcpy(str, str_2, min_field - 1);
-	else
-		ft_memcpy(&str[min_field - len], str_2, len);
-	free(str_2);
+	str[1] = '\0';
 	return (str);
 }
 
@@ -262,16 +176,14 @@ char	*hexa_num_upper(va_list args)
 	return (str);
 }
 
-char	*arg_to_str(char *s, va_list args)
+char	*arg_to_str(char c, va_list args)
 {
 	char	*arg;
-	char	c;
 
-	c = s[ft_strlen(s) - 1];
 	if (c == 'c')
-		arg = character(s, args);
+		arg = character(args);
 	if (c == 's')
-		arg = string(s, args);
+		arg = va_arg(args, char *);
 	if (c == 'p')
 		arg = hexa_pointer(args);
 	if (c == 'd'|| c == 'i')
@@ -285,7 +197,53 @@ char	*arg_to_str(char *s, va_list args)
 	return (arg);
 }
 
-/*FUNCION PARA CREAR EL ARGUMENTO A IMPRIMIR*/
+/*FUNCIONES PARA CALCULAR PRECISION Y MIN_FIELD*/
+
+size_t	cal_prec(char *s)
+{
+	char	*str;
+	size_t	prec;
+
+	prec = 0;
+	if (ft_strcontains(s, '.'))
+	{
+		str = ft_strrchr(s, '.') + 1;
+		while (ft_isdigit(*str))
+		{
+			prec = prec * 10 + (*str - '0');
+			str++;
+		}
+	}
+	return (prec);
+}
+
+size_t	cal_min_field(char *s)
+{
+	size_t	min_field;
+
+	min_field = 0;
+	while (ft_strcontains("-0# +", *s))
+		s++;
+	while (ft_isdigit(*s))
+	{
+		min_field = min_field * 10 + (*s - '0');
+		s++;
+	}
+	return (min_field);
+}
+
+/*FUNCIONES PARA SABER SI CONTIENE LAS FLAGS*/
+
+int	flag(char *s, char c)
+{
+	while (!ft_strcontains(".123456789cspdiuxX", *s))
+	{
+		if (*s == c)
+			return (1);
+		s++;
+	}
+	return (0);
+}
 
 char	*create_print_arg(char *s, va_list args)
 {
@@ -293,7 +251,7 @@ char	*create_print_arg(char *s, va_list args)
 	size_t	min_field;
 	size_t	prec;
 
-	arg = arg_to_str(s, args);
+	arg = arg_to_str(s[ft_strlen(s) - 1], args);
 	prec = cal_prec(s);
 	min_field = cal_min_field(s);
 	
