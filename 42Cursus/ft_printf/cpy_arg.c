@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 14:50:09 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/28 18:41:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:48:11 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,32 +166,46 @@ char	*string(char *s, va_list args)
 	else 
 		len = ft_strlen(str);
 	str_2 = (char *) malloc (len + 1);
+	if (!str_2)
+		return (NULL);
 	ft_strlcpy(str_2, str, len + 1);
 	if (min_field > len)
+	{
 		str = (char *) malloc (min_field + 1);
+		if (!str)
+		{
+			free(str_2);
+			return (NULL);
+		}
+		ft_memset(str, ' ', min_field);
+		if (flag(s, '-'))
+			ft_memcpy(str, str_2, len);
+		else
+			ft_memcpy(&str[min_field - len], str_2, len);
+		str[min_field] = '\0';
+		free(str_2);
+	}
 	else
 		return (str_2);
-	ft_memset(str, ' ', min_field);
-	if (flag(s, '-'))
-		ft_memcpy(str, str_2, min_field - 1);
-	else
-		ft_memcpy(&str[min_field - len], str_2, len);
-	free(str_2);
 	return (str);
 }
 
-char	*hexa_pointer(va_list args)
+char	*hexa_pointer(char *s, va_list args)
 {
 	void				*pnt;
 	unsigned long long	num_pnt;
 	char				*str;
+	char				*str_2;
 	char				hexa[17];
-	int					len;
+	size_t				len;
+	size_t				len_2;
+	size_t				min_field;
+
 
 	pnt = va_arg(args, void*);
 	num_pnt = (unsigned long long) pnt;
 	ft_strlcpy(hexa, "0123456789abcdef", 17);
-	len = numlen(num_pnt, 16);
+	len = (size_t) numlen(num_pnt, 16);
 	str = (char *) malloc (len + 1);
 	if (!str)
 		return (NULL);
@@ -203,6 +217,174 @@ char	*hexa_pointer(va_list args)
 		str[len - 1] = hexa[num_pnt % 16];
 		len--;
 		num_pnt = num_pnt / 16;
+	}
+	if (ft_strcontains(s, '.'))
+		len_2 = cal_prec(s);
+	if (len > ft_strlen(str))
+		len_2 = len_2 + 2;
+	else 
+		len_2 = len + 2;
+	str_2 = (char *) malloc (len_2 + 1);
+	if (!str_2)
+	{
+		free(str);
+		return (NULL);
+	}
+	ft_memset(str_2, '0', len_2);
+	str_2[1] = 'x';
+	str_2[len_2] = '\0';
+	ft_memcpy(&str_2[len_2 - len], str, len);
+	free(str);
+	min_field = cal_min_field(s);
+	if (min_field > len)
+	{
+		str = (char *) malloc (min_field + 1);
+		if (!str)
+		{
+			free(str_2);
+			return (NULL);
+		}
+		ft_memset(str, ' ', min_field);
+		str[min_field] = '\0';
+		ft_memcpy(&str[min_field - len_2], str_2, len_2);
+                free(str_2);
+        }
+        else
+                return (str_2);
+        return (str);
+}
+
+char	*integer(char *s, va_list args)
+{
+        char    *str;
+	char	*str_2;
+	int		num;
+        size_t  min_field;
+        size_t  len;
+	size_t	len_2;
+	size_t	prec;
+
+	num = va_arg(args, int);
+	str = ft_itoa(num);
+	len = ft_strlen(str);
+	prec = 0;
+	if (ft_strcontains(s, '.'))
+		prec = cal_prec(s);
+	if (prec > len)
+	{
+		len_2 = prec;
+		str_2 = (char *) malloc (len_2 + 1);
+		if (!str_2)
+		{
+			free(str);
+			return (NULL);
+		}
+		ft_memset(str_2, '0', len_2);
+		str_2[len_2] = '\0';
+		if (num >= 0)
+			ft_memcpy(&str_2[len_2 - len], str, len);
+		else
+		{
+			str_2[0] = '-';
+			ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
+		}
+	}
+	else
+	{
+		len_2 = len;
+		str_2 = (char *) malloc (len_2 + 1);
+		if (!str_2)
+		{
+			free(str);
+			return (NULL);
+		}
+		ft_memcpy(str_2, str, len);
+		str_2[len_2] = '\0';
+	}
+	free(str);
+	str = str_2;
+	len = len_2;
+	if (ft_strcontains(s, '+') && (num > 0))
+        {
+		len_2 = len + 1;
+		str_2 = (char *) malloc (len_2 + 1);
+		if (!str_2)
+		{
+			free(str);
+			return (NULL);
+		}
+		str_2[0] = '+';
+		str_2[len_2] = '\0';
+		ft_memcpy(&str_2[1], str, len);
+		free(str);
+		str = str_2;
+		len = len_2;
+	}
+	else if (ft_strcontains(s, ' ') && (num > 0))
+	{
+		len_2 = len + 1;
+		str_2 = (char *) malloc (len_2 + 1);
+		if (!str_2)
+		{
+			free(str);
+			return (NULL);
+		}
+		str_2[0] = ' ';
+		str_2[len_2] = '\0';
+		ft_memcpy(&str_2[1], str, len);
+		free(str);
+		str = str_2;
+		len = len_2;
+	}
+	min_field = cal_min_field(s);
+	if (min_field > len)
+	{
+		len_2 = min_field;
+		if (ft_strcontains(s, '-'))
+		{
+			str_2 = (char *) malloc (len_2 + 1);
+			if (!str_2)
+			{
+				free(str);
+				return (NULL);
+			}
+			str_2[len_2] = '\0';
+			ft_memset(str_2, ' ', len_2);
+			ft_memcpy(str_2, str, len);
+		}
+		else if (ft_strcontains(s, '0') && !ft_strcontains(s, '.'))
+		{
+			str_2 = (char *) malloc (len_2 + 1);
+			if(!str_2)
+			{
+				free(str);
+				return (NULL);
+			}
+			str_2[len_2] = '\0';
+			ft_memset(str_2, '0', len_2);
+			if (num >= 0)
+				ft_memcpy(&str_2[len_2 - len], str, len);
+			else
+			{
+				str_2[0] = '-';
+				ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
+			}
+		}
+		else
+		{
+			str_2 = (char *) malloc (len_2 + 1);
+			if(!str_2)
+			{
+				free(str);
+				return (NULL);
+			}
+			str_2[len_2] = '\0';
+			ft_memset(str_2, ' ', len_2);
+			ft_memcpy(&str_2[len_2 - len], str, len);
+		}
+		free(str);
+		str = str_2;
+		len = len_2;
 	}
 	return (str);
 }
@@ -273,9 +455,11 @@ char	*arg_to_str(char *s, va_list args)
 	if (c == 's')
 		arg = string(s, args);
 	if (c == 'p')
-		arg = hexa_pointer(args);
-	if (c == 'd'|| c == 'i')
-		arg = ft_itoa(va_arg(args, int));
+		arg = hexa_pointer(s, args);
+	if (c == 'd')
+		arg = integer(s, args);
+	if (c == 'i')
+		arg = integer(s, args);
 	if (c == 'u')
 		arg = unsig_int(args);
 	if (x == 'x')

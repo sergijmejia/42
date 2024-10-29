@@ -2,7 +2,9 @@
 
 void	main()
 {
+	void	*ptr;
 	unsigned int	aux = 4294967281;
+	int	num = -254345;
 
-	printf("%x\n", aux);
+	printf("%15d\n", num);
 }
