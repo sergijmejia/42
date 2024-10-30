@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 14:16:14 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:57:49 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,7 @@ int		ft_countchar(const char *s, char c);
 int		ft_countwords(const char *s, char c);
 int		ft_intlen(int n, int base);
 int		ft_abs(int num);
+void	ft_putchar(char c);
+void	ft_putstr(char *str);
 
 #endif
