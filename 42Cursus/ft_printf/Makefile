@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/10/30 17:32:32 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/10/31 01:39:34 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ LIBS    = -L$(LIB_DIR) -lft
 all : $(TARGET)
 
 $(TARGET) : $(OBJS) $(MAKEFILE_LIST)
-	$(CC) $(OBJS) $(LIBS)-o $(TARGET)
+	$(CC) $(OBJS) $(LIBS) -o $(TARGET)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
