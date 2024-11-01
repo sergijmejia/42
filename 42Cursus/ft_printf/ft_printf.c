@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:13:03 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/01 03:34:34 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/01 13:49:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,7 @@ char	*integer(char *s, va_list args)
 	free(str);
 	str = str_2;
 	len = len_2;
-	if ((ft_strcontains(flags, '+') || ft_strcontains(flags, ' ')) && (num > 0))
+	if ((ft_strcontains(flags, '+') || ft_strcontains(flags, ' ')) && (num >= 0))
 	{
 		len_2 = len + 1;
 		str_2 = (char *) malloc (len_2 + 1);
@@ -416,12 +416,12 @@ char	*integer(char *s, va_list args)
 			}
 			str_2[len_2] = '\0';
 			ft_memset(str_2, '0', len_2);
-			if (ft_strcontains(flags, '+') && num > 0)
+			if (ft_strcontains(flags, '+') && num >= 0)
 			{
 				str_2[0] = '+';
 				ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
 			}
-			else if (ft_strcontains(flags, ' ') && num > 0)
+			else if (ft_strcontains(flags, ' ') && num >= 0)
 			{
 				str_2[0] = ' ';
 				ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
@@ -456,32 +456,45 @@ char	*integer(char *s, va_list args)
 char	*unsig_int(char *s, va_list args)
 {
 	unsigned int	num;
+	unsigned int	num_2;
 	char			*str;
 	char			*str_2;
+	char			*flags;
 	size_t			len;
 	size_t			len_2;
 	size_t			min_field;
 	int				prec;
 
 	//printf("\n__(entra en la funcion unsig_int)__\n");
+	flags = get_flags(s);
+	if (!flags)
+		return (NULL);
+	//printf("\n__(el string flags es: %s)__\n", flags);
 	num = va_arg(args, unsigned int);
+	//printf("\n__(num es: %u)__\n", num);
+	num_2 = num;
 	len = numlen((unsigned long long) num, 10);
+	//printf("\n__(el valor de len es: %d)__\n", (int) len);
 	str = (char *) malloc (len + 1);
 	if (str == NULL)
 		return (NULL);
 	str[len] = '\0';
-	while (num != 0)
+	if (num_2 == 0)
+		str[0] = 0;
+	while (num_2 != 0)
 	{
-		str[len - 1] = (num % 10) + '0';
-		num = num / 10;
+		str[len - 1] = (num_2 % 10) + '0';
+		num_2 = num_2 / 10;
 		len--;
 	}
 	len = ft_strlen(str);
+	//printf("\n__(el string str es: %s. len es: %d)__\n", str, (int) len);
 	prec = -1;
 	if (ft_strcontains(s, '.'))
 		prec = (int) cal_prec(s);
 	if (prec > (int) len)
 	{
+		//printf("\n__(entra en la condicion prec > len con: %d > %d)__\n", prec, (int) len);
 		len_2 = (size_t) prec;
 		str_2 = (char *) malloc (len_2 + 1);
 		if (!str_2)
@@ -507,6 +520,7 @@ char	*unsig_int(char *s, va_list args)
 	else
 	{
 		len_2 = len;
+		//printf("\n__(len_2 es: %d)__\n", (int) len_2);
 		str_2 = (char *) malloc (len_2 + 1);
 		if (!str_2)
 		{
@@ -522,8 +536,9 @@ char	*unsig_int(char *s, va_list args)
 	min_field = cal_min_field(s);
 	if (min_field > len)
 	{
+		//printf("\n__(entra en la condicion min_field > len con: %d > %d)__\n", (int) min_field, (int) len);
 		len_2 = min_field;
-		if (ft_strcontains(s, '-'))
+		if (ft_strcontains(flags, '-'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -535,7 +550,7 @@ char	*unsig_int(char *s, va_list args)
 			ft_memset(str_2, ' ', len_2);
 			ft_memcpy(str_2, str, len);
 		}
-		else if (ft_strcontains(s, '0') && !ft_strcontains(s, '.'))
+		else if (ft_strcontains(flags, '0') && !ft_strcontains(s, '.'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -549,6 +564,7 @@ char	*unsig_int(char *s, va_list args)
 		}
 		else
 		{
+			//printf("\n__(entra en a condicion para completar los ' ')__\n");
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
 			{
@@ -572,6 +588,7 @@ char	*hexa_num_lower(char *s, va_list args)
 	unsigned int	temp_num;
 	char			*str;
 	char			*str_2;
+	char			*flags;
 	char			hexa[17];
 	size_t			len;
 	size_t			len_2;
@@ -579,6 +596,9 @@ char	*hexa_num_lower(char *s, va_list args)
 	int				prec;
 
 	//printf("\n__(entra en la funcion hexa_num_lower)__\n");
+	flags = get_flags(s);
+	if (!flags)
+		return (NULL);
 	num = va_arg(args, unsigned int);
 	ft_strlcpy(hexa, "0123456789abcdef", 17);
 	len = (size_t) numlen(num, 16);
@@ -638,7 +658,7 @@ char	*hexa_num_lower(char *s, va_list args)
 	free (str);
 	len = len_2;
 	str = str_2;
-	if (ft_strcontains(s, '#') && (prec != 0))
+	if (ft_strcontains(flags, '#') && (prec != 0) && (num != 0))
 	{
 		len_2 = len + 2;
 		str_2 = (char *) malloc (len_2 + 1);
@@ -659,7 +679,7 @@ char	*hexa_num_lower(char *s, va_list args)
 	if (min_field > len)
 	{
 		len_2 = min_field;
-		if (ft_strcontains(s, '-'))
+		if (ft_strcontains(flags, '-'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -671,7 +691,7 @@ char	*hexa_num_lower(char *s, va_list args)
 			ft_memset(str_2, ' ', len_2);
 			ft_memcpy(str_2, str, len);
 		}
-		else if (ft_strcontains(s, '0') && !ft_strcontains(s, '.'))
+		else if (ft_strcontains(flags, '0') && !ft_strcontains(s, '.'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -681,14 +701,14 @@ char	*hexa_num_lower(char *s, va_list args)
 			}
 			str_2[len_2] = '\0';
 			ft_memset(str_2, '0', len_2);
-			if (!ft_strcontains(s, '#'))
-				ft_memcpy(&str_2[len_2 - len], str, len);
-			else
+			if (ft_strcontains(flags, '#') && num != 0)
 			{
 				str_2[0] = '0';
 				str_2[1] = 'x';
 				ft_memcpy(&str_2[len_2 - len + 2], &str[2], len - 2);
 			}
+			else
+				ft_memcpy(&str_2[len_2 - len], str, len);
 		}
 		else
 		{
@@ -827,7 +847,7 @@ int	main()
 	char			c = 'c';
 	char			*s = "Hola mundo";
 	void			*p = s;
-	int				d = 25025;
+	int				d = 0;
 	unsigned int	u = 123456;
 	unsigned int	x = 654321;
 
@@ -840,20 +860,20 @@ int	main()
 	printf("Lo que imprime    printf para p es: %-20p. Esto es para ver si termina donde debe.\n", p);
 	ft_printf("Lo que imprime ft_printf para p es: %-20p. Esto es para ver si termina donde debe.\n", p);
 	printf("\n");
-	printf("Lo que imprime    printf para d es: %+-15.10d. Esto es para ver si termina donde debe.\n", d);
-	ft_printf("Lo que imprime ft_printf para d es: %+-15.10d. Esto es para ver si termina donde debe.\n", d);
+	printf("Lo que imprime    printf para d es: %15.10d. Esto es para ver si termina donde debe.\n", d);
+	ft_printf("Lo que imprime ft_printf para d es: %15.10d. Esto es para ver si termina donde debe.\n", d);
 	printf("\n");
 	printf("Lo que imprime    printf para i es: %+-15.10i. Esto es para ver si termina donde debe.\n", d);
 	ft_printf("Lo que imprime ft_printf para i es: %+-15.10i. Esto es para ver si termina donde debe.\n", d);
 	printf("\n");
-	printf("Lo que imprime    printf para u es: %u. Esto es para ver si termina donde debe.\n", u);
-	ft_printf("Lo que imprime ft_printf para u es: %u. Esto es para ver si termina donde debe.\n", u);
+	printf("Lo que imprime    printf para u es: %-20.10u. Esto es para ver si termina donde debe.\n", u);
+	ft_printf("Lo que imprime ft_printf para u es: %-20.10u. Esto es para ver si termina donde debe.\n", u);
 	printf("\n");
-	printf("Lo que imprime    printf para x es: %x. Esto es para ver si termina donde debe.\n", x);
-	ft_printf("Lo que imprime ft_printf para x es: %x. Esto es para ver si termina donde debe.\n", x);
+	printf("Lo que imprime    printf para x es: %#20.10x. Esto es para ver si termina donde debe.\n", x);
+	ft_printf("Lo que imprime ft_printf para x es: %#20.10x. Esto es para ver si termina donde debe.\n", x);
 	printf("\n");
-	printf("Lo que imprime    printf para X es: %X. Esto es para ver si termina donde debe.\n", x);
-	ft_printf("Lo que imprime ft_printf para X es: %X. Esto es para ver si termina donde debe.\n", x);
+	printf("Lo que imprime    printf para X es: %#X. Esto es para ver si termina donde debe.\n", x);
+	ft_printf("Lo que imprime ft_printf para X es: %#X. Esto es para ver si termina donde debe.\n", x);
 	printf("\n");
 	printf("Lo que imprime    printf para doble porcentaje es: %%. Esto es para ver si termina donde debe.\n");
 	ft_printf("Lo que imprime ft_printf para doble porcentaje es: %%. Esto es para ver si termina donde debe.\n");
