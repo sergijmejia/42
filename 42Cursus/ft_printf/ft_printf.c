@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:13:03 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/31 03:23:34 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/01 03:34:34 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ size_t	cal_min_field(char *s)
 	return (min_field);
 }
 
-/*FUNCIONES PARA SABER SI CONTIENE LAS FLAGS*/
+/*FUNCION PARA SABER SI CONTIENE LAS FLAGS*/
 
 int	flag(char *s, char c)
 {
@@ -149,6 +149,26 @@ int	flag(char *s, char c)
 		s++;
 	}
 	return (0);
+}
+
+/*FUNCION PARA OBTENER LAS FLAGS*/
+
+char	*get_flags(char *s)
+{
+	char	*flags;
+	size_t	len;
+
+	//printf("\n__(entra en la funcion get_flags)__\n");
+	len = 0;
+	while (ft_strcontains("-0# +", s[len]))
+		len++;
+	flags = (char *) malloc (len + 1);
+	if (!flags)
+		return (NULL);
+	flags[len] = '\0';
+	if (len != 0)
+		ft_memcpy(flags, s, len);
+	return (flags);
 }
 
 /*FUNCIONES PARA IDENTFICAR EL TIPO DE ARGUMENTO A IMPRIMIR*/
@@ -229,7 +249,6 @@ char	*hexa_pointer(char *s, va_list args)
 	char				hexa[17];
 	size_t				len;
 	size_t				len_2;
-	size_t				min_field;
 
 	//printf("\n__(entra en la funcion hexa_pointer)__\n");
 	pnt = va_arg(args, void *);
@@ -249,14 +268,7 @@ char	*hexa_pointer(char *s, va_list args)
 		num_pnt = num_pnt / 16;
 	}
 	len = ft_strlen(str);
-	if (ft_strcontains(s, '.'))
-		len_2 = cal_prec(s);
-	else
-		len_2 = len;
-	if (len_2 > len)
-		len_2 = len_2 + 2;
-	else
-		len_2 = len + 2;
+	len_2 = len + 2;
 	str_2 = (char *) malloc (len_2 + 1);
 	if (!str_2)
 	{
@@ -270,18 +282,21 @@ char	*hexa_pointer(char *s, va_list args)
 	free(str);
 	str = str_2;
 	len = len_2;
-	min_field = cal_min_field(s);
-	if (min_field > len)
+	len_2 = cal_min_field(s);
+	if (len_2 > len)
 	{
-		str_2 = (char *) malloc (min_field + 1);
+		str_2 = (char *) malloc (len_2 + 1);
 		if (!str_2)
 		{
 			free(str);
 			return (NULL);
 		}
-		ft_memset(str_2, ' ', min_field);
-		str_2[min_field] = '\0';
-		ft_memcpy(&str_2[min_field - len], str, len);
+		str_2[len_2] = '\0';
+		ft_memset(str_2, ' ', len_2);
+		if (ft_strcontains(s, '-'))
+			ft_memcpy(str_2, str, len);
+		else
+			ft_memcpy(&str_2[len_2 - len], str, len);
 		free(str);
 		str = str_2;
 	}
@@ -292,6 +307,7 @@ char	*integer(char *s, va_list args)
 {
 	char	*str;
 	char	*str_2;
+	char	*flags;
 	int		num;
 	size_t	min_field;
 	size_t	len;
@@ -299,6 +315,9 @@ char	*integer(char *s, va_list args)
 	int		prec;
 
 	//printf("\n__(entra en la funcion integer)__\n");
+	flags = get_flags(s);
+	if (!flags)
+		return (NULL);
 	num = va_arg(args, int);
 	str = ft_itoa(num);
 	len = ft_strlen(str);
@@ -308,6 +327,8 @@ char	*integer(char *s, va_list args)
 	if (prec > (int) len)
 	{
 		len_2 = (size_t) prec;
+		if (num < 0)
+			len_2++;
 		str_2 = (char *) malloc (len_2 + 1);
 		if (!str_2)
 		{
@@ -350,7 +371,7 @@ char	*integer(char *s, va_list args)
 	free(str);
 	str = str_2;
 	len = len_2;
-	if (ft_strcontains(s, '+') && (num > 0))
+	if ((ft_strcontains(flags, '+') || ft_strcontains(flags, ' ')) && (num > 0))
 	{
 		len_2 = len + 1;
 		str_2 = (char *) malloc (len_2 + 1);
@@ -359,23 +380,10 @@ char	*integer(char *s, va_list args)
 			free(str);
 			return (NULL);
 		}
-		str_2[0] = '+';
-		str_2[len_2] = '\0';
-		ft_memcpy(&str_2[1], str, len);
-		free(str);
-		str = str_2;
-		len = len_2;
-	}
-	else if (ft_strcontains(s, ' ') && (num > 0))
-	{
-		len_2 = len + 1;
-		str_2 = (char *) malloc (len_2 + 1);
-		if (!str_2)
-		{
-			free(str);
-			return (NULL);
-		}
-		str_2[0] = ' ';
+		if (ft_strcontains(flags, '+'))
+			str_2[0] = '+';
+		else
+			str_2[0] = ' ';
 		str_2[len_2] = '\0';
 		ft_memcpy(&str_2[1], str, len);
 		free(str);
@@ -386,7 +394,7 @@ char	*integer(char *s, va_list args)
 	if (min_field > len)
 	{
 		len_2 = min_field;
-		if (ft_strcontains(s, '-'))
+		if (ft_strcontains(flags, '-'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -398,7 +406,7 @@ char	*integer(char *s, va_list args)
 			ft_memset(str_2, ' ', len_2);
 			ft_memcpy(str_2, str, len);
 		}
-		else if (ft_strcontains(s, '0') && !ft_strcontains(s, '.'))
+		else if (ft_strcontains(flags, '0') && !ft_strcontains(s, '.'))
 		{
 			str_2 = (char *) malloc (len_2 + 1);
 			if (!str_2)
@@ -408,7 +416,17 @@ char	*integer(char *s, va_list args)
 			}
 			str_2[len_2] = '\0';
 			ft_memset(str_2, '0', len_2);
-			if (num >= 0)
+			if (ft_strcontains(flags, '+') && num > 0)
+			{
+				str_2[0] = '+';
+				ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
+			}
+			else if (ft_strcontains(flags, ' ') && num > 0)
+			{
+				str_2[0] = ' ';
+				ft_memcpy(&str_2[len_2 - len + 1], &str[1], len - 1);
+			}
+			else if (num >= 0)
 				ft_memcpy(&str_2[len_2 - len], str, len);
 			else
 			{
@@ -816,17 +834,17 @@ int	main()
 	printf("Lo que imprime    printf para c es: %-10c. Esto es para ver si termina donde debe.\n", c);
 	ft_printf("Lo que imprime ft_printf para c es: %-10c. Esto es para ver si termina donde debe.\n", c);
 	printf("\n");
-	printf("Lo que imprime    printf para s es: %-5.20s. Esto es para ver si termina donde debe.\n", s);
-	ft_printf("Lo que imprime ft_printf para s es: %-5.20s. Esto es para ver si termina donde debe.\n", s);
+	printf("Lo que imprime    printf para s es: %-20.5s. Esto es para ver si termina donde debe.\n", s);
+	ft_printf("Lo que imprime ft_printf para s es: %-20.5s. Esto es para ver si termina donde debe.\n", s);
 	printf("\n");
-	printf("Lo que imprime    printf para p es: %p. Esto es para ver si termina donde debe.\n", p);
-	ft_printf("Lo que imprime ft_printf para p es: %p. Esto es para ver si termina donde debe.\n", p);
+	printf("Lo que imprime    printf para p es: %-20p. Esto es para ver si termina donde debe.\n", p);
+	ft_printf("Lo que imprime ft_printf para p es: %-20p. Esto es para ver si termina donde debe.\n", p);
 	printf("\n");
-	printf("Lo que imprime    printf para d es: %d. Esto es para ver si termina donde debe.\n", d);
-	ft_printf("Lo que imprime ft_printf para d es: %d. Esto es para ver si termina donde debe.\n", d);
+	printf("Lo que imprime    printf para d es: %+-15.10d. Esto es para ver si termina donde debe.\n", d);
+	ft_printf("Lo que imprime ft_printf para d es: %+-15.10d. Esto es para ver si termina donde debe.\n", d);
 	printf("\n");
-	printf("Lo que imprime    printf para i es: %i. Esto es para ver si termina donde debe.\n", d);
-	ft_printf("Lo que imprime ft_printf para i es: %i. Esto es para ver si termina donde debe.\n", d);
+	printf("Lo que imprime    printf para i es: %+-15.10i. Esto es para ver si termina donde debe.\n", d);
+	ft_printf("Lo que imprime ft_printf para i es: %+-15.10i. Esto es para ver si termina donde debe.\n", d);
 	printf("\n");
 	printf("Lo que imprime    printf para u es: %u. Esto es para ver si termina donde debe.\n", u);
 	ft_printf("Lo que imprime ft_printf para u es: %u. Esto es para ver si termina donde debe.\n", u);
@@ -840,7 +858,6 @@ int	main()
 	printf("Lo que imprime    printf para doble porcentaje es: %%. Esto es para ver si termina donde debe.\n");
 	ft_printf("Lo que imprime ft_printf para doble porcentaje es: %%. Esto es para ver si termina donde debe.\n");
 	printf("Lo que imprime    printf para c es: %c. El segundo argumento d: %d.\n", c, d);
-        ft_printf("Lo que imprime ft_printf para c es: %c. El segundo argumento d: %d.\n", c, d);
-	return(0);
+	ft_printf("Lo que imprime ft_printf para c es: %c. El segundo argumento d: %d.\n", c, d);
+	return (0);
 }
-
