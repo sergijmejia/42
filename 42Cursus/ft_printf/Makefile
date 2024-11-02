@@ -14,7 +14,7 @@ TARGET	= ft_printf
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
-OBJS	= $(OBJ_DIR)/ft_printf.o     
+OBJS	= $(OBJ_DIR)/ft_printf_all.o     
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR) -g
 CC	= cc
