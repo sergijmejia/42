@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 00:12:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 00:12:53 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:09:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 size_t	ft_cal_prec(char *s)
 {

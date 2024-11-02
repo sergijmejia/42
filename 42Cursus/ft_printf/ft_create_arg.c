@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:37:19 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/01 17:37:19 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 14:39:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 static char	*cpy_arg(char *s)
 {
@@ -56,21 +58,21 @@ static char	*create_print_arg(char *s, va_list args)
 
 	c = s[ft_strlen(s) - 1];
 	if (c == 'c')
-		arg = character(s, args);
+		arg = ft_character(s, args);
 	if (c == 's')
-		arg = string(s, args);
+		arg = ft_string(s, args);
 	if (c == 'p')
-		arg = hexa_pointer(s, args);
+		arg = ft_hexa_pointer(s, args);
 	if (c == 'd')
-		arg = integer(s, args);
+		arg = ft_integer(s, args);
 	if (c == 'i')
-		arg = integer(s, args);
+		arg = ft_integer(s, args);
 	if (c == 'u')
-		arg = unsig_int(s, args);
+		arg = ft_unsig_int(s, args);
 	if (c == 'x')
-		arg = hexa_num_lower(s, args);
+		arg = ft_hexa_num_lower(s, args);
 	if (c == 'X')
-		arg = hexa_num_upper(s, args);
+		arg = ft_hexa_num_upper(s, args);
 	return (arg);
 }
 

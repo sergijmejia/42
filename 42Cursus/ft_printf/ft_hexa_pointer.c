@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 01:35:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:07:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 static char	*create_hexa_str(unsigned long long num)
 {
@@ -27,10 +29,10 @@ static char	*create_hexa_str(unsigned long long num)
 	while (num != 0)
 	{
 		new_str[new_len - 1] = hexa[num % 16];
-		len--;
+		new_len--;
 		num = num / 16;
 	}
-	return (str);
+	return (new_str);
 }
 
 static char	*add_0x_hexa(char *str)
@@ -73,7 +75,7 @@ static char	*apply_min_field(char *s, char *str)
 	return (new_str);
 }
 
-char	*hexa_pointer(char *s, va_list args)
+char	*ft_hexa_pointer(char *s, va_list args)
 {
 	unsigned long long	num_pnt;
 	void				*pnt;

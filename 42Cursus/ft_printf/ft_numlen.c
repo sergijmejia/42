@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 00:09:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 00:09:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:34:45 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 int	ft_numlen(unsigned long long n, int base)
 {

@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 02:15:10 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 02:15:10 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:11:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 static char	*apply_zero_prec(char *str, int num, size_t len, int prec)
 {
@@ -62,7 +64,7 @@ static char	*apply_precision(char *str, int num, int prec)
 	return (new_str);
 }
 
-char	*apply_signal(char *str, char *s, int num)
+static char	*apply_signal(char *str, char *s, int num)
 {
 	char	*new_str;
 	size_t	new_len;
@@ -109,12 +111,12 @@ static void	apply_zero_signal(char *new_str, char *str, char *s, int num)
 	}
 	else
 	{
-		str_2[0] = '-';
+		new_str[0] = '-';
 		ft_memcpy(&new_str[new_len - len + 1], &str[1], len - 1);
 	}
 }
 
-char	*apply_min_field(char *str, char *s, int n, size_t min_field)
+static char	*apply_min_field(char *str, char *s, int num, size_t min_field)
 {
 	char	*new_str;
 	char	c;
@@ -134,7 +136,7 @@ char	*apply_min_field(char *str, char *s, int n, size_t min_field)
 		if (ft_flag(s, '-'))
 			ft_memcpy(new_str, str, len);
 		else if (c == 0)
-			apply_zero_signal(new_str, str, s, n);
+			apply_zero_signal(new_str, str, s, num);
 		else
 			ft_memcpy(&new_str[min_field - len], str, len);
 	}
@@ -157,7 +159,7 @@ char	*ft_integer(char *s, va_list args)
 		return (NULL);
 	prec = -1;
 	if (ft_strcontains(s, '.'))
-		prec = (int) cal_precs(s);
+		prec = (int) ft_cal_prec(s);
 	str_2 = apply_precision(str, num, prec);
 	free(str);
 	if (!str_2)
@@ -167,7 +169,7 @@ char	*ft_integer(char *s, va_list args)
 	if (!str)
 		return (NULL);
 	min_field = ft_cal_min_field(s);
-	str_2 = apply_min_field(str, s, num, min_field, ft_strlen(str));
+	str_2 = apply_min_field(str, s, num, min_field);
 	free(str);
 	return (str_2);
 }

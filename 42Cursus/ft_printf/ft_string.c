@@ -6,9 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 01:35:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:00:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_printf.h"
 
 static char	*apply_precision(char *s, char *str)
 {
