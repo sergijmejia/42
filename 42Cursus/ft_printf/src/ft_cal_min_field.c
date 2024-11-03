@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_flag.c                                          :+:      :+:    :+:   */
+/*   ft_cal_min_field.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 00:06:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 14:52:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/02 14:40:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-int	ft_flag(char *s, char c)
+size_t	ft_cal_min_field(char *s)
 {
-	while (!ft_strcontains(".123456789cspdiuxX", *s))
+	size_t	min_field;
+
+	min_field = 0;
+	while (ft_strcontains("-0# +", *s))
+		s++;
+	while (ft_isdigit(*s))
 	{
-		if (*s == c)
-			return (1);
+		min_field = min_field * 10 + (*s - '0');
 		s++;
 	}
-	return (0);
+	return (min_field);
 }

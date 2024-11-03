@@ -10,40 +10,26 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= libftprintf.a
+TARGET	= test
 OBJ_DIR	= ./obj
-INC_DIR	= ./inc
-SRC_DIR	= ./src
-LIB_DIR = ./lib
-OBJS	= $(OBJ_DIR)/ft_printf.o        	\
-          $(OBJ_DIR)/ft_cal_min_field.o 	\
-	  $(OBJ_DIR)/ft_create_arg.o    	\
-          $(OBJ_DIR)/ft_hexa_pointer.o 	  	\
-          $(OBJ_DIR)/ft_cal_prec.o   	    	\
-          $(OBJ_DIR)/ft_flag.o 		   	\
-          $(OBJ_DIR)/ft_integer.o           	\
-          $(OBJ_DIR)/ft_character.o         	\
-          $(OBJ_DIR)/ft_hexa_num_lower.o    	\
-          $(OBJ_DIR)/ft_numlen.o    		\
-          $(OBJ_DIR)/ft_string.o 		\
-          $(OBJ_DIR)/ft_count_arg_len.o    	\
-          $(OBJ_DIR)/ft_hexa_num_upper.o 	\
-          $(OBJ_DIR)/ft_unsig_int.o		\
-	  $(OBJ_DIR)/ft_integer_2.o
+INC_DIR	= .
+SRC_DIR	= .
+OBJS	= $(OBJ_DIR)/test.o
 
 
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR) -g
 CC	= cc
 
-LIBS    = -L$(LIB_DIR) -lft
+LIB_DIR = .
+LIBS    = -L$(LIB_DIR) -lftprintf -lft
 
 .PHONY : all clean fclean re
 
 all : $(TARGET)
 
 $(TARGET) : $(OBJS) $(MAKEFILE_LIST)
-	ar rcs $(TARGET) $(OBJS)
+	$(CC) $(OBJS) $(LIBS) -o $(TARGET)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)

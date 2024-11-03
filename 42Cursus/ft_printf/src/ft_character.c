@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cal_prec.c                                      :+:      :+:    :+:   */
+/*   ft_character.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 00:12:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:09:02 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 00:52:17 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/11/02 14:42:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-size_t	ft_cal_prec(char *s)
+char	*ft_character(char *s, va_list args)
 {
 	char	*str;
-	size_t	prec;
+	size_t	min_field;
+	size_t	len;
 
-	prec = 0;
-	if (ft_strcontains(s, '.'))
-	{
-		str = ft_strrchr(s, '.') + 1;
-		while (ft_isdigit(*str))
-		{
-			prec = prec * 10 + (*str - '0');
-			str++;
-		}
-	}
-	return (prec);
+	min_field = ft_cal_min_field(s);
+	if (ft_flag(s, '-') && (min_field > 1))
+		len = min_field;
+	else
+		len = 1;
+	str = (char *) malloc (len + 1);
+	if (!str)
+		return (NULL);
+	ft_memset(str, ' ', len);
+	str[0] = (char) va_arg(args, int);
+	str[len] = '\0';
+	return (str);
 }

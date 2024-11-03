@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_numlen.c                                        :+:      :+:    :+:   */
+/*   ft_count_arg_len.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 00:09:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:34:45 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 00:06:32 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/11/02 14:44:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-int	ft_numlen(unsigned long long n, int base)
+size_t	ft_count_arg_len(char *s)
 {
-	int	len;
+	size_t	len;
 
 	len = 0;
-	if (n == 0)
-		return (1);
-	while (n != 0)
+	while (*s && ft_strcontains("-0.# +123456789", *s))
 	{
-		n = n / base;
 		len++;
+		s++;
+	}
+	if (*s && ft_strcontains("cspdiuxX", *s))
+	{
+		len++;
+		s++;
 	}
 	return (len);
 }

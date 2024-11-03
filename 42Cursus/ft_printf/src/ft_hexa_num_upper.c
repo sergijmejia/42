@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_count_arg_len.c                                 :+:      :+:    :+:   */
+/*   ft_hexa_num_upper.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 00:06:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 14:44:02 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 13:24:38 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/11/02 15:35:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-size_t	ft_count_arg_len(char *s)
+char	*ft_hexa_num_upper(char *s, va_list args)
 {
-	size_t	len;
+	char	*str;
 
-	len = 0;
-	while (*s && ft_strcontains("-0.# +123456789", *s))
-	{
-		len++;
-		s++;
-	}
-	if (*s && ft_strcontains("cspdiuxX", *s))
-	{
-		len++;
-		s++;
-	}
-	return (len);
+	str = ft_hexa_num_lower(s, args);
+	if (!str)
+		return (NULL);
+	ft_strtoupper(str);
+	return (str);
 }

@@ -1,56 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unsig_int.c                                     :+:      :+:    :+:   */
+/*   ft_integer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 12:32:38 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:39:11 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 02:15:10 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/11/02 15:11:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-static char	*create_unsigned_int(unsigned int num)
+static char	*apply_zero_prec(char *str, int num, size_t len, int prec)
 {
 	char	*new_str;
 	size_t	new_len;
 
-	new_len = (size_t) ft_numlen((unsigned long long) num, 10);
-	new_str = (char *) malloc (new_len + 1);
-	if (!new_str)
-		return (NULL);
-	new_str[new_len] = '\0';
-	if (num == 0)
-		new_str[new_len - 1] = '0';
-	while (num != 0)
-	{
-		new_str[new_len - 1] = (num % 10) + '0';
-		new_len--;
-		num = num / 10;
-	}
-	return (new_str);
-}
-
-static char	*apply_zero_prec(char *str, int prec)
-{
-	char	*new_str;
-	size_t	new_len;
-	size_t	len;
-
-	len = ft_strlen(str);
 	new_len = (size_t) prec;
+	if (num < 0)
+		new_len++;
 	new_str = (char *) malloc (new_len + 1);
 	if (!new_str)
 		return (NULL);
 	ft_memset(new_str, '0', new_len);
 	new_str[new_len] = '\0';
-	ft_memcpy(&new_str[new_len - len], str, len);
+	if (num >= 0)
+		ft_memcpy(&new_str[new_len - len], str, len);
+	else
+	{
+		new_str[0] = '-';
+		ft_memcpy(&new_str[new_len - len + 1], &str[1], len - 1);
+	}
 	return (new_str);
 }
 
-static char	*apply_precision(char *str, unsigned int num, int prec)
+static char	*apply_precision(char *str, int num, int prec)
 {
 	char	*new_str;
 	size_t	len;
@@ -58,7 +43,7 @@ static char	*apply_precision(char *str, unsigned int num, int prec)
 	len = ft_strlen(str);
 	if (prec > (int) len)
 	{
-		new_str = apply_zero_prec(str, prec);
+		new_str = apply_zero_prec(str, num, len, prec);
 		if (!new_str)
 			return (NULL);
 	}
@@ -79,43 +64,41 @@ static char	*apply_precision(char *str, unsigned int num, int prec)
 	return (new_str);
 }
 
-static char	*apply_min_field(char *str, char *s, size_t min_field)
+static char	*apply_signal(char *str, char *s, int num)
 {
 	char	*new_str;
-	char	c;
+	size_t	new_len;
 	size_t	len;
 
 	len = ft_strlen(str);
-	if (min_field > len)
+	if ((ft_flag(s, '+') || ft_flag(s, ' ')) && (num >= 0))
 	{
-		new_str = (char *) malloc (min_field + 1);
+		new_len = len + 1;
+		new_str = (char *) malloc (new_len + 1);
 		if (!new_str)
 			return (NULL);
-		new_str[min_field] = '\0';
-		c = ' ';
-		if (ft_flag(s, '0') && !ft_strcontains(s, '.'))
-			c = '0';
-		ft_memset(new_str, c, min_field);
-		if (ft_flag(s, '-'))
-			ft_memcpy(new_str, str, len);
+		if (ft_flag(s, '+'))
+			new_str[0] = '+';
 		else
-			ft_memcpy(&new_str[min_field - len], str, len);
+			new_str[0] = ' ';
+		new_str[new_len] = '\0';
+		ft_memcpy(&new_str[1], str, len);
 	}
 	else
 		new_str = ft_strdup(str);
 	return (new_str);
 }
 
-char	*ft_unsig_int(char *s, va_list args)
+char	*ft_integer(char *s, va_list args)
 {
-	unsigned int	num;
-	char			*str;
-	char			*str_2;
-	size_t			min_field;
-	int				prec;
+	char	*str;
+	char	*str_2;
+	size_t	min_field;
+	int		num;
+	int		prec;
 
-	num = va_arg(args, unsigned int);
-	str = create_unsigned_int(num);
+	num = va_arg(args, int);
+	str = ft_itoa(num);
 	if (!str)
 		return (NULL);
 	prec = -1;
@@ -125,8 +108,12 @@ char	*ft_unsig_int(char *s, va_list args)
 	free(str);
 	if (!str_2)
 		return (NULL);
-	min_field = ft_cal_min_field(s);
-	str = apply_min_field(str_2, s, min_field);
+	str = apply_signal(str_2, s, num);
 	free(str_2);
-	return (str);
+	if (!str)
+		return (NULL);
+	min_field = ft_cal_min_field(s);
+	str_2 = ft_apply_min_field_int(str, s, num, min_field);
+	free(str);
+	return (str_2);
 }

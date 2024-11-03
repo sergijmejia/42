@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
 static char	*create_hexa_str(unsigned int num)
 {
@@ -48,7 +48,10 @@ static char	*apply_precision(char *str, unsigned int num, int prec)
 			return (NULL);
 		new_str[prec] = '\0';
 		if (prec != 0)
+		{
+			ft_memset(new_str, '0', prec);
 			ft_memcpy(&new_str[prec - len], str, len);
+		}
 	}
 	else
 	{

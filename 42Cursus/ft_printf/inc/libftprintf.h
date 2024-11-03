@@ -13,9 +13,9 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-#include <stdarg.h>
-#include "libft.h"
-#include <stdio.h>
+# include <stdarg.h>
+# include "libft.h"
+# include <stdio.h>
 
 int		ft_printf(char *s, ...);
 
@@ -34,4 +34,5 @@ char	*ft_unsig_int(char *s, va_list args);
 char	*ft_hexa_num_lower(char *s, va_list args);
 char	*ft_hexa_num_upper(char *s, va_list args);
 
+char	*ft_apply_min_field_int(char *str, char *s, int num, size_t min_field);
 #endif
