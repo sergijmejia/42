@@ -12,7 +12,7 @@
 
 #include "libftprintf.h"
 
-static char	*cpy_arg(char *s)
+static char	*cpy_arg(const char *s)
 {
 	size_t	len;
 	char	*arg;
@@ -76,7 +76,7 @@ static char	*create_print_arg(char *s, va_list args)
 	return (arg);
 }
 
-char	*ft_create_arg(char *s, va_list args)
+char	*ft_create_arg(const char *s, va_list args)
 {
 	char	*str;
 	char	*print;

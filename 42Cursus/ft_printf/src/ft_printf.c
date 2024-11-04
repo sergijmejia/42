@@ -12,21 +12,21 @@
 
 #include "libftprintf.h"
 
-static int	literal_char(char **s)
+static int	literal_char(const char **s)
 {
 	ft_putchar(**s);
 	(*s)++;
 	return (1);
 }
 
-static int	double_percent(char **s)
+static int	double_percent(const char **s)
 {
 	ft_putchar(**s);
 	*s = *s + 2;
 	return (1);
 }
 
-static int	argument(char **s, va_list args)
+static int	argument(const char **s, va_list args)
 {
 	char	*arg;
 	int		printed;
@@ -44,7 +44,7 @@ static int	argument(char **s, va_list args)
 	return (printed);
 }
 
-int	ft_printf(char *s, ...)
+int	ft_printf(const char *s, ...)
 {
 	va_list	args;
 	int		printed;

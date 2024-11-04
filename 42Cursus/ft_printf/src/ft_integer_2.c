@@ -58,7 +58,7 @@ char	*ft_apply_min_field_int(char *str, char *s, int num, size_t min_field)
 		ft_memset(new_str, c, min_field);
 		if (ft_flag(s, '-'))
 			ft_memcpy(new_str, str, len);
-		else if (c == 0)
+		else if (c == '0')
 			apply_zero_signal(new_str, str, s, num);
 		else
 			ft_memcpy(&new_str[min_field - len], str, len);

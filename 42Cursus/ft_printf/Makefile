@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= libftprintf.a
+NAME	= libftprintf.a
 OBJ_DIR	= ./obj
 INC_DIR	= ./inc
 SRC_DIR	= ./src
@@ -40,10 +40,10 @@ LIBS    = -L$(LIB_DIR) -lft
 
 .PHONY : all clean fclean re
 
-all : $(TARGET)
+all : $(NAME)
 
-$(TARGET) : $(OBJS) $(MAKEFILE_LIST)
-	ar rcs $(TARGET) $(OBJS)
+$(NAME) : $(OBJS) $(MAKEFILE_LIST)
+	ar rcs $(NAME) $(OBJS)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
@@ -56,7 +56,7 @@ clean:
 
 fclean:
 	$(MAKE) clean
-	rm -f $(TARGET)
+	rm -f $(NAME)
 
 re:
 	$(MAKE) fclean

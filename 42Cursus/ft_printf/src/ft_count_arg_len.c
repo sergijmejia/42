@@ -12,7 +12,7 @@
 
 #include "libftprintf.h"
 
-size_t	ft_count_arg_len(char *s)
+size_t	ft_count_arg_len(const char *s)
 {
 	size_t	len;
 

@@ -56,14 +56,14 @@ int	main()
         printed_ft_printf = ft_printf("Diferentes casos de i = 20025 con ft_printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d, d, d, d, d, d, d, d, d, d, d);
         ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
         printf("\n");
-        printed_printf = printf("Diferentes casos de d = 0 con    printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0);
+        printed_printf = printf("Diferentes casos de i = 0 con    printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0);
         printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-        printed_ft_printf = ft_printf("Diferentes casos de d = 0 con ft_printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-d: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0);
+        printed_ft_printf = ft_printf("Diferentes casos de i = 0 con ft_printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-d: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0, d_0);
         ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
         printf("\n");
-        printed_printf = printf("Diferentes casos de d = -3704998 con    printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n);
+        printed_printf = printf("Diferentes casos de i = -3704998 con    printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n);
         printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-        printed_ft_printf = ft_printf("Diferentes casos de d = -3704998 con ft_printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n);
+        printed_ft_printf = ft_printf("Diferentes casos de i = -3704998 con ft_printf: %%i: %i , %%15i: %15i , %%015i: %015i , %%0+15i: %0+15i , %%0 15i: %0 15i , %%15.10i: %15.10i , %%-i: %-i , %%-15i: %-15i , %%-15.10i: %-15.10i , %%-+15.10i: %-+15.10i , %%- 15.10i: %- 15.10i.", d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n, d_n);
 	ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
         printf("\n");
 
