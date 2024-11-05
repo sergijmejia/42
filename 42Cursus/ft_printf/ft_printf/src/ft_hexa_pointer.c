@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:07:32 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:48:23 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,19 @@ static char	*create_hexa_str(unsigned long long num)
 	char	hexa[17];
 	size_t	new_len;
 
+	if (num == 0)
+	{
+		new_str = ft_strdup("(nil)");
+		if (!new_str)
+			return (NULL);
+		return (new_str);
+	}
 	ft_strlcpy(hexa, "0123456789abcdef", 17);
 	new_len = (size_t) ft_numlen(num, 16);
 	new_str = (char *) malloc (new_len + 1);
 	if (!new_str)
 		return (NULL);
 	new_str[new_len] = '\0';
-	if (num == 0)
-		new_str[new_len - 1] = '0';
 	while (num != 0)
 	{
 		new_str[new_len - 1] = hexa[num % 16];
@@ -87,6 +92,8 @@ char	*ft_hexa_pointer(char *s, va_list args)
 	str = create_hexa_str(num_pnt);
 	if (!str)
 		return (NULL);
+	if (ft_memcmp(str, "(nil)", ft_strlen(str) + 1) == 0)
+		return (str);
 	str_temp = add_0x_hexa(str);
 	free(str);
 	if (!str_temp)

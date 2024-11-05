@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 15:54:12 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/14 19:07:00 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/02 12:26:24 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/02 13:18:24 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*ft_strrchr(const char *s, int c)
+char	*ft_strdup(const char *s)
 {
-	unsigned char	chr;
-	const char		*str;
-	int				pos;	
+	size_t	len;
+	char	*str;
 
-	str = NULL;
-	chr = (unsigned char) c;
-	pos = ft_strlen(s);
-	while (pos >= 0)
-	{
-		if (s[pos] == chr)
-		{
-			str = &s[pos];
-			break ;
-		}
-		pos--;
-	}
-	return ((char *) str);
+	len = ft_strlen((char *) s);
+	str = (char *) malloc (len + 1);
+	if (str == NULL)
+		return (NULL);
+	len = ft_strlcpy(str, s, len + 1);
+	return (str);
 }
