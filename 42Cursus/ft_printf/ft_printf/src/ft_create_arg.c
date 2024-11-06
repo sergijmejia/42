@@ -57,8 +57,6 @@ static char	*create_print_arg(char *s, va_list args)
 	char	c;
 
 	c = s[ft_strlen(s) - 1];
-	if (c == 'c')
-		arg = ft_character(s, args);
 	if (c == 's')
 		arg = ft_string(s, args);
 	if (c == 'p')

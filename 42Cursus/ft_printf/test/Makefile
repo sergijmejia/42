@@ -14,26 +14,25 @@ TARGET	= test
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
+LIB_DIR = .
 OBJS	= $(OBJ_DIR)/test.o
 
-
+HEADER	= ft_printf.h
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR) -g
 CC	= cc
-
-LIB_DIR = .
-LIBS    = -L$(LIB_DIR) -lftprintf -lft
+LIBS    = -L$(LIB_DIR) -lftprintf
 
 .PHONY : all clean fclean re
 
 all : $(TARGET)
 
-$(TARGET) : $(OBJS) $(MAKEFILE_LIST)
+$(TARGET) : $(OBJS) $(HEADER)
 	$(CC) $(OBJS) $(LIBS) -o $(TARGET)
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)
-	$(CC) -c -MD $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 -include $(OBJ_DIR)/*.d
 

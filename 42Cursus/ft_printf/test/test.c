@@ -1,8 +1,9 @@
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 int	main()
 {
-	char			c = 'c';
+	char			c = 0;
+	char			c_1 = '0';
 	char			*s = "HolaMundo";
 	void			*p = s;
 	int				d = 20025;
@@ -15,9 +16,9 @@ int	main()
 	int				printed_printf;
 	int				printed_ft_printf;
 
-	printed_printf = printf("Diferentes casos de c con    printf: %%c: %c , %%-c: %-c , %%-10c: %-10c.", c, c, c);
+	printed_printf = printf("Diferentes casos de c con    printf: %%c: %c , %%-c: %-c , %%-10c: %-10c.", c, c_1, c);
 	printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-	printed_ft_printf = ft_printf("Diferentes casos de c con ft_printf: %%c: %c , %%-c: %-c , %%-10c: %-10c.", c, c, c);
+	printed_ft_printf = ft_printf("Diferentes casos de c con ft_printf: %%c: %c , %%-c: %-c , %%-10c: %-10c.", c, c_1, c);
 	ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
 	printf("\n");
 	printed_printf = printf("Diferentes casos de s con    printf: %%s: %s , %%-s: %-s , %%-15s: %-15s ,  %%-15.5s: %-15.5s.", s, s, s, s);

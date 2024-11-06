@@ -38,6 +38,8 @@ char	*ft_unsig_int(char *s, va_list args);
 char	*ft_hexa_num_lower(char *s, va_list args);
 char	*ft_hexa_num_upper(char *s, va_list args);
 
+int		ft_create_character_arg(const char *s, va_list args, char **arg);
+
 //Funciones del libft
 int		ft_strcontains(const char *str, char c);
 int		ft_isdigit(int c);

@@ -46,7 +46,8 @@ OBJS	= $(OBJ_DIR)/ft_printf.o        	\
           $(OBJ_DIR)/ft_abs.o			\
           $(OBJ_DIR)/ft_bzero.o			\
 	  $(OBJ_DIR)/ft_strrchr.o		\
-	  $(OBJ_DIR)/ft_memcmp.o
+	  $(OBJ_DIR)/ft_memcmp.o		\
+	  $(OBJ_DIR)/ft_create_character_arg.o
 
 
 HEADER	= ft_printf.h

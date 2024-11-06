@@ -12,6 +12,16 @@
 
 #include "ft_printf.h"
 
+static int	check_character(const char *s)
+{
+	while (*s && ft_strcontains("-0.# +123456789", *s))
+		s++;
+	if (*s == 'c')
+		return (1);
+	else
+		return (0);
+}
+
 static int	literal_char(const char **s)
 {
 	ft_putchar(**s);
@@ -31,12 +41,26 @@ static int	argument(const char **s, va_list args)
 	char	*arg;
 	int		printed;
 
-	arg = ft_create_arg(*s, args);
-	if (!arg)
-		return (-1);
+	arg = NULL;
+	if (check_character(&(*s)[1]) == 1)
+	{
+		printed = ft_create_character_arg(&(*s)[1], args, &arg);
+		if (!arg)
+			return (-1);
+		if (arg[0] == '\0')
+			ft_putstr(&arg[1]);
+		else 
+			ft_putstr(arg);
+	}
+	else
+	{
+		arg = ft_create_arg(*s, args);
+		if (!arg)
+			return (-1);
+		printed = ft_strlen(arg);
+		ft_putstr(arg);
+	}
 	*s = *s + ft_count_arg_len(&(*s)[1]) + 1;
-	printed = ft_strlen(arg);
-	ft_putstr(arg);
 	free(arg);
 	return (printed);
 }
