@@ -6,11 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:00:41 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:46:10 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static char	*apply_precision(char *s, char *str)
 {
@@ -58,11 +58,20 @@ char	*ft_string(char *s, va_list args)
 {
 	char	*str;
 	char	*str_temp;
+	size_t	len_temp;
 
-	str = va_arg(args, char *);
-	if (!str)
-		return (NULL);
+	str_temp = va_arg(args, char *);
+	if (!str_temp)
+		str = ft_strdup("(null)");
+	else
+	{
+		len_temp = ft_strlen(str_temp);
+		str = (char *) malloc (len_temp + 1);
+		ft_memcpy(str, str_temp, len_temp);
+		str[len_temp] = '\0';
+	}
 	str_temp = apply_precision(s, str);
+	free(str);
 	if (!str_temp)
 		return (NULL);
 	str = str_temp;

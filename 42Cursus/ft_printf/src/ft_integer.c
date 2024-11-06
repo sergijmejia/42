@@ -6,11 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 02:15:10 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:11:41 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/06 18:00:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static char	*apply_zero_prec(char *str, int num, size_t len, int prec)
 {
@@ -41,7 +41,7 @@ static char	*apply_precision(char *str, int num, int prec)
 	size_t	len;
 
 	len = ft_strlen(str);
-	if (prec > (int) len)
+	if (prec >= (int) len)
 	{
 		new_str = apply_zero_prec(str, num, len, prec);
 		if (!new_str)
