@@ -6,18 +6,18 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/11/06 19:01:14 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/11/07 16:31:09 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 TARGET	= test
 OBJ_DIR	= ./obj
-INC_DIR	= .
+INC_DIR	= ..
 SRC_DIR	= .
-LIB_DIR = .
+LIB_DIR = ..
 OBJS	= $(OBJ_DIR)/test.o
 
-HEADER	= ft_printf.h
+HEADER	= $(INC_DIR)/ft_printf.h
 
 CFLAGS	= -I$(INC_DIR) -g
 CC	= cc

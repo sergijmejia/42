@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/11/06 18:49:24 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/11/07 16:20:59 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	= libftprintf.a
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= ./src
-OBJS	= $(OBJ_DIR)/ft_printf.o        	\
+SRC	= $(OBJ_DIR)/ft_printf.o        	\
           $(OBJ_DIR)/ft_cal_min_field.o 	\
 	  $(OBJ_DIR)/ft_create_arg.o    	\
           $(OBJ_DIR)/ft_hexa_pointer.o 	  	\
@@ -49,30 +49,33 @@ OBJS	= $(OBJ_DIR)/ft_printf.o        	\
 	  $(OBJ_DIR)/ft_memcmp.o		\
 	  $(OBJ_DIR)/ft_create_character_arg.o
 
-OBJS_BONUS =
+SRC_BONUS =
 
 HEADER	= ft_printf.h
+
+ifndef BONUS
+	OBJ = $(SRC:.c=.o)
+else
+	OBJ = $(SRC_BONUS:.c=.o) $(SRC:.c=.o)
+endif
+OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
 CC	= cc
 
-.PHONY : all clean fclean re
+.PHONY : all bonus clean fclean re
 
 all : $(NAME)
 
-$(NAME) : $(OBJS) $(HEADER)
-	ar rcs $(NAME) $(OBJS)
+$(NAME) : $(OBJ) $(HEADER)
+	ar rcs $(NAME) $(OBJ)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)
 	$(CC) -c $(CFLAGS) $< -o $@
 
--include $(OBJ_DIR)/*.d
-
-bonus: $(OBJS) $(OBJS_BONUS) $(HEADER)
-	ar rcs $(NAME) $^
-	@touch $@
-
+bonus: 
+	@make BONUS=1 --no-print-directory
 
 clean:
 	rm -rf $(OBJ_DIR) $(OBJS_BONUS)
@@ -80,7 +83,6 @@ clean:
 fclean:
 	$(MAKE) clean
 	rm -f $(NAME)
-	@${RM} bonus
 
 re:
 	$(MAKE) fclean

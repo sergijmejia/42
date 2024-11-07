@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:37:19 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 14:39:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:53:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,30 +74,25 @@ static char	*create_print_arg(char *s, va_list args)
 	return (arg);
 }
 
-char	*ft_create_arg(const char *s, va_list args)
+int	ft_create_arg(const char *s, va_list args, char **arg)
 {
 	char	*str;
-	char	*print;
-	size_t	len;
+	size_t	len_str;
+	size_t	len_arg;
 
 	str = cpy_arg(s);
 	if (!str)
-		return (NULL);
-	len = ft_strlen(str);
+		return (-1);
+	len_str = ft_strlen(str);
 	if (!check_arg(str))
 	{
-		print = (char *) malloc (len + 1);
-		if (!print)
-		{
-			free(str);
-			return (NULL);
-		}
-		print[len] = '\0';
-		ft_memcpy(print, str, len);
 		free(str);
-		return (print);
+		return (-1);
 	}
-	print = create_print_arg(&str[1], args);
+	*arg = create_print_arg(&str[1], args);
 	free(str);
-	return (print);
+	if (!*arg)
+		return (-1);
+	len_arg = ft_strlen(*arg);
+	return ((int) len_arg);
 }

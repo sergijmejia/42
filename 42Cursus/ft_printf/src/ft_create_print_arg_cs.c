@@ -6,13 +6,13 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 17:23:49 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/05 17:30:10 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:21:04 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_create_print_arg_cs(char *s, va_list args, char **arg, char c)
 {
-	int             len;
+	int	len;
 
 	c = s[ft_strlen(s) - 1];
 	if (c == 'c')

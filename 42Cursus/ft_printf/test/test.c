@@ -95,48 +95,18 @@ int	main()
 
 
 	printed_printf = printf("Diferentes casos de X = 654321 con    printf: %%X: %X , %%15X: %15X , %%015X: %015X , %%15.10X: %15.10X , %%-X: %-X , %%-15X: %-15X , %%-15.10X: %-15.10X , %%-#15.10X: %-#15.10X.", x, x, x, x, x, x, x, x);
-        printed_ft_printf = ft_printf("Diferentes casos de X = 654321 con ft_printf: %%X: %X , %%15X: %15X , %%015X: %015X , %%15.10X: %15.10X , %%-X: %-X , %%-15X: %-15X , %%-15.10X: %-15.10X , %%-#15.10X: %-#15.10X.", x, x, x, x, x, x, x, x);
         printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
+	printed_ft_printf = ft_printf("Diferentes casos de X = 654321 con ft_printf: %%X: %X , %%15X: %15X , %%015X: %015X , %%15.10X: %15.10X , %%-X: %-X , %%-15X: %-15X , %%-15.10X: %-15.10X , %%-#15.10X: %-#15.10X.", x, x, x, x, x, x, x, x);
 	ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
         printf("\n");
         printed_printf = printf("Diferentes casos de X = 0 con    printf: %%X: %X , %%15X: %15X , %%015X: %015X , %%15.10X: %15.10X , %%-X: %-X , %%-15X: %-15X , %%-15.10X: %-15.10X , %%-#15.10X: %-#15.10X.", x_0, x_0, x_0, x_0, x_0, x_0, x_0, x_0);
+	printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
         printed_ft_printf = ft_printf("Diferentes casos de X = 0 con ft_printf: %%X: %X , %%15X: %15X , %%015X: %015X , %%15.10X: %15.10X , %%-X: %-X , %%-15X: %-15X , %%-15.10X: %-15.10X , %%-#15.10X: %-#15.10X.", x_0, x_0, x_0, x_0, x_0, x_0, x_0, x_0);
-        printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
 	ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
 	printf("\n");
-
-	printed_printf = printf(" %c %c %c ", '0', 0, '1');
-	printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-	printed_ft_printf = ft_printf(" %c %c %c ", '0', 0, '1');
-	ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
-	printf("\n");
-
-	printed_printf = printf(" %c %c %c ", '2', '1', 0);
-	printf("La cantidad de caracteres impreso es %d\n", printed_printf);
-        printed_ft_printf = ft_printf(" %c %c %c ", '2', '1', 0);
-        ft_printf("La cantidad de caracteres impreso es %d\n", printed_ft_printf);
-	printf("\n");
-
-	printed_printf = printf(" %c %c %c ", 0, '1', '2');
-	printf("La cantidad de caracteres impreso es %d\n", printed_printf);
-        printed_ft_printf = ft_printf(" %c %c %c ", 0, '1', '2');
-        ft_printf("La cantidad de caracteres impreso es %d\n", printed_ft_printf);
-        printf("\n");
-
-	printed_printf = printf(" %p %p ", (void *) 0, (void *) 0);
-        printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-        printed_ft_printf = ft_printf(" %p %p ", (void *) 0, (void *) 0);
-        ft_printf(" La cantidad de caracteres impreso es %d\n", printed_ft_printf);
-        printf("\n");
-
-
-	printed_printf = printf("Hello%c, world", 0);
-	printf("\n");
-	printf(" La cantidad de caracteres impreso es %d\n", printed_printf);
-
 
 	printf("\n\n\n\n");
-	printf("Test que fallan de c. Primero en printf y luego en ft_printf:\n");
+	printf("Test especiales de c. Primero en printf y luego en ft_printf:\n");
 	printed_printf = printf(" %c %c %c ", '0', 0, '1');
 	printf("\n");
 	printed_ft_printf = ft_printf(" %c %c %c ", '0', 0, '1');
@@ -160,7 +130,7 @@ int	main()
 
 
         printf("\n\n\n\n");
-        printf("Test que falla de mix. Primero en printf y luego en ft_printf:\n");
+        printf("Test especial de mix. Primero en printf y luego en ft_printf:\n");
         printed_printf = printf("%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%", 'A', "42", 42, 42 ,42 , 42, 42, 'B', "-42", -42, -42 ,-42 ,-42, 42, 'C', "0", 0, 0 ,0 ,0, 42, 0);
         printf("\n");
         printed_ft_printf = ft_printf("%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%", 'A', "42", 42, 42 ,42 , 42, 42, 'B', "-42", -42, -42 ,-42 ,-42, 42, 'C', "0", 0, 0 ,0 ,0, 42, 0);
@@ -170,7 +140,7 @@ int	main()
 
 
 	printf("\n\n\n\n");
-        printf("Test que fallan de '.'. Primero en printf y luego en ft_printf:\n");
+        printf("Test especial de '.'. Primero en printf y luego en ft_printf:\n");
         printed_printf = printf(" %.2d ", -1);
         printf("\n");
         printed_ft_printf = ft_printf(" %.2d ", -1);
@@ -191,6 +161,35 @@ int	main()
         printf("\n");
         printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
 
+
+	printf("\n\n\n\n");
+        printf("Test especial de '%%' unico. Primero en printf y luego en ft_printf:\n");
+        printed_printf = printf("%");
+        printf("\n");
+        printed_ft_printf = ft_printf("%");
+        printf("\n");
+        printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
+
+/*	printf("\n");
+	printed_printf = printf("Prueba de fallo % -0 %d   q. Imprime?", d);
+        printf("\n");
+        printed_ft_printf = ft_printf("Prueba de fallo % -0 %d   q. Imprime?", d);
+        printf("\n");
+        printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
+
+	printf("\n");
+        printed_printf = printf("Prueba de fallo % -0 que aparecera en el print%d   q. Imprime?", d);
+        printf("\n");
+        printed_ft_printf = ft_printf("Prueba de fallo % -0 que aparecera en el print%d   q. Imprime?", d);
+        printf("\n");
+        printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);*/
+
+	printf("\n");
+        printed_printf = printf("Prueba de fallo %");
+        printf("\n");
+        printed_ft_printf = ft_printf("Prueba de fallo %");
+        printf("\n");
+        printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
 
 
 

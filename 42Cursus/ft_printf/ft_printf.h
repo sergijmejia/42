@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:34:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:05:35 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:51:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		ft_printf(const char *s, ...);
 size_t	ft_cal_min_field(char *s);
 size_t	ft_cal_prec(char *s);
 size_t	ft_count_arg_len(const char *s);
-char	*ft_create_arg(const char *s, va_list args);
+int		ft_create_arg(const char *s, va_list args, char **arg);
 int		ft_flag(char *s, char c);
 int		ft_numlen(unsigned long long n, int base);
 

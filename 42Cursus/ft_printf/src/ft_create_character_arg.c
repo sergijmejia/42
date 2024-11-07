@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_character_arg.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 19:18:37 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/11/07 19:19:25 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 int	ft_create_character_arg(const char *s, va_list args, char **arg)
@@ -5,7 +17,7 @@ int	ft_create_character_arg(const char *s, va_list args, char **arg)
 	char	*str;
 	size_t	min_field;
 	int		len;
-	
+
 	str = (char *) s;
 	min_field = ft_cal_min_field(str);
 	if (ft_flag(str, '-') && (min_field > 1))

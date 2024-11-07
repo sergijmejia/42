@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:01:01 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/06 18:24:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:51:38 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,14 @@ static int	argument(const char **s, va_list args)
 			return (-1);
 		if (arg[0] == '\0')
 			ft_putstr(&arg[1]);
-		else 
+		else
 			ft_putstr(arg);
 	}
 	else
 	{
-		arg = ft_create_arg(*s, args);
+		printed = ft_create_arg(*s, args, &arg);
 		if (!arg)
 			return (-1);
-		printed = ft_strlen(arg);
 		ft_putstr(arg);
 	}
 	*s = *s + ft_count_arg_len(&(*s)[1]) + 1;
@@ -82,7 +81,10 @@ int	ft_printf(const char *s, ...)
 		else
 			arg_printed = argument(&s, args);
 		if (arg_printed == -1)
+		{
+			printed = arg_printed;
 			break ;
+		}
 		else
 			printed = printed + arg_printed;
 	}
