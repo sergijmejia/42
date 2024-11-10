@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/06 16:46:10 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:45:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ static char	*apply_precision(char *s, char *str)
 
 	len = ft_strlen(str);
 	if (ft_strcontains(s, '.'))
+	{
 		new_len = ft_cal_prec(s);
+		if ((ft_memcmp(str, "(null)", 7) == 0) && (new_len < 6))
+			return (ft_strdup(""));
+	}
 	else
 		new_len = len;
 	if (new_len > len)
