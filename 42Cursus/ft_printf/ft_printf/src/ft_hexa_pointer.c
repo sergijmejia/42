@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 01:35:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/10 03:23:45 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/11 10:18:31 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,30 +104,26 @@ char	*ft_hexa_pointer(char *s, va_list args)
 	unsigned long long	num_pnt;
 	void				*pnt;
 	char				*str;
-	char				*str_temp;
+	char				*str_2;
 
 	pnt = va_arg(args, void *);
 	num_pnt = (unsigned long long) pnt;
 	str = create_hexa_str(num_pnt);
 	if (ft_memcmp(str, "(nil)", ft_strlen(str) + 1) == 0)
-		str_temp = ft_strdup(str);
+		str_2 = ft_strdup(str);
 	else
 	{
-		str_temp = apply_precision(s, str);
-		        free(str);
-			if (!str_temp)
-				return (NULL);
-			str = str_temp;
-			str_temp = add_0x_hexa(str);
+		str_2 = apply_precision(s, str);
+		free(str);
+		if (!str_2)
+			return (NULL);
+		str = str_2;
+		str_2 = add_0x_hexa(str);
 	}
 	free(str);
-	if (!str_temp)
+	if (!str_2)
 		return (NULL);
-	str = str_temp;
-	str_temp = apply_min_field(s, str);
-	free(str);
-	if (!str_temp)
-		return (NULL);
-	str = str_temp;
+	str = apply_min_field(s, str_2);
+	free(str_2);
 	return (str);
 }
