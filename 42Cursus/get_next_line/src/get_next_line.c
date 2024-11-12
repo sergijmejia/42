@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:35:29 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/11 13:46:00 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:26:51 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*get_next_line(int fd)
 	else
 	{
 		len = ft_strlen(str);
-		end_line = ft_check_end_line(str, len);
+		end_line = ft_check_end_line(str);
 		if (end_line != -1)
 		{
 			str_tmp = ft_strdup(&str[end_line + 1]);
@@ -73,5 +73,5 @@ char	*get_next_line(int fd)
 		get_next_line(fd);
 	ft_memcpy(&str[len], buffer, (size_t) readed_char);
 	str[len + readed_char] = '\0';
-	get_next_line(fd);	
+	return (get_next_line(fd));	
 }

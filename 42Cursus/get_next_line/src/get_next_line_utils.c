@@ -6,19 +6,19 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:34:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/11 13:46:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:34:49 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_check_end_line(const char *str, size_t len)
+int	ft_check_end_line(const char *str)
 {
 	size_t	i;
 	size_t	len;
 	
 	i = 0;
-	len = ft_strlen(str);
+	len = ft_strlen((char *) str);
 	while (i < len)
 	{
 		if (str[i] == '\n')
@@ -26,19 +26,6 @@ int	ft_check_end_line(const char *str, size_t len)
 		i++;
 	}
 	return (-1);
-}
-
-char	*ft_strdup(const char *s)
-{
-	size_t	len;
-	char	*str;
-
-	len = ft_strlen(s);
-	str = (char *) malloc (len + 1);
-	if (str == NULL)
-		return (NULL);
-	len = ft_strlcpy(str, s, len + 1);
-	return (str);
 }
 
 size_t	ft_strlen(char *str)
@@ -73,3 +60,35 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	n;
+
+	n = ft_strlen((char *) src);
+	if ((dst == NULL) || (src == NULL) || (size == 0))
+		return (n);
+	if (n >= (size - 1))
+	{
+		dst = ft_memcpy(dst, src, (size - 1));
+		dst[size - 1] = '\0';
+	}
+	else
+	{
+		dst = ft_memcpy(dst, src, n);
+		dst[n] = '\0';
+	}
+	return (n);
+}
+
+char    *ft_strdup(const char *s)
+{
+	size_t  len;
+	char    *str;
+
+	len = ft_strlen((char *) s);
+	str = (char *) malloc (len + 1);
+	if (str == NULL)
+		return (NULL);
+	len = ft_strlcpy(str, s, len + 1);
+	return (str);
+}
