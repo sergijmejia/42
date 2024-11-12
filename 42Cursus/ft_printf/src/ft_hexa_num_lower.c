@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 13:25:18 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/02 15:34:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/10 03:46:29 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static char	*apply_min_field(char *str, char *s, size_t min, unsigned int n)
 		return (NULL);
 	new_str[min] = '\0';
 	c = ' ';
-	if (ft_flag(s, '0') && !ft_strcontains(s, '.'))
+	if (ft_flag(s, '0') && !ft_strcontains(s, '.') && !ft_flag(s, '-'))
 		c = '0';
 	ft_memset(new_str, c, min);
 	if (ft_flag(s, '-'))

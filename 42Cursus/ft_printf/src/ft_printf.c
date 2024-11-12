@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:01:01 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/07 19:51:38 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:25:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,16 @@ static int	check_character(const char *s)
 
 static int	literal_char(const char **s)
 {
-	ft_putchar(**s);
+	if (ft_putchar(**s) == -1)
+		return (-1);
 	(*s)++;
 	return (1);
 }
 
 static int	double_percent(const char **s)
 {
-	ft_putchar(**s);
+	if (ft_putchar(**s) == -1)
+		return (-1);
 	*s = *s + 2;
 	return (1);
 }
@@ -44,20 +46,20 @@ static int	argument(const char **s, va_list args)
 	arg = NULL;
 	if (check_character(&(*s)[1]) == 1)
 	{
-		printed = ft_create_character_arg(&(*s)[1], args, &arg);
+		ft_create_character_arg(&(*s)[1], args, &arg);
 		if (!arg)
 			return (-1);
 		if (arg[0] == '\0')
-			ft_putstr(&arg[1]);
+			printed = ft_putstr(&arg[1]) + 1;
 		else
-			ft_putstr(arg);
+			printed = ft_putstr(arg);
 	}
 	else
 	{
-		printed = ft_create_arg(*s, args, &arg);
+		ft_create_arg(*s, args, &arg);
 		if (!arg)
 			return (-1);
-		ft_putstr(arg);
+		printed = ft_putstr(arg);
 	}
 	*s = *s + ft_count_arg_len(&(*s)[1]) + 1;
 	free(arg);

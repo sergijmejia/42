@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:37:19 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/07 19:53:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:23:55 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	check_arg(char *s)
 	size_t	i;
 
 	i = ft_strlen(s) - 1;
-	if (ft_strcontains("cspdiuxX", s[i]))
+	if (ft_strcontains("cspdiuxX%", s[i]))
 		i--;
 	else
 		return (0);
@@ -71,6 +71,8 @@ static char	*create_print_arg(char *s, va_list args)
 		arg = ft_hexa_num_lower(s, args);
 	if (c == 'X')
 		arg = ft_hexa_num_upper(s, args);
+	if (c == '%')
+		arg = ft_strdup("%");
 	return (arg);
 }
 

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:34:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/07 19:51:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:11:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strdup(const char *s);
 void	ft_strtoupper(void *str);
 int		ft_toupper(int c);
-void	ft_putchar(char c);
-void	ft_putstr(char *str);
+int		ft_putchar(char c);
+int		ft_putstr(char *str);
 char	*ft_itoa(int n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_intlen(int n, int base);

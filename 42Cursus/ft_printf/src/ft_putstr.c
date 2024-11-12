@@ -6,20 +6,25 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 20:50:54 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/08/27 21:58:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:08:48 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	ft_putstr(char *str)
+int	ft_putstr(char *str)
 {
 	char	c;
+	int		printed;
 
+	printed = 0;
 	while (*str != '\0')
 	{
 		c = *str;
-		write(1, &c, 1);
+		if (ft_putchar(c) == -1)
+			return (-1);
+		printed++;
 		str++;
 	}
+	return (printed);
 }

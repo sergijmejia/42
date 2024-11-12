@@ -129,6 +129,15 @@ int	main()
 	printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
 
 
+	printf("\n\n\n\n");
+	printf("Test especial de c con min fliend 10. Primero en printf y luego en ft_printf:\n");
+        printed_printf = printf(" %-10c ", 0);
+        printf("\n");
+        printed_ft_printf = ft_printf(" %-10c ", 0);
+        printf("\n");
+        printf("Los caracteres impresos con printf son %d y los impresos con ft_printf con %d", printed_printf, printed_ft_printf);
+
+
         printf("\n\n\n\n");
         printf("Test especial de mix. Primero en printf y luego en ft_printf:\n");
         printed_printf = printf("%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%", 'A', "42", 42, 42 ,42 , 42, 42, 'B', "-42", -42, -42 ,-42 ,-42, 42, 'C', "0", 0, 0 ,0 ,0, 42, 0);
