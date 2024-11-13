@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:35:29 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/12 17:26:51 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/13 13:24:04 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*get_next_line(int fd)
 			if (!str_tmp)
 			{
 				free(str);
+				str = NULL;
 				return (NULL);
 			}
 			str_return = (char *) malloc (end_line + 2);
@@ -44,6 +45,7 @@ char	*get_next_line(int fd)
 			{
 				free(str_tmp);
 				free(str);
+				str = NULL;
 				return (NULL);
 			}
 			ft_memcpy(str_return, str, end_line + 1);
@@ -67,6 +69,7 @@ char	*get_next_line(int fd)
 	if (readed_char == -1 || (readed_char == 0 && len == 0))
 	{
 		free(str);
+		str = NULL;
 		return (NULL);
 	}
 	if (readed_char == 0) 

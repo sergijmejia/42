@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:34:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/12 17:34:49 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:43:26 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@ int	ft_check_end_line(const char *str)
 {
 	size_t	i;
 	size_t	len;
+	char	c;
 	
 	i = 0;
 	len = ft_strlen((char *) str);
 	while (i < len)
 	{
-		if (str[i] == '\n')
+		c = str[i];
+		if (c == '\n')
 			return (i);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:58:04 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/11 14:07:45 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:04:26 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(void)
 {
-	const char *filename = "text";
+	const char *filename = "text.txt";
 	int	fd;
 
 	fd = open(filename, O_RDONLY);

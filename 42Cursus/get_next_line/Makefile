@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/11/12 16:37:28 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/11/13 13:32:05 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ else
 endif
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
-CFLAGS	= -Wall -Werror -Wextra -D BUFFER_SIZE=10 -I $(INC_DIR)
+CFLAGS	= -Wall -Werror -Wextra -g -D BUFFER_SIZE=2147483647 -I $(INC_DIR)
 CC	= cc
 
 .PHONY : all bonus clean fclean re
@@ -37,7 +37,7 @@ CC	= cc
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(HEADER)
-	$(CC) $(OBJS) -o $(NAME)
+	$(CC) $(OBJ) -o $(NAME)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)
