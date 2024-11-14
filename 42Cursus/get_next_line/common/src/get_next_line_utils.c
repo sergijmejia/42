@@ -6,21 +6,20 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:34:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/13 10:43:26 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/14 12:08:56 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_check_end_line(const char *str)
+/*Busca la posicion del caracter '\n' en str*/
+int	ft_check_newline(char *str)
 {
-	size_t	i;
-	size_t	len;
+	int		i;
 	char	c;
-	
+
 	i = 0;
-	len = ft_strlen((char *) str);
-	while (i < len)
+	while (str && str[i] != '\0')
 	{
 		c = str[i];
 		if (c == '\n')
@@ -82,10 +81,10 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (n);
 }
 
-char    *ft_strdup(const char *s)
+char	*ft_strdup(const char *s)
 {
-	size_t  len;
-	char    *str;
+	size_t	len;
+	char	*str;
 
 	len = ft_strlen((char *) s);
 	str = (char *) malloc (len + 1);
