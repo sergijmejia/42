@@ -6,11 +6,13 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 11:34:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/20 13:09:06 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:51:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+//falta incluir el ft_strjin.c
 
 /*Busca la posicion del caracter '\n' en str*/
 int	ft_check_newline(char *str)
@@ -36,7 +38,7 @@ size_t	ft_strlen(char *str)
 	size_t	l;
 
 	l = 0;
-	while (*str != '\0')
+	while (str && str != '\0')
 	{
 		l++;
 		str++;

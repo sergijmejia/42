@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 09:36:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/20 13:30:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:50:37 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,6 @@ char     *free_str(char **str)
         free(*str);
         *str = NULL;
         return (*str);
-}
-
-/*Aumenta la capacidad del buffer y copia el contenido anterior*/
-char	*realloc_buffer(char **str, size_t new_len)
-{
-	char	*new_str;
-	size_t	i;
-	size_t	len;
-
-	len = ft_strlen(*str);
-	new_str = (char *) malloc(new_len + 1);
-	if (!new_str)
-		return (free_str(str));
-	i = 0;
-	while (i < len)
-	{
-		new_str[i] = (*str)[i];
-		i++;
-	}
-	new_str[i] = '\0';
-	free_str(str);
-	*str = new_str;
-	return (*str);
 }
 
 /*Extrae la linea desde el string acumulado y ajusta el putero str*/
@@ -78,58 +55,26 @@ char	*extract_line(char **str)
 	return (str_return);
 }
 
-/*Lee desde e archivo y agrega el contenido a str*/
-int	read_to_buffer(int fd, char **str)
-{
-	ssize_t	readed_char;
-	char	buffer[BUFFER_SIZE + 1];
-	size_t	len;
-	int		i;
-
-	len = ft_strlen(*str);
-	readed_char = read(fd, buffer, BUFFER_SIZE);
-	if (readed_char == -1)
-		return (-1);
-	if (readed_char == 0)
-		return (0);
-	if (realloc_buffer(str, len + readed_char) == NULL)
-		return (-1);
-	i = 0;
-	while (i < readed_char)
-	{
-		(*str)[len + i] = buffer[i];
-		i++;
-	}
-	(*str)[len + readed_char] = '\0';
-	return (1);
-}
-
 /*Funcion principal. Devuelve la siguiente linea de un archivo fd*/
 char	*get_next_line(int fd)
 {
 	static char	*str;
-	int			str_null;
+	size_t		len;
+	char    buffer[BUFFER_SIZE + 1];
+	ssize_t		readed_char;
 	int			readed;
 
-	str_null = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (str == NULL)
-	{
-		str_null = 1;
-		str = (char *) malloc(1);
-		if (!str)
-			return (NULL);
-		str[0] = '\0';
-	}
 	while (ft_check_newline(str) == -1)
 	{
-		readed = read_to_buffer(fd, &str);
-		if (readed < 0 || (readed == 0 && str_null == 1))
+		readed_char = read(fd, buffer, BUFFER_SIZE);
+		if (readed_char == -1)
 			return (free_str(&str));
-		if (readed == 0)
+		else if (readed_char == 0)
 			return(extract_line(&str));
-		str_null = 0;
+		else
+			str = ftstrjoin(str, buffer, len + readed_char + 1);
 	}
 	return (extract_line(&str));
 }
