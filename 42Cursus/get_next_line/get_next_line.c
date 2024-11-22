@@ -6,22 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 09:36:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/11/20 13:30:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/11/22 12:05:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*Libera memoria donde apunta el puntero str*/
-char     *free_str(char **str)
-{
-        free(*str);
-        *str = NULL;
-        return (*str);
-}
-
 /*Aumenta la capacidad del buffer y copia el contenido anterior*/
-char	*realloc_buffer(char **str, size_t new_len)
+static char	*realloc_buffer(char **str, size_t new_len)
 {
 	char	*new_str;
 	size_t	i;
@@ -30,7 +22,7 @@ char	*realloc_buffer(char **str, size_t new_len)
 	len = ft_strlen(*str);
 	new_str = (char *) malloc(new_len + 1);
 	if (!new_str)
-		return (free_str(str));
+		return (ft_free_str(str));
 	i = 0;
 	while (i < len)
 	{
@@ -38,13 +30,31 @@ char	*realloc_buffer(char **str, size_t new_len)
 		i++;
 	}
 	new_str[i] = '\0';
-	free_str(str);
+	ft_free_str(str);
 	*str = new_str;
 	return (*str);
 }
 
+/*Crea el str_return para el extract_line*/
+static char	*create_str_return(char **str, int end_line, char **str_tmp)
+{
+	char	*str_return;
+
+	str_return = (char *) malloc(end_line + 2);
+	if (!str_return)
+	{
+		ft_free_str(str_tmp);
+		return (ft_free_str(str));
+	}
+	ft_memcpy(str_return, *str, end_line + 1);
+	str_return[end_line + 1] = '\0';
+	ft_free_str(str);
+	*str = *str_tmp;
+	return (str_return);
+}
+
 /*Extrae la linea desde el string acumulado y ajusta el putero str*/
-char	*extract_line(char **str)
+static char	*extract_line(char **str)
 {
 	char	*str_tmp;
 	char	*str_return;
@@ -54,32 +64,22 @@ char	*extract_line(char **str)
 	if (end_line == -1)
 	{
 		str_return = ft_strdup(*str);
-		free_str(str);
-		return(str_return);
+		ft_free_str(str);
+		return (str_return);
 	}
-	if (end_line == (int) (ft_strlen(*str) - 1))
+	if (end_line == (int)(ft_strlen(*str) - 1))
 		str_tmp = NULL;
 	else
 	{
 		str_tmp = ft_strdup(*str + end_line + 1);
 		if (!str_tmp)
-			return (free_str(str));
+			return (ft_free_str(str));
 	}
-	str_return = (char *) malloc(end_line + 2);
-	if (!str_return)
-	{
-		free_str(&str_tmp);
-		return (free_str(str));
-	}
-	ft_memcpy(str_return, *str, end_line + 1);
-	str_return[end_line + 1] = '\0';
-	free_str(str);
-	*str = str_tmp;
-	return (str_return);
+	return (create_str_return(str, end_line, &str_tmp));
 }
 
 /*Lee desde e archivo y agrega el contenido a str*/
-int	read_to_buffer(int fd, char **str)
+static int	read_to_buffer(int fd, char **str)
 {
 	ssize_t	readed_char;
 	char	buffer[BUFFER_SIZE + 1];
@@ -126,9 +126,9 @@ char	*get_next_line(int fd)
 	{
 		readed = read_to_buffer(fd, &str);
 		if (readed < 0 || (readed == 0 && str_null == 1))
-			return (free_str(&str));
+			return (ft_free_str(&str));
 		if (readed == 0)
-			return(extract_line(&str));
+			return (extract_line(&str));
 		str_null = 0;
 	}
 	return (extract_line(&str));
