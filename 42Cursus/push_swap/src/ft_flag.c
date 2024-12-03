@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_flag.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 00:06:32 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/12/02 11:40:15 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+int	ft_flag(char *s, char c)
 {
-	if (lst != NULL)
+	while (!ft_strcontains(".123456789cspdiuxX", *s))
 	{
-		del(lst->content);
-		free(lst);
+		if (*s == c)
+			return (1);
+		s++;
 	}
+	return (0);
 }

@@ -1,22 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/05 01:09:01 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/05 02:08:08 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+//#include <stdio.h>
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+void	ft_putchar_fd(char c, int fd)
 {
-	if (lst != NULL)
-	{
-		del(lst->content);
-		free(lst);
-	}
+	char	str[1];
+
+	str[0] = c;
+	write(fd, str, 1);
 }
+/*
+int	main(int argc, char *argv[])
+{
+	if (argc != 2)
+	{
+		printf("Cantidad de argumentos incorrecta\n");
+		return (1);
+	}
+	if (ft_strlen(argv[1]) > 1)
+	{
+		printf("Cantidad de caracteres incorrecta\n");
+		return (1);
+	}
+	ft_putchar_fd(*argv[1], 1);
+	return (0);
+}
+*/

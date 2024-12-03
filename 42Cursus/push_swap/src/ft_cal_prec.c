@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_cal_prec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 00:12:53 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/12/02 11:38:35 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+size_t	ft_cal_prec(char *s)
 {
-	if (lst != NULL)
+	char	*str;
+	size_t	prec;
+
+	prec = 0;
+	if (ft_strcontains(s, '.'))
 	{
-		del(lst->content);
-		free(lst);
+		str = ft_strrchr(s, '.') + 1;
+		while (ft_isdigit(*str))
+		{
+			prec = prec * 10 + (*str - '0');
+			str++;
+		}
 	}
+	return (prec);
 }

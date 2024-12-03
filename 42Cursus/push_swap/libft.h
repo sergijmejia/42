@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/11 20:26:33 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:02:43 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdarg.h>
+# include <stddef.h>
+
+/*libft*/
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -72,7 +78,51 @@ void	ft_strtoupper(void *str);
 int		ft_strcontains(const char *str, char c);
 int		ft_countchar(const char *s, char c);
 int		ft_countwords(const char *s, char c);
-int		ft_intlen(int n);
+int		ft_intlen(int n, int base);
 int		ft_abs(int num);
+int             ft_putchar(char c);
+int             ft_putstr(char *str);
+
+/*get_next_line*/
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
+# endif
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+# if BUFFER_SIZE > 1024
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
+
+char	*get_next_line(int fd);
+char	*ft_free_str(char **str);
+int		ft_check_newline(char *str);
+
+/*ft_printf*/
+
+int		ft_printf(const char *s, ...);
+size_t	ft_cal_min_field(char *s);
+size_t	ft_cal_prec(char *s);
+size_t	ft_count_arg_len(const char *s);
+int		ft_create_arg(const char *s, va_list args, char **arg);
+int		ft_flag(char *s, char c);
+int		ft_numlen(unsigned long long n, int base);
+char	*ft_character(char *s, va_list args);
+char	*ft_string(char *s, va_list args);
+char	*ft_hexa_pointer(char *s, va_list args);
+char	*ft_integer(char *s, va_list args);
+char	*ft_apply_min_field_int(char *str, char *s, int num, size_t min_field);
+char	*ft_unsig_int(char *s, va_list args);
+char	*ft_hexa_num_lower(char *s, va_list args);
+char	*ft_hexa_num_upper(char *s, va_list args);
+int		ft_create_character_arg(const char *s, va_list args, char **arg);
+
+/*push_swap*/
+
+//int		push_swap(t_list **a);
 
 #endif

@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_cal_min_field.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/11/02 00:06:32 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/12/02 11:38:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+size_t	ft_cal_min_field(char *s)
 {
-	if (lst != NULL)
+	size_t	min_field;
+
+	min_field = 0;
+	while (ft_strcontains("-0# +", *s))
+		s++;
+	while (ft_isdigit(*s))
 	{
-		del(lst->content);
-		free(lst);
+		min_field = min_field * 10 + (*s - '0');
+		s++;
 	}
+	return (min_field);
 }

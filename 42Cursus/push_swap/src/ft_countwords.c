@@ -1,22 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_countwords.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/10/11 19:40:13 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/10/11 20:33:18 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+int	ft_countwords(const char *s, char c)
 {
-	if (lst != NULL)
+	int	i;
+	int	split;
+	int	word;
+
+	if (s == NULL)
+		return (0);
+	i = 0;
+	split = 0;
+	word = 0;
+	while (s[i])
 	{
-		del(lst->content);
-		free(lst);
+		if (s[i] == c && split)
+			split = 0;
+		if (s[i] != c && !split)
+		{
+			word++;
+			split = 1;
+		}
+		i++;
 	}
+	return (word);
 }

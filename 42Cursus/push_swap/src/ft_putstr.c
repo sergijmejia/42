@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/08/27 20:50:54 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/12/02 11:45:48 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+int	ft_putstr(char *str)
 {
-	if (lst != NULL)
+	char	c;
+	int		printed;
+
+	printed = 0;
+	while (*str != '\0')
 	{
-		del(lst->content);
-		free(lst);
+		c = *str;
+		if (ft_putchar(c) == -1)
+			return (-1);
+		printed++;
+		str++;
 	}
+	return (printed);
 }

@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_check_newline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:49:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/10/18 09:50:10 by smejia-a         ###   ########.fr       */
+/*   Created: 2024/12/01 16:40:37 by smejia-a          #+#    #+#             */
+/*   Updated: 2024/12/01 16:41:15 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+int	ft_check_newline(char *str)
 {
-	if (lst != NULL)
+	int		i;
+	char	c;
+
+	if (!str)
+		return (-1);
+	i = 0;
+	while (str && str[i] != '\0')
 	{
-		del(lst->content);
-		free(lst);
+		c = str[i];
+		if (c == '\n')
+			return (i);
+		i++;
 	}
+	return (-1);
 }
