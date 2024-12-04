@@ -1,19 +1,55 @@
 #include "libft.h"
 
-/*Funciones de movimiento del push swap*/
+/*********FUNCIONES DE MOVIMIENTO DE PUSH_SWAP*********/
 
+/*Intercambia las dos primeras posiciones de la lista lst*/
 static void     swap(t_list **lst)
 {
-        t_list  *aux1;
-        t_list  *aux2;
+        t_list  *aux;
 
         if (*lst == NULL || (*lst)->next == NULL)
                 return ;
-        aux1 = *lst;
-        aux2 = (*lst)->next;
-        aux1 = aux2->next;
-        aux2->next = aux1;
-        *lst = aux2;
+        aux = (*lst)->next;
+	(*lst)->next = aux->next;
+        aux->next = *lst;
+        *lst = aux;
+	return ;
+}
+
+/*Intercambia las dos primeras posiciones en la lista lst_a y en la lista lst_b a la vez*/
+static void	swap_swap(t_list **lst_a, t_list **lst_b)
+{
+	swap(lst_a);
+	swap(lst_b);
+	return ;
+}
+
+/*Toma el primer elemento e la lista lst_b y lo pone el primero en la lista lst_a*/
+static void	push(t_list **lst_a, t_list **lst_b)
+{
+	t_list	*aux;
+	
+	if (*lst_b == NULL)
+		return ;
+	aux = (*lst_b)->next;
+	(*lst_b)->next = (*lst_a);
+	*lst_a = *lst_b;
+	*lst_b = aux;
+	return ;
+}
+
+/*Desplaza hacia arriba todos los elementos del list*/
+static void	rotate(t_list **lst)
+{
+	t_list	*aux;
+
+	if (*lst == NULL || (*lst)->next == NULL)
+		return ;
+	aux = *lst;
+	*lst = (*lst)->next;
+	aux->next = NULL;
+	ft_lstadd_back(lst, aux);
+	return ;
 }
 
 
@@ -42,10 +78,10 @@ static t_list   *ft_lstdup(t_list *lst)
 
 static void     print_lst(t_list *lst)
 {
-        int     n1;
+        /*int     n1;
         int     n2;
         int     n3;
-        int     n4;
+        int     n4;*/
 
 
 	
@@ -73,33 +109,34 @@ static int     push_swap(t_list **a)
 
         int             len;
         int             result;
-        //t_list        *b;
+        t_list        *b;
         t_list  *lst;
-	int	n1;
-	int	n2;
-	int	n3;
-	int	n4;
 
         result = 0;
-	n1 = *(int *)((*a)->content);
-	n2 = *(int *)(((*a)->next)->content);
-	n3 = *(int *)((((*a)->next)->next)->content);
-	n4 = *(int *)(((((*a)->next)->next)->next)->content);
         len = ft_lstsize(*a);
-        lst = ft_lstdup(*a);
-        if(lst == NULL)
-                return (0); //ESTO SE DEBE REVISAR
-        print_lst(*a);
+	ft_printf("Lista a: ");
+	print_lst(a);
+	ft_printf("\n");
+	ft_printf("Listab: ");
+        print_lst(&b);
         ft_printf("\n");
-        print_lst(lst);
+        swap(a);
+	ft_printf("sa\n");
+	ft_printf("Lista a: ");
+        print_lst(a);
         ft_printf("\n");
-        swap(&lst);
-	n1 = *(int *)((lst)->content);
-        n2 = *(int *)((lst->next)->content);
-        n3 = *(int *)(((lst->next)->next)->content);
-        n4 = *(int *)((((lst->next)->next)->next)->content);
-        print_lst(lst);
-        return (1);
+        ft_printf("Listab: ");
+        print_lst(&b);
+        ft_printf("\n");
+	rotate(*a);
+	ft_printf("ra\n");
+        rt_printf("Lista a: ");
+        print_lst(a);
+        ft_printf("\n");
+        ft_printf("Listab: ");
+        print_lst(&b);
+        ft_printf("\n");
+	return (1);
 }
 
 int     main()
@@ -109,20 +146,26 @@ int     main()
         t_list  *num2;
         t_list  *num3;
         t_list  *num4;
-        int     n1;
-        int     n2;
-        int     n3;
-        int     n4;
+        int     *n1;
+        int     *n2;
+        int     *n3;
+        int     *n4;
 
-        n1 = 23;
-        n2 = 72;
-        n3 = 44;
-        n4 = 2;
-        num1 = ft_lstnew(&n1);
-        num2 = ft_lstnew(&n2);
-        num3 = ft_lstnew(&n3);
-        num4 = ft_lstnew(&n4);
-	a = NULL;
+	n1 = (int *) malloc (sizeof(int));
+        n1[0] = 23;
+	n2 = (int *) malloc (sizeof(int));
+        n2[0] = 72;
+	n3 = (int *) malloc (sizeof(int));
+        n3[0] = 44;
+	n4 = (int *) malloc (sizeof(int));
+        n4[0] = 2;
+	n5 = (int *) malloc (sizeof(int));
+	n[5] = 13;
+        num1 = ft_lstnew(n1);
+        num2 = ft_lstnew(n2);
+        num3 = ft_lstnew(n3);
+        num4 = ft_lstnew(n4);
+	num5 = ft_lstnew(n5);
         a = num1;
         ft_lstadd_back(&a, num2);
         ft_lstadd_back(&a, num3);
