@@ -24,7 +24,7 @@ static void	swap_swap(t_list **lst_a, t_list **lst_b)
 	return ;
 }
 
-/*Toma el primer elemento e la lista lst_b y lo pone el primero en la lista lst_a*/
+/*Toma el primer elemento de la lista lst_b y lo pone el primero en la lista lst_a*/
 static void	push(t_list **lst_a, t_list **lst_b)
 {
 	t_list	*aux;
@@ -102,40 +102,37 @@ static void     print_lst(t_list *lst)
         }
 }
 
-static int     push_swap(t_list **a)
+static void	print_ab_lists(t_list *a, t_list *b)
 {
-        //*lst->content es el numero en la posicion 1
-        //*lst->next apunta al siguiente elemento
-
-        int             len;
-        int             result;
-        t_list        *b;
-        t_list  *lst;
-
-        result = 0;
-        len = ft_lstsize(*a);
 	ft_printf("Lista a: ");
 	print_lst(a);
+	ft_printf("\nLista b:");
+	print_lst(b);
 	ft_printf("\n");
-	ft_printf("Listab: ");
-        print_lst(&b);
-        ft_printf("\n");
-        swap(a);
+}
+
+static int     push_swap(t_list **a)
+{
+	//*lst->content es el numero en la posicion 1
+	////*lst->next apunta al siguiente elemento
+
+	int             len;
+	int             result;
+	t_list        *b;
+	t_list  *lst;
+
+        result = 0;
+	b = NULL;
+	print_ab_lists(*a, b);
+	swap(a);
 	ft_printf("sa\n");
-	ft_printf("Lista a: ");
-        print_lst(a);
-        ft_printf("\n");
-        ft_printf("Listab: ");
-        print_lst(&b);
-        ft_printf("\n");
-	rotate(*a);
+	print_ab_lists(*a, b);
+	rotate(a);
 	ft_printf("ra\n");
-        rt_printf("Lista a: ");
-        print_lst(a);
-        ft_printf("\n");
-        ft_printf("Listab: ");
-        print_lst(&b);
-        ft_printf("\n");
+	print_ab_lists(*a, b);
+	push(&b, a);
+	ft_printf("pb\n");
+	print_ab_lists(*a, b);
 	return (1);
 }
 
@@ -146,10 +143,12 @@ int     main()
         t_list  *num2;
         t_list  *num3;
         t_list  *num4;
+	t_list	*num5;
         int     *n1;
         int     *n2;
         int     *n3;
         int     *n4;
+	int	*n5;
 
 	n1 = (int *) malloc (sizeof(int));
         n1[0] = 23;
@@ -160,7 +159,7 @@ int     main()
 	n4 = (int *) malloc (sizeof(int));
         n4[0] = 2;
 	n5 = (int *) malloc (sizeof(int));
-	n[5] = 13;
+	n5[0] = 13;
         num1 = ft_lstnew(n1);
         num2 = ft_lstnew(n2);
         num3 = ft_lstnew(n3);
@@ -170,6 +169,7 @@ int     main()
         ft_lstadd_back(&a, num2);
         ft_lstadd_back(&a, num3);
         ft_lstadd_back(&a, num4);
+	ft_lstadd_back(&a, num5);
         push_swap(&a);
         ft_lstclear(&a, free);
         return (0);
