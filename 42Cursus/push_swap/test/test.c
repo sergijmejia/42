@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/09 16:41:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/10 14:18:59 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	print_ab_lists(t_list *a, t_list *b)
 {
 	ft_printf("Lista a: ");
 	print_lst(a);
-	ft_printf("\nLista b:");
+	ft_printf("\nLista b: ");
 	print_lst(b);
 	ft_printf("\n");
 }
@@ -164,11 +164,24 @@ static void	reverse_rotate_rotate(t_list **lst_a, t_list **lst_b)
 /* *******************  FUNCIONES ALGORITMO ORGANIZACION  ******************* */
 /* ************************************************************************** */
 
-/*Cuenta cuantos movimientos se han de hacer en lst para organizar correctamente x*/
-static int	count_move(t_list *lst, int x)
+/*Cuenta la cantidad de movimientos que se han de hacer para llevar la posicion x hasta la primera posicion siguiendo una determinada direccion dir*/
+static int	count_moves_a(t_list *lst, int pos, int dir)
+{
+	int	size;
+
+	if (lst == NULL)
+		return (0);
+	size = ft_lstsize(lst);
+	if (pos == 0 || dir == -1)
+		return (pos);
+	else
+		return (size - pos);
+}
+
+/*Cuenta cuantos movimientos se han de hacer en lst para organizar correctamente x habiendo desplazado i posiciones previamente*/
+static int	count_moves_b(t_list *lst, int x, int i)
 {
 	int		size;
-	int		i;
 	int		j;
 	int		boolean;
 	int		aux_1;
@@ -176,6 +189,7 @@ static int	count_move(t_list *lst, int x)
 	t_list	*aux;
 
 	size = ft_lstsize(lst);
+	ft_printf("La longitud de la lista es: %d\n", size);
 	i = 0;
 	boolean = 0;
 	if (*(int *)(lst->content) < x && lst->content > ft_lstlast(lst)->content)
@@ -184,17 +198,45 @@ static int	count_move(t_list *lst, int x)
 	while (!boolean)
 	{
 		i++;
-		aux_1 = aux->content;
-		aux_2 = (ft_lstlast(aux))->content;
+		ft_printf("\nMovimiento #%d. ", i);
+		aux_1 = *(int *)(aux->content);
+		aux_2 = *(int *)((aux->next)->content);
+		ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
 		if (x < aux_1 && x > aux_2)
 			break ;
 		aux = aux->next;
 	}
-	j = len - i;
+	ft_printf("En total hace %d movimientos hacia abajo\n", i);
+	j = size - i;
+	ft_printf("Esto equivale a hacer %d movimientos hacia arriba\n", j);
 	if (i >= j)
 		return (j);
 	else
 		return (i);
+
+}
+
+static int min_move (t_list **a, t_list **b)
+{
+	int	i;
+	int	moves;
+	int	aux;
+	int	moves_aux;
+	int	pos;
+	int	direction;
+
+	i = 0;
+	pos = 0;
+	direction = -1;
+	mix_move = 1;
+	moves_a = count_moves_a(*a, i, direction);
+	moves_b = count_moves_b(*b, *a[pos], (-1) * (moves_a));
+	moves = moves_a + moves_b;
+
+	
+	
+		
+
 
 }
 
@@ -207,120 +249,117 @@ static int     push_swap(t_list **a)
 	//*lst->content es el numero en la posicion 1
 	////*lst->next apunta al siguiente elemento
 
-	int             len;
+	int             size;
 	int             result;
-	int		x;
+	int		mov;
+	int		i;
 	t_list        *b;
 	t_list  *lst;
 
-	x =17;
-        result = count_move(*a, x);
-	ft_printf("%d\n", result);
 	b = NULL;
 	print_ab_lists(*a, b);
+	ft_printf("\n");
+	push(&b, a);
+	ft_printf("pb\n");
+	print_ab_lists(*a, b);
+	ft_printf("\n");
+	push(&b, a);
+	ft_printf("pb\n");
+	print_ab_lists(*a, b);
+
+	size = ft_lstsize(*a);
+	i = 1;
+	while (size > 0)
+	{
+		min_move(a, &b);
+		size = ft_lstsize(*a);
+	}
+	ft_printf("\n");
 	swap(a);
 	ft_printf("sa\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	rotate(a);
 	ft_printf("ra\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	push(&b, a);
 	ft_printf("pb\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	reverse_rotate(a);
 	ft_printf("rra\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	reverse_rotate(a);
 	ft_printf("rra\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	push(&b, a);
 	ft_printf("pb\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	reverse_rotate_rotate(a, &b);
 	ft_printf("rrr\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	push(a, &b);
 	ft_printf("pa\n");
 	print_ab_lists(*a, b);
+	ft_printf("\n");
 	reverse_rotate_rotate(a, &b);
 	ft_printf("rrr\n");
 	print_ab_lists(*a, b);
+	for (int j = 0; j < 4; j++)
+	{
+		ft_printf("\n");
+		rotate(a);
+		ft_printf("ra\n");
+		print_ab_lists(*a, b);
+		if (j % 2 == 1)
+		{
+			ft_printf("\n");
+			push(&b, a);
+			ft_printf("pb\n");
+			print_ab_lists(*a, b);
+		}
+	}
+	for (int j = 0; j < 3; j++)
+	{
+		ft_printf("\n");
+		rotate(a);
+		ft_printf("ra\n");
+		print_ab_lists(*a, b);
+	}
+	lst = *a;
+	*a = b;
+	b = lst;
+	ft_printf("\n");
+	print_ab_lists(*a, b);
+	result = count_moves_a(*a, 2, 1) + count_moves_b(b, 12, 0);
+	ft_printf("\n");
+	ft_printf("%d\n", result);
 	return (1);
 }
 
-int     main()
+int     main(int argc, char **argv)
 {
-        t_list	*a;
-        t_list  *num1;
-        t_list  *num2;
-        t_list  *num3;
-        t_list  *num4;
-	t_list	*num5;
-        int	*n0;
-	int     *n1;
-        int     *n2;
-        int     *n3;
-        int     *n4;
-	int	*n5;
-	int	*n6;
-	int	*n7;
-	int	*n8;
-	int	*n9;
-	int	*n10;
-	int	*n11;
-	int	*n12;
+	t_list	*a;
+	t_list *new_node;
+	int		i;
+	int		*new_num;
 
-	n0 = (int *) malloc (sizeof(int));
-	n0[0] = 9;
-	n1 = (int *) malloc (sizeof(int));
-        n1[0] = 8;
-	n2 = (int *) malloc (sizeof(int));
-        n2[0] = 6;
-	n3 = (int *) malloc (sizeof(int));
-        n3[0] = 3;
-	n4 = (int *) malloc (sizeof(int));
-        n4[0] = 35;
-	n5 = (int *) malloc (sizeof(int));
-	n5[0] = 33;
-	n6 = (int *) malloc (sizeof(int));
-	n6[0] = 31;
-	n7 = (int *) malloc (sizeof(int));
-	n7[0] = 23;
-	n8 = (int *) malloc (sizeof(int));
-	n8[0] = 22;
-	n9 = (int *) malloc (sizeof(int));
-	n9[0] = 18;
-	n10 = (int *) malloc (sizeof(int));
-	n10[0] = 16;
-	n11 = (int *) malloc (sizeof(int));
-	n11[0] = 12;
-	num0 = ft_lstnew(n0);
-        num1 = ft_lstnew(n1);
-        num2 = ft_lstnew(n2);
-        num3 = ft_lstnew(n3);
-        num4 = ft_lstnew(n4);
-	num5 = ft_lstnew(n5);
-	num6 = ft_lstnew(n6);
-	num7 = ft_lstnew(n7);
-	num8 = ft_lstnew(n8);
-	num9 = ft_lstnew(n9);
-	num10 = ft_lstnew(n10);
-	num11 = ft_lstnew(n11);
-
-        a = num0;
-	ft_lstadd_back(&a, num1);
-        ft_lstadd_back(&a, num2);
-        ft_lstadd_back(&a, num3);
-        ft_lstadd_back(&a, num4);
-	ft_lstadd_back(&a, num5);
-	ft_lstadd_back(&a, num6);
-	ft_lstadd_back(&a, num7);
-	ft_lstadd_back(&a, num8);
-	ft_lstadd_back(&a, num9);
-	ft_lstadd_back(&a, num10);
-	ft_lstadd_back(&a, num11);
-        push_swap(&a);
-        ft_lstclear(&a, free);
-        return (0);
+	i = 1;
+	a = NULL;
+	while (i < argc)
+	{
+		new_num = (int *) malloc (sizeof(int));
+		new_num[0] =  ft_atoi(argv[i]);
+		new_node = ft_lstnew(new_num);
+		ft_lstadd_back(&a, new_node);
+		i++;
+	}
+	push_swap(&a);
+	ft_lstclear(&a, free);
+	return (0);
 }
-
