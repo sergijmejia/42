@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/10 14:18:59 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:48:10 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,57 @@
 /* ************************************************************************** */
 /* *************************  FUNCIONES AUXILIARES  ************************* */
 /* ************************************************************************** */
+
+/*Devuelve el valor minimo de la lista*/
+static int	ft_lstmin(t_list *lst)
+{
+	int	min;
+
+	min = *(int *)(lst->content);
+	while (lst->next)
+	{
+		lst = lst->next;
+		if (min > *(int *)(lst->content))
+			min = *(int *)(lst->content);
+	}
+	return (min);
+}
+
+/*Devuelve el malor maximo de la lista*/
+static int	ft_lstmax(t_list *lst)
+{
+	int	max;
+
+	max = *(int *)(lst->content);
+	while (lst->next)
+	{
+		lst = lst->next;
+		if (max < *(int *)(lst->content))
+			max = *(int *)(lst->content);
+	}
+	return (max);
+}
+
+/*Devuelve un puntero a la posicion x de la lista lst*/
+static t_list	*ft_lstpos(t_list *lst, int x)
+{
+	int		size;
+	int		i;
+	t_list	*pnt;
+
+	size = ft_lstsize(lst);
+	if (x >= size || x < 0)
+		return (NULL);
+	pnt = lst;
+	i = 0;
+	while (i < x)
+	{
+		pnt = pnt->next;
+		i++;
+	}
+	return (pnt);
+}
+
 
 /*Devuelve un puntero al penultimo elemmento de la lista lst*/
 static t_list	*ft_lstsecondlast(t_list *lst)
@@ -54,6 +105,7 @@ static t_list   *ft_lstdup(t_list *lst)
         return (new_lst);
 }
 
+/*Imprime por pantalla la lista lst*/
 static void     print_lst(t_list *lst)
 {
 	if (lst == NULL)
@@ -68,6 +120,7 @@ static void     print_lst(t_list *lst)
         }
 }
 
+/*Imprime por pantalla las dos listas a y b*/
 static void	print_ab_lists(t_list *a, t_list *b)
 {
 	ft_printf("Lista a: ");
@@ -178,179 +231,264 @@ static int	count_moves_a(t_list *lst, int pos, int dir)
 		return (size - pos);
 }
 
-/*Cuenta cuantos movimientos se han de hacer en lst para organizar correctamente x habiendo desplazado i posiciones previamente*/
-static int	count_moves_b(t_list *lst, int x, int i)
+/*Cuenta cuantos movimientos se han de hacer en lst para organizar correctamente x habiendo desplazado moves posiciones previamente*/
+static int	count_moves_b(t_list *lst, int x, int moves)
 {
 	int		size;
+	int		i;
 	int		j;
 	int		boolean;
 	int		aux_1;
 	int		aux_2;
+	static int	min;
+	static int	max;
 	t_list	*aux;
 
 	size = ft_lstsize(lst);
+	min = ft_lstmin(lst);
+	max = ft_lstmax(lst);
 	ft_printf("La longitud de la lista es: %d\n", size);
+
 	i = 0;
 	boolean = 0;
-	if (*(int *)(lst->content) < x && lst->content > ft_lstlast(lst)->content)
-		return (i);
-	aux = lst;
-	while (!boolean)
+	if (x < min || x > max)
 	{
-		i++;
-		ft_printf("\nMovimiento #%d. ", i);
-		aux_1 = *(int *)(aux->content);
-		aux_2 = *(int *)((aux->next)->content);
-		ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
-		if (x < aux_1 && x > aux_2)
-			break ;
-		aux = aux->next;
+		aux = lst;
+		while (!boolean)
+		{
+			i++;
+			ft_printf("\nMovimiento #%d. ", i);
+			aux_2 = *(int *)((aux->next)->content);
+			if (aux_2 == max)
+				break ;
+			aux = aux->next;
+		}
 	}
+	else if (!(*(int *)(lst->content) < x) || !(x < *(int *)(ft_lstlast(lst)->content)))
+	{
+		aux = lst;
+		while (!boolean)
+		{
+			i++;
+			ft_printf("\nMovimiento #%d. ", i);
+			aux_1 = *(int *)(aux->content);
+			if (aux->next)
+				aux_2 = *(int *)((aux->next)->content);
+			else
+				aux_2 = *(int *)(lst->content);
+			ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
+			if (x < aux_1 && x > aux_2)
+				break ;
+			aux = aux->next;
+		}
+	}
+	i = (i + moves) % size;
 	ft_printf("En total hace %d movimientos hacia abajo\n", i);
 	j = size - i;
 	ft_printf("Esto equivale a hacer %d movimientos hacia arriba\n", j);
 	if (i >= j)
 		return (j);
 	else
-		return (i);
+		return ((-1) * i);
 
 }
 
+/*Realiza los movimientos con los datos transferidos*/
+static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
+{
+	int	size_a;
+	int	size_b;
+	int	moves_a;
+	int	moves_b;
+
+	size_a = ft_lstsize(*a);
+	size_b = ft_lstsize(*b);
+	if (direction_a == -1 && rotate == 0)
+	{
+		if (pos > 0)
+			ft_printf("Exec");
+		while (pos > 0)
+		{
+			rotate(a);
+			pos--;
+			ft_printf(" ra");
+		}
+	}
+	if (direction_a == -1 && rotate == 1)
+	{
+		if (pos > 0)
+			ft_printf("Exec");
+		while (pos > 0)
+		{
+			rotate_rotate(a, b);
+			pos--;
+			ft_printf(" rr");
+		}
+	}
+	if (direction_a == 1 && rotate == 0)
+	{
+		if (pos > 0)
+			ft_printf("Exec");
+		while (size_a - pos > 0)
+		{
+			reverse_rotate(a);
+			pos++;
+			ft_printf(" rra");
+		}
+	}
+	if (direction_a == 1 && rotate == 1)
+	{
+		if (pos > 0)
+			ft_printf("Exec");
+		while (size_a - pos > 0)
+		{
+			reverse_rotate_rotate(a, b);
+			pos++;
+			ft_printf(" rrr");
+		}
+	}
+	moves_b = count_moves_b(*b, *(int *)((*b)->content), 0);
+
+
+}
+
+/*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
 static int min_move (t_list **a, t_list **b)
 {
 	int	i;
 	int	moves;
+	int	moves_a;
+	int	moves_b;
+	int	moves_b_dir;
+	int	moves_i_neg;
 	int	aux;
-	int	moves_aux;
 	int	pos;
-	int	direction;
+	int	direction_a;
+	int	direction_b;
+	int	rotate;
+	int	num_b;
 
-	i = 0;
 	pos = 0;
-	direction = -1;
-	mix_move = 1;
-	moves_a = count_moves_a(*a, i, direction);
-	moves_b = count_moves_b(*b, *a[pos], (-1) * (moves_a));
-	moves = moves_a + moves_b;
-
-	
-	
-		
-
-
+	direction_a = -1;
+	direction_b = 1;
+	rotate = 0;
+	num_b = *(int *)((*a)->content);
+	moves = count_moves_b(*b, num_b, 0);
+	ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves);
+	i = 1;
+	while (i < moves)
+	{
+		moves_a = count_moves_a(*a, i, -1);
+		num_b = *(int *)(ft_lstpos(*a, i)->content);
+		//ft_printf("Para la primera se analiza los movimientos para ")
+		moves_b_dir = count_moves_b(*b, num_b, (-1) * moves_a);
+		moves_b = ft_abs(moves_b_dir);
+		if ((moves_a + moves_b) < moves)
+		{
+			pos = i;
+			direction_a = -1;
+			rotate = 1;
+			moves = moves_a + moves_b;
+			if (moves_b_dir < 0)
+				direction_b = -1;
+			else
+				direction_b = 1;
+		}
+		moves_b_dir = count_moves_b(*b, num_b, 0);
+		moves_b = ft_abs(moves_b_dir);
+		if ((moves_a + moves_b) < moves)
+		{
+			pos = i;
+			direction_a = -1;
+			rotate = 0;
+			moves = moves_a + moves_b;
+			if (moves_b_dir < 0)
+				direction_b = -1;
+			else
+				direction_b = 1;
+		}
+		if (moves >= 3)
+		{
+			moves_a = count_moves_a(*a, moves - 2, 1);
+			num_b = *(int *)(ft_lstpos(*a, moves - 2)->content);
+			moves_b_dir = count_moves_b(*b, num_b, moves_a);
+			moves_b = ft_abs(moves_b_dir);
+			if ((moves_a + moves_b) < moves)
+			{
+				pos = moves - 2;
+				direction_a = 1;
+				rotate = 1;
+				moves = moves_a + moves_b;
+				if (moves_b_dir < 0)
+					direction_b = -1;
+				else
+					direction_b = 1;
+			}
+		}
+		if (moves >= 3)
+		{
+			moves_b_dir = count_moves_a(*b, num_b, 0);
+			moves_b = ft_abs(moves_b_dir);
+			if ((moves_a + moves_b) < moves)
+			{
+				pos = moves - 2;
+				direction_a = 1;
+				rotate = 0;
+				moves = moves_a + moves_b;
+				if (moves_b_dir < 0)
+					direction_b = -1;
+				else
+					direction_b = 1;
+			}
+		}
+		ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves + 1);
+		i++;
+	}
+	do_moves(a, b, pos, direction_a, direction_b, rotate);
+	moves++;
+	ft_printf("El elemento que menos movimientos necesita es: %d. Se pasa a la lista B en %d movimientos", *(int *)(ft_lstpos(*a, pos)->content), moves);
+	return (moves);
 }
 
 /* ************************************************************************** */
 /* **************************  FUNCION  PUSH_SWAP  ************************** */
 /* ************************************************************************** */
 
-static int     push_swap(t_list **a)
+static int     push_swap(t_list **a, t_list **b)
 {
 	//*lst->content es el numero en la posicion 1
 	////*lst->next apunta al siguiente elemento
 
-	int             size;
-	int             result;
-	int		mov;
-	int		i;
-	t_list        *b;
-	t_list  *lst;
+	int	moves;
+	int	min;
+	int	max;
 
-	b = NULL;
-	print_ab_lists(*a, b);
+	print_ab_lists(*a, *b);
+	
 	ft_printf("\n");
-	push(&b, a);
-	ft_printf("pb\n");
-	print_ab_lists(*a, b);
+	min = *(int *)((*a)->content);
+	max = *(int *)((*a)->content);
+	push(b, a);
+	push(b, a);
+	ft_printf("Exec pb pb:\n");
+	print_ab_lists(*a, *b);
+	moves = min_move(a, b);
 	ft_printf("\n");
-	push(&b, a);
-	ft_printf("pb\n");
-	print_ab_lists(*a, b);
-
-	size = ft_lstsize(*a);
-	i = 1;
-	while (size > 0)
-	{
-		min_move(a, &b);
-		size = ft_lstsize(*a);
-	}
-	ft_printf("\n");
-	swap(a);
-	ft_printf("sa\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	rotate(a);
-	ft_printf("ra\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	push(&b, a);
-	ft_printf("pb\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	reverse_rotate(a);
-	ft_printf("rra\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	reverse_rotate(a);
-	ft_printf("rra\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	push(&b, a);
-	ft_printf("pb\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	reverse_rotate_rotate(a, &b);
-	ft_printf("rrr\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	push(a, &b);
-	ft_printf("pa\n");
-	print_ab_lists(*a, b);
-	ft_printf("\n");
-	reverse_rotate_rotate(a, &b);
-	ft_printf("rrr\n");
-	print_ab_lists(*a, b);
-	for (int j = 0; j < 4; j++)
-	{
-		ft_printf("\n");
-		rotate(a);
-		ft_printf("ra\n");
-		print_ab_lists(*a, b);
-		if (j % 2 == 1)
-		{
-			ft_printf("\n");
-			push(&b, a);
-			ft_printf("pb\n");
-			print_ab_lists(*a, b);
-		}
-	}
-	for (int j = 0; j < 3; j++)
-	{
-		ft_printf("\n");
-		rotate(a);
-		ft_printf("ra\n");
-		print_ab_lists(*a, b);
-	}
-	lst = *a;
-	*a = b;
-	b = lst;
-	ft_printf("\n");
-	print_ab_lists(*a, b);
-	result = count_moves_a(*a, 2, 1) + count_moves_b(b, 12, 0);
-	ft_printf("\n");
-	ft_printf("%d\n", result);
+	ft_printf("%d\n", moves);
 	return (1);
 }
 
 int     main(int argc, char **argv)
 {
 	t_list	*a;
+	t_list	*b;
 	t_list *new_node;
 	int		i;
 	int		*new_num;
 
 	i = 1;
 	a = NULL;
+	b = NULL;
 	while (i < argc)
 	{
 		new_num = (int *) malloc (sizeof(int));
@@ -359,7 +497,7 @@ int     main(int argc, char **argv)
 		ft_lstadd_back(&a, new_node);
 		i++;
 	}
-	push_swap(&a);
+	push_swap(&a, &b);
 	ft_lstclear(&a, free);
 	return (0);
 }
