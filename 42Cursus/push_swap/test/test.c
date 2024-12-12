@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/11 18:48:10 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/12 19:20:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ static int	count_moves_b(t_list *lst, int x, int moves)
 	size = ft_lstsize(lst);
 	min = ft_lstmin(lst);
 	max = ft_lstmax(lst);
-	ft_printf("La longitud de la lista es: %d\n", size);
+	//ft_printf("La longitud de la lista es: %d\n", size);
 
 	i = 0;
 	boolean = 0;
@@ -257,7 +257,7 @@ static int	count_moves_b(t_list *lst, int x, int moves)
 		while (!boolean)
 		{
 			i++;
-			ft_printf("\nMovimiento #%d. ", i);
+			//ft_printf("\nMovimiento #%d. ", i);
 			aux_2 = *(int *)((aux->next)->content);
 			if (aux_2 == max)
 				break ;
@@ -270,22 +270,22 @@ static int	count_moves_b(t_list *lst, int x, int moves)
 		while (!boolean)
 		{
 			i++;
-			ft_printf("\nMovimiento #%d. ", i);
+			//ft_printf("\nMovimiento #%d. ", i);
 			aux_1 = *(int *)(aux->content);
 			if (aux->next)
 				aux_2 = *(int *)((aux->next)->content);
 			else
 				aux_2 = *(int *)(lst->content);
-			ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
+			//ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
 			if (x < aux_1 && x > aux_2)
 				break ;
 			aux = aux->next;
 		}
 	}
 	i = (i + moves) % size;
-	ft_printf("En total hace %d movimientos hacia abajo\n", i);
+	//ft_printf("En total hace %d movimientos hacia abajo\n", i);
 	j = size - i;
-	ft_printf("Esto equivale a hacer %d movimientos hacia arriba\n", j);
+	//ft_printf("Esto equivale a hacer %d movimientos hacia arriba\n", j);
 	if (i >= j)
 		return (j);
 	else
@@ -294,7 +294,7 @@ static int	count_moves_b(t_list *lst, int x, int moves)
 }
 
 /*Realiza los movimientos con los datos transferidos*/
-static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
+static void	do_moves(t_list **a, t_list **b, int pos, int direction_a, int direction_b, int rot)
 {
 	int	size_a;
 	int	size_b;
@@ -303,7 +303,7 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
 
 	size_a = ft_lstsize(*a);
 	size_b = ft_lstsize(*b);
-	if (direction_a == -1 && rotate == 0)
+	if (direction_a == -1 && rot == 0)
 	{
 		if (pos > 0)
 			ft_printf("Exec");
@@ -313,8 +313,11 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
 			pos--;
 			ft_printf(" ra");
 		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
 	}
-	if (direction_a == -1 && rotate == 1)
+	if (direction_a == -1 && rot == 1)
 	{
 		if (pos > 0)
 			ft_printf("Exec");
@@ -324,8 +327,11 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
 			pos--;
 			ft_printf(" rr");
 		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
 	}
-	if (direction_a == 1 && rotate == 0)
+	if (direction_a == 1 && rot == 0)
 	{
 		if (pos > 0)
 			ft_printf("Exec");
@@ -335,8 +341,11 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
 			pos++;
 			ft_printf(" rra");
 		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
 	}
-	if (direction_a == 1 && rotate == 1)
+	if (direction_a == 1 && rot == 1)
 	{
 		if (pos > 0)
 			ft_printf("Exec");
@@ -346,10 +355,42 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction, int rotate)
 			pos++;
 			ft_printf(" rrr");
 		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
 	}
-	moves_b = count_moves_b(*b, *(int *)((*b)->content), 0);
-
-
+	moves_b = count_moves_b(*b, *(int *)((*a)->content), 0);
+	if (moves_b > 0)
+	{
+		ft_printf("Exec");
+	}
+	if (direction_b == 1)
+	{
+		while (moves_b > 0)
+		{
+			reverse_rotate(b);
+			moves_b--;
+			ft_printf(" rrb");
+		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
+	}
+	if (direction_b == -1)
+	{
+		while (moves_b > 0)
+		{
+			rotate(b);
+			moves_b--;
+			ft_printf(" rb");
+		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
+	}
+	ft_printf("\n");
+	ft_printf("Exec pb\n");
+	push(b, a);
 }
 
 /*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
@@ -374,7 +415,7 @@ static int min_move (t_list **a, t_list **b)
 	rotate = 0;
 	num_b = *(int *)((*a)->content);
 	moves = count_moves_b(*b, num_b, 0);
-	ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves);
+	//ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves);
 	i = 1;
 	while (i < moves)
 	{
@@ -441,12 +482,12 @@ static int min_move (t_list **a, t_list **b)
 					direction_b = 1;
 			}
 		}
-		ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves + 1);
+		//ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves + 1);
 		i++;
 	}
 	do_moves(a, b, pos, direction_a, direction_b, rotate);
 	moves++;
-	ft_printf("El elemento que menos movimientos necesita es: %d. Se pasa a la lista B en %d movimientos", *(int *)(ft_lstpos(*a, pos)->content), moves);
+	//ft_printf("El elemento que menos movimientos necesita es: %d. Se pasa a la lista B en %d movimientos", *(int *)(ft_lstpos(*a, pos)->content), moves);
 	return (moves);
 }
 
@@ -464,15 +505,21 @@ static int     push_swap(t_list **a, t_list **b)
 	int	max;
 
 	print_ab_lists(*a, *b);
-	
 	ft_printf("\n");
 	min = *(int *)((*a)->content);
 	max = *(int *)((*a)->content);
 	push(b, a);
 	push(b, a);
-	ft_printf("Exec pb pb:\n");
+	ft_printf("Exec pb pb\n");
+	moves = 2;
 	print_ab_lists(*a, *b);
-	moves = min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
+	moves = moves + min_move(a, b);
 	ft_printf("\n");
 	ft_printf("%d\n", moves);
 	return (1);
