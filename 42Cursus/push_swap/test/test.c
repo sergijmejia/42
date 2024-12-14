@@ -425,7 +425,7 @@ static int min_move (t_list **a, t_list **b)
 	}
 	//ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves);
 	i = 1;
-	while (i < moves)
+	while (i < moves && i < ft_lstsize(*a))
 	{
 		moves_a = count_moves_a(*a, i, -1);
 		num_b = *(int *)(ft_lstpos(*a, i)->content);
@@ -456,47 +456,120 @@ static int min_move (t_list **a, t_list **b)
 			else
 				direction_b = 1;
 		}
-		if (moves >= 3)
+		moves_a = count_moves_a(*a, ft_lstsize(*a) - i, 1);
+		num_b = *(int *)(ft_lstpos(*a, ft_lstsize(*a) - i)->content);
+		moves_b_dir = count_moves_b(*b, num_b, moves_a);
+		moves_b = ft_abs(moves_b_dir);
+		if ((moves_a + moves_b) < moves)
 		{
-			moves_aux = moves % ft_lstsize(*a);
-			moves_a = count_moves_a(*a, moves_aux - 2, 1);
-			num_b = *(int *)(ft_lstpos(*a, moves_aux - 2)->content);
-			moves_b_dir = count_moves_b(*b, num_b, moves_a);
-			moves_b = ft_abs(moves_b_dir);
-			if ((moves_a + moves_b) < moves)
-			{
-				pos = moves - 2;
-				direction_a = 1;
-				rotate = 1;
-				moves = moves_a + moves_b;
-				if (moves_b_dir < 0)
-					direction_b = -1;
-				else
-					direction_b = 1;
-			}
+			pos = ft_lstsize(*a) - i;
+			direction_a = 1;
+			rotate = 1;
+			moves = moves_a + moves_b;
+			if (moves_b_dir < 0)
+				direction_b = -1;
+			else
+				direction_b = 1;
 		}
-		if (moves >= 3)
+		moves_b_dir = count_moves_b(*b, num_b, 0);
+		moves_b = ft_abs(moves_b_dir);
+		if ((moves_a + moves_b) < moves)
 		{
-			moves_b_dir = count_moves_a(*b, num_b, 0);
-			moves_b = ft_abs(moves_b_dir);
-			if ((moves_a + moves_b) < moves)
-			{
-				pos = moves - 2;
-				direction_a = 1;
-				rotate = 0;
-				moves = moves_a + moves_b;
-				if (moves_b_dir < 0)
-					direction_b = -1;
-				else
-					direction_b = 1;
-			}
+			pos = ft_lstsize(*a) - i;
+			direction_a = 1;
+			rotate = 0;
+			moves = moves_a + moves_b;
+			if (moves_b_dir < 0)
+				direction_b = -1;
+			else
+				direction_b = 1;
 		}
+		if (i >= (ft_lstsize(*a) / 2))
+			break ;
 		//ft_printf("Para pasar el elemento en pos %d necesita %d movimientos.\n", pos, moves + 1);
 		i++;
 	}
 	do_moves(a, b, pos, direction_a, direction_b, rotate);
 	moves++;
 	//ft_printf("El elemento que menos movimientos necesita es: %d. Se pasa a la lista B en %d movimientos", *(int *)(ft_lstpos(*a, pos)->content), moves);
+	return (moves);
+}
+
+/*Funcion que traspasa todos los numeros de la lista b a la lista a (que aun tiene 2 elementos)*/
+static int organize(t_list **a, t_list **b)
+{
+	int	size_b;
+	int	max_b;
+	int	i;
+	int	direction_b;
+	int	moves;
+	int	b_first;
+	int	a_last;
+	int	a_second_last;
+	t_list	*aux;
+
+	size_b = ft_lstsize(*b);
+	max_b = ft_lstmax(*b);
+	aux = *b;
+	direction_b = -1;
+	moves = 0;
+	i = 0;
+	while ((*(int *)(aux->content)) != max_b)
+	{
+		i++;
+		aux = aux->next;
+	}
+	if ((size_b - i) < i)
+	{
+		i = size_b - i;
+		direction_b = 1;
+	}
+	if (i > 0)
+		ft_printf("Exec");
+	while (i > 0)
+	{
+		if (direction_b == 1)
+		{
+			reverse_rotate(b);
+			ft_printf(" rrb");
+		}
+		if (direction_b == -1)
+		{
+			rotate(b);
+			ft_printf(" rb");
+		}
+		moves++;
+		i--;
+	}
+	ft_printf("\n");
+	print_ab_lists(*a, *b);
+	ft_printf("\n");
+	if (size_b > 0)
+		ft_printf("Exec");
+	while (size_b > 0)
+	{
+		b_first = *(int *)((*b)->content); //70
+		a_last = *(int *)((ft_lstlast(*a))->content); //71
+		a_second_last = *(int *)((ft_lstsecondlast(*a))->content); //100
+		ft_printf("Exec");
+		if (b_first > a_last || (b_first < a_last && b_first < a_second_last && a_second_last != max_b))
+		{
+			push(a, b);
+			ft_printf(" pa");
+			moves++;
+		}
+		else
+		{
+			reverse_rotate(a);
+			ft_printf(" rra");
+			moves++;
+		}
+		ft_printf("\n");
+		print_ab_lists(*a, *b);
+		ft_printf("\n");
+		size_b = ft_lstsize(*b);
+	}
+	ft_printf("\n");
 	return (moves);
 }
 
@@ -508,16 +581,11 @@ static int     push_swap(t_list **a, t_list **b)
 {
 	//*lst->content es el numero en la posicion 1
 	////*lst->next apunta al siguiente elemento
-
 	int	moves;
-	int	min;
-	int	max;
 	int	size;
 
 	print_ab_lists(*a, *b);
 	ft_printf("\n");
-	min = *(int *)((*a)->content);
-	max = *(int *)((*a)->content);
 	push(b, a);
 	push(b, a);
 	ft_printf("Exec pb pb\n");
@@ -525,17 +593,20 @@ static int     push_swap(t_list **a, t_list **b)
 	print_ab_lists(*a, *b);
 	ft_printf("\n");
 	size = ft_lstsize(*a);
-	while (size > 0)
+	while (size > 2)
 	{
 		moves = moves + min_move(a, b);
 		size = ft_lstsize(*a);
 	}
-
+	if ((*(int *)((*a)->content)) > (*(int *)(((*a)->next)->content)))
+		swap(a);
+	moves = moves + 1 + organize(a, b);
 	ft_printf("\n");
-	ft_printf("%d\n", moves);
+	ft_printf("Total de movimientos: %d\n", moves);
 	return (1);
 }
 
+/*Programa main principal*/
 int     main(int argc, char **argv)
 {
 	t_list	*a;
