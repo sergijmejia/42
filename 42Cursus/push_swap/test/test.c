@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/13 20:43:39 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/14 20:34:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,75 +306,93 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction_a, int direc
 	size_b = ft_lstsize(*b);
 	if (direction_a == -1 && rot == 0 && pos > 0)
 	{
-		ft_printf("Exec");
+		//ft_printf("Exec");
 		while (pos > 0)
 		{
 			rotate(a);
 			pos--;
-			ft_printf(" ra");
-		}	
+			ft_printf("ra\n");
+		}
+		/*	
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
 	if (direction_a == -1 && rot == 1)
 	{
+		/*
 		if (pos > 0)
 			ft_printf("Exec");
+		*/
 		while (pos > 0)
 		{
 			rotate_rotate(a, b);
 			pos--;
-			ft_printf(" rr");
+			ft_printf("rr\n");
 		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
 	if (direction_a == 1 && rot == 0)
 	{
+		/*
 		if (pos > 0)
 			ft_printf("Exec");
+		*/
 		while (size_a - pos > 0)
 		{
 			reverse_rotate(a);
 			pos++;
-			ft_printf(" rra");
+			ft_printf("rra\n");
 		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
 	if (direction_a == 1 && rot == 1)
 	{
+		/*
 		if (pos > 0)
 			ft_printf("Exec");
+		*/
 		while (size_a - pos > 0)
 		{
 			reverse_rotate_rotate(a, b);
 			pos++;
-			ft_printf(" rrr");
+			ft_printf("rrr\n");
 		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
 	moves_b = ft_abs(count_moves_b(*b, *(int *)((*a)->content), 0));
+	/*
 	if (moves_b > 0)
 	{
 		ft_printf("Exec");
 	}
+	*/
 	if (direction_b == 1)
 	{
 		while (moves_b > 0)
 		{
 			reverse_rotate(b);
 			moves_b--;
-			ft_printf(" rrb");
+			ft_printf("rrb\n");
 		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
 	if (direction_b == -1)
 	{
@@ -382,17 +400,22 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction_a, int direc
 		{
 			rotate(b);
 			moves_b--;
-			ft_printf(" rb");
+			ft_printf("rb\n");
 		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 	}
-	ft_printf("\n");
-	ft_printf("Exec pb\n");
+
+	//ft_printf("\n");
+	ft_printf("pb\n");
 	push(b, a);
+	/*
 	print_ab_lists(*a, *b);
 	ft_printf("\n");
+	*/
 }
 
 /*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
@@ -524,52 +547,62 @@ static int organize(t_list **a, t_list **b)
 		i = size_b - i;
 		direction_b = 1;
 	}
+	/*
 	if (i > 0)
 		ft_printf("Exec");
+	*/
 	while (i > 0)
 	{
 		if (direction_b == 1)
 		{
 			reverse_rotate(b);
-			ft_printf(" rrb");
+			ft_printf("rrb\n");
 		}
 		if (direction_b == -1)
 		{
 			rotate(b);
-			ft_printf(" rb");
+			ft_printf("rb\n");
 		}
 		moves++;
 		i--;
 	}
+	/*
 	ft_printf("\n");
 	print_ab_lists(*a, *b);
 	ft_printf("\n");
 	if (size_b > 0)
 		ft_printf("Exec");
+	*/
 	while (size_b > 0)
 	{
 		b_first = *(int *)((*b)->content); //70
 		a_last = *(int *)((ft_lstlast(*a))->content); //71
 		a_second_last = *(int *)((ft_lstsecondlast(*a))->content); //100
-		ft_printf("Exec");
+		//ft_printf("Exec");
 		if (b_first > a_last || (b_first < a_last && b_first < a_second_last && a_second_last != max_b))
 		{
 			push(a, b);
-			ft_printf(" pa");
+			ft_printf("pa");
 			moves++;
 		}
 		else
 		{
 			reverse_rotate(a);
-			ft_printf(" rra");
+			ft_printf("rra");
 			moves++;
 		}
+		if (size_b != 1)
+		{
+			ft_printf("\n");
+		}
+		/*
 		ft_printf("\n");
 		print_ab_lists(*a, *b);
 		ft_printf("\n");
+		*/
 		size_b = ft_lstsize(*b);
 	}
-	ft_printf("\n");
+	//ft_printf("\n");
 	return (moves);
 }
 
@@ -584,14 +617,16 @@ static int     push_swap(t_list **a, t_list **b)
 	int	moves;
 	int	size;
 
-	print_ab_lists(*a, *b);
-	ft_printf("\n");
+	//print_ab_lists(*a, *b);
+	//ft_printf("\n");
 	push(b, a);
 	push(b, a);
-	ft_printf("Exec pb pb\n");
+	//ft_printf("Exec pb pb\n");
+	ft_printf("pb\n");
+	ft_printf("pb\n");
 	moves = 2;
-	print_ab_lists(*a, *b);
-	ft_printf("\n");
+	//print_ab_lists(*a, *b);
+	//ft_printf("\n");
 	size = ft_lstsize(*a);
 	while (size > 2)
 	{
@@ -599,10 +634,14 @@ static int     push_swap(t_list **a, t_list **b)
 		size = ft_lstsize(*a);
 	}
 	if ((*(int *)((*a)->content)) > (*(int *)(((*a)->next)->content)))
+	{
 		swap(a);
-	moves = moves + 1 + organize(a, b);
-	ft_printf("\n");
-	ft_printf("Total de movimientos: %d\n", moves);
+		moves++;
+		ft_printf("sa\n");
+	}
+	moves = moves + organize(a, b);
+	//ft_printf("\n");
+	//ft_printf("Total de movimientos: %d\n", moves);
 	return (1);
 }
 

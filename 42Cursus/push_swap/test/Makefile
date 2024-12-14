@@ -6,11 +6,11 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/12/02 11:48:00 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/12/14 19:59:51 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= test
+TARGET	= push_swap
 OBJ_DIR	= ./obj
 INC_DIR	= ..
 SRC_DIR	= .
