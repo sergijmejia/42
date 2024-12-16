@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/14 20:34:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:38:22 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,62 @@
 /* ************************************************************************** */
 /* *************************  FUNCIONES AUXILIARES  ************************* */
 /* ************************************************************************** */
+
+/*Funcion para limpiar listas*/
+static t_list	*ft_free_lst(t_list **lst)
+{
+	ft_lstclear(lst, free);
+	return (*lst);
+}
+
+/*Verifica que la lista de enteros de entrada no contiene caracteres no admitidos*/
+static  int	check_error(char *str)
+{
+	while (*str != '\0')
+	{
+		//ft_printf("Esta evaluado el caracter %c\n", *str);
+		if (!ft_isdigit(*str) && !(*str >= '\t' && *str <= '\r'))
+		{
+			if (*str != '+' && *str != '-' && *str != ' ')
+			{
+				ft_printf("Error\n");
+				return (0);
+                        }
+                }
+		//ft_printf("El caracter es OK\n");
+		str++;
+	}
+	return (1);
+}
+
+/*Crea la lista de enteros lst a partir del string str*/
+static t_list	*create_list(t_list **lst, char *str)
+{
+	int		*new_num;
+	t_list	*new_node;
+
+	while (*str != '\0')
+	{
+		new_num = (int *) malloc (sizeof(int));
+		if (!new_num)
+			return (ft_free_lst(lst));
+		new_num[0] = ft_atoi(str);
+		new_node = ft_lstnew(new_num);
+		if (!new_node)
+		{
+			free(new_num);
+			return (ft_free_lst(lst));
+		}
+		ft_lstadd_back(lst, new_node);
+		while (*str >= '\t' && *str <= '\r')
+			str++;
+		while (*str == '-' || *str == '+' || *str == ' ')
+			str++;
+		while (*str >= '0' && *str <= '9')
+			str++;
+	}
+	return (*lst);
+}
 
 /*Devuelve el valor minimo de la lista*/
 static int	ft_lstmin(t_list *lst)
@@ -278,7 +334,7 @@ static int	count_moves_b(t_list *lst, int x, int moves)
 			else
 				aux_2 = *(int *)(lst->content);
 			//ft_printf("aux_1 = %d ; aux_2 = %d\n", aux_1, aux_2);
-			if (x < aux_1 && x > aux_2)
+			if (x <= aux_1 && x >= aux_2)
 				break ;
 			aux = aux->next;
 		}
@@ -412,10 +468,8 @@ static void	do_moves(t_list **a, t_list **b, int pos, int direction_a, int direc
 	//ft_printf("\n");
 	ft_printf("pb\n");
 	push(b, a);
-	/*
 	print_ab_lists(*a, *b);
 	ft_printf("\n");
-	*/
 }
 
 /*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
@@ -579,7 +633,7 @@ static int organize(t_list **a, t_list **b)
 		a_last = *(int *)((ft_lstlast(*a))->content); //71
 		a_second_last = *(int *)((ft_lstsecondlast(*a))->content); //100
 		//ft_printf("Exec");
-		if (b_first > a_last || (b_first < a_last && b_first < a_second_last && a_second_last != max_b))
+		if (b_first > a_last || (b_first < a_last && b_first < a_second_last && a_second_last != ft_lstmax(*a)))
 		{
 			push(a, b);
 			ft_printf("pa");
@@ -640,8 +694,8 @@ static int     push_swap(t_list **a, t_list **b)
 		ft_printf("sa\n");
 	}
 	moves = moves + organize(a, b);
-	//ft_printf("\n");
-	//ft_printf("Total de movimientos: %d\n", moves);
+	ft_printf("\n");
+	ft_printf("Total de movimientos: %d\n", moves);
 	return (1);
 }
 
@@ -650,22 +704,27 @@ int     main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
-	t_list *new_node;
-	int		i;
-	int		*new_num;
+	char	*str;
 
-	i = 1;
+	if (argc != 2)
+		return (1);
 	a = NULL;
 	b = NULL;
-	while (i < argc)
+	str = argv[1];
+	if (!check_error(str))
+		return (1);
+	//ft_printf("Ha terminado la verificacion del string y es correcto\n");
+	create_list(&a, str);
+	print_ab_lists(a, b);
+        ft_printf("\n");
+	if (!a)
 	{
-		new_num = (int *) malloc (sizeof(int));
-		new_num[0] =  ft_atoi(argv[i]);
-		new_node = ft_lstnew(new_num);
-		ft_lstadd_back(&a, new_node);
-		i++;
+		ft_printf("Error\n");
+		return (1);
 	}
 	push_swap(&a, &b);
+	ft_printf("\n");
+	print_ab_lists(a, b);
 	ft_lstclear(&a, free);
 	return (0);
 }
