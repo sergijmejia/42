@@ -6,13 +6,23 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/17 14:16:38 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:21:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "libft.h"
+
+typedef struct s_properties
+{
+	int	dir_a;
+	int	dir_b;
+	int	pos;
+	int	mov_a;
+	int	mov_b;
+	int	mov_b_dir;
+	int	mov;
+	int	rotate;
+}	mov_properties;
 
 /* ************************************************************************** */
 /* *************************  FUNCIONES AUXILIARES  ************************* */
@@ -26,20 +36,18 @@ static t_list	*ft_free_lst(t_list **lst)
 }
 
 /*Verifica que la lista de enteros de entrada no contiene caracteres no admitidos*/
-static  int	check_error(char *str)
+static int	check_error(char *str)
 {
 	while (*str != '\0')
 	{
-		//ft_printf("Esta evaluado el caracter %c\n", *str);
 		if (!ft_isdigit(*str) && !(*str >= '\t' && *str <= '\r'))
 		{
 			if (*str != '+' && *str != '-' && *str != ' ')
 			{
 				ft_printf("Error\n");
 				return (0);
-                        }
-                }
-		//ft_printf("El caracter es OK\n");
+			}
+		}
 		str++;
 	}
 	return (1);
@@ -124,7 +132,6 @@ static t_list	*ft_lstpos(t_list *lst, int x)
 	return (pnt);
 }
 
-
 /*Devuelve un puntero al penultimo elemmento de la lista lst*/
 static t_list	*ft_lstsecondlast(t_list *lst)
 {
@@ -138,42 +145,40 @@ static t_list	*ft_lstsecondlast(t_list *lst)
 }
 
 /*Devuelve un puntero a un duplicado de la lista lst*/
-static t_list   *ft_lstdup(t_list *lst)
+static t_list	*ft_lstdup(t_list *lst)
 {
-        t_list  *new_lst;
-        int     len;
+	t_list	*new_lst;
+	int		len;
 
-        if(lst == NULL)
-                return (NULL);
-        len = ft_lstsize(lst);
-        new_lst = malloc (sizeof(t_list));
-        if(new_lst == NULL)
-        {
-                return (NULL);
-        }
-        new_lst->content = lst->content;
-        new_lst->next = ft_lstdup(lst->next);
-        if(ft_lstsize(new_lst) != len)
-        {
-                ft_lstclear(&new_lst, free);
-                return (NULL);
-        }
-        return (new_lst);
+	if (lst == NULL)
+		return (NULL);
+	len = ft_lstsize(lst);
+	new_lst = malloc (sizeof(t_list));
+	if (new_lst == NULL)
+	{
+		return (NULL);
+	}
+	new_lst->content = lst->content;
+	new_lst->next = ft_lstdup(lst->next);
+	if (ft_lstsize(new_lst) != len)
+	{
+		ft_lstclear(&new_lst, free);
+		return (NULL);
+	}
+	return (new_lst);
 }
 
 /*Imprime por pantalla la lista lst*/
-static void     print_lst(t_list *lst)
+static void	print_lst(t_list *lst)
 {
 	if (lst == NULL)
-                return ;
-        ft_printf("%d ", *(int *)(lst->content));
-        if (lst->next == NULL)
-                return ;
-        else
-        {
-                print_lst(lst->next);
-                return ;
-        }
+		return ;
+	ft_printf("%d ", *(int *)(lst->content));
+	if (lst->next != NULL)
+	{
+		print_lst(lst->next);
+		return ;
+	}
 }
 
 /*Imprime por pantalla las dos listas a y b*/
@@ -191,16 +196,16 @@ static void	print_ab_lists(t_list *a, t_list *b)
 /* ************************************************************************** */
 
 /*Intercambia las dos primeras posiciones de la lista lst*/
-static void     swap(t_list **lst)
+static void	swap(t_list **lst)
 {
-        t_list  *aux;
+	t_list	*aux;
 
-        if (*lst == NULL || (*lst)->next == NULL)
-                return ;
-        aux = (*lst)->next;
+	if (*lst == NULL || (*lst)->next == NULL)
+		return ;
+	aux = (*lst)->next;
 	(*lst)->next = aux->next;
-        aux->next = *lst;
-        *lst = aux;
+	aux->next = *lst;
+	*lst = aux;
 	return ;
 }
 
@@ -216,7 +221,7 @@ static void	swap_swap(t_list **lst_a, t_list **lst_b)
 static void	push(t_list **lst_a, t_list **lst_b)
 {
 	t_list	*aux;
-	
+
 	if (*lst_b == NULL)
 		return ;
 	aux = (*lst_b)->next;
@@ -241,7 +246,7 @@ static void	rotate(t_list **lst)
 }
 
 /*Desplaza hacia arriba todos los elementos de la lista lst_a y la lista lst_b a la vez*/
-static void     rotate_rotate(t_list **lst_a, t_list **lst_b)
+static void	rotate_rotate(t_list **lst_a, t_list **lst_b)
 {
 	rotate(lst_a);
 	rotate(lst_b);
@@ -251,7 +256,7 @@ static void     rotate_rotate(t_list **lst_a, t_list **lst_b)
 /*Desplaza hacia abajo todos los elementos de la lista lst*/
 static void	reverse_rotate(t_list **lst)
 {
-	t_list  *aux;
+	t_list	*aux;
 
 	if (*lst == NULL || (*lst)->next == NULL)
 		return ;
@@ -415,7 +420,7 @@ static void	move_b(t_list **a, t_list **b, int direction)
 			reverse_rotate(b);
 			ft_printf("rrb\n");
 		}
-		else 
+		else
 		{
 			rotate(b);
 			ft_printf("rb\n");
@@ -424,115 +429,156 @@ static void	move_b(t_list **a, t_list **b, int direction)
 	}
 }
 
-/*Realiza los movimientos con los datos transferidos*/
-static void	do_moves(t_list **a, t_list **b, int pos, int direction_a, int direction_b, int rot)
+/*Realiza los movimientos de a con los datos transferidos*/
+static void	do_moves_a(t_list **a, t_list **b, mov_properties new_mov)
 {
 	int	size_a;
 
 	size_a = ft_lstsize(*a);
-	if (direction_a == -1)
-		move_a_neg(a, b, pos, rot);
-	if (direction_a == 1)
-		move_a_pos(a, b, pos, rot);
-	move_b(a, b, direction_b);
+	if (new_mov.dir_a == -1)
+		move_a_neg(a, b, new_mov.pos, new_mov.rotate);
+	if (new_mov.dir_a == 1)
+		move_a_pos(a, b, new_mov.pos, new_mov.rotate);
+}
+
+/*Realiza los movimientos de b con los datos transferidos*/
+static void	do_moves_b(t_list **a, t_list **b, mov_properties new_mov)
+{
+	move_b(a, b, new_mov.dir_b);
 	ft_printf("pb\n");
 	push(b, a);
 }
 
-/*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
-static int min_move (t_list **a, t_list **b)
+/*Reuccion de la funcion min_move*/
+
+static int	rotate_definition(t_list **a, t_list **b, int moves, int i)
 {
-	int	i;
-	int	moves;
 	int	moves_a;
 	int	moves_b;
-	int	moves_aux;
-	int	moves_b_dir;
-	int	moves_i_neg;
-	int	aux;
-	int	pos;
-	int	direction_a;
-	int	direction_b;
-	int	rotate;
 	int	num_b;
+	int	rotate;
 
-	pos = 0;
-	direction_a = -1;
-	direction_b = 1;
-	rotate = 0;
-	num_b = *(int *)((*a)->content);
-	moves = count_moves_b(*b, num_b, 0);
-	if (moves < 0)
+	moves_a = count_moves_a(*a, i, -1);
+	num_b = *(int *)(ft_lstpos(*a, i)->content);
+	moves_b = ft_abs(count_moves_b(*b, num_b, (-1) * moves_a));
+	if ((moves_a + moves_b) < moves)
+		rotate = 1;
+	moves_b = ft_abs(count_moves_b(*b, num_b, 0));
+	if ((moves_a + moves_b) < moves)
+		rotate = 0;
+	return (rotate);
+}
+
+
+/*Asigna el valor a direction_b*/
+static int	set_direction_b(int moves_dir)
+{
+	if (moves_dir < 0)
+		return (-1);
+	else
+		return (1);
+}
+
+/*Modifica el valor de moves, direction_b y result en caso de haber obtenido un move menor*/
+static int	set_result(mov_properties *new_mov, int i)
+{
+	new_mov->mov_b = ft_abs(new_mov->mov_b_dir);
+	new_mov->mov = new_mov->mov_a + new_mov->mov_b;
+	new_mov->dir_b = set_direction_b(new_mov->mov_b_dir);
+	return (i);
+}
+
+/*Calcula la minima combinacion de move_a y move_b*/
+static int min_move_ab(t_list **a, t_list **b, int i, mov_properties *new_mov)
+{
+	int	num_b;
+	int	result;
+
+	if (i == 0)
+		return (-1);
+	result = 0;
+	new_mov->mov_a = count_moves_a(*a, i, -1);
+	num_b = *(int *)(ft_lstpos(*a, i)->content);
+	new_mov->mov_b_dir = count_moves_b(*b, num_b, (-1) * new_mov->mov_a);
+	if ((new_mov->mov_a) + ft_abs(new_mov->mov_b_dir) < (new_mov->mov))
+		result = set_result(new_mov, 1);
+	new_mov->mov_b_dir = count_moves_b(*b, num_b, 0);
+	if ((new_mov->mov_a) + ft_abs(new_mov->mov_b_dir) < (new_mov->mov))
+		result = set_result(new_mov, 2);
+	new_mov->mov_a = count_moves_a(*a, ft_lstsize(*a) - i, 1);
+	num_b = *(int *)(ft_lstpos(*a, ft_lstsize(*a) - i)->content);
+	new_mov->mov_b_dir = count_moves_b(*b, num_b, new_mov->mov_a);
+	if ((new_mov->mov_a) + ft_abs(new_mov->mov_b_dir) < (new_mov->mov))
+		result = set_result(new_mov, 3);
+	new_mov->mov_b_dir = count_moves_b(*b, num_b, 0);
+	if ((new_mov->mov_a) + ft_abs(new_mov->mov_b_dir) < (new_mov->mov))
+		result = set_result(new_mov, 4);
+	return (result);
+}
+
+/*Asigna valor a direction_a*/
+static int	set_direction_a(int old_direction_a, int result)
+{
+	if (result == 0)
+		return (old_direction_a);
+	if (result == -1 || result == 1 || result == 2)
+		return (-1);
+	else
+		return (1);
+}
+
+/*Asigna el valor a rotate*/
+static int	set_rotate(int old_rotate, int result)
+{
+	if (result == 0)
+		return (old_rotate);
+	if (result == -1 || result == 2 || result == 4)
+		return (0);
+	else
+		return (1);
+}
+
+/*Asigna el valor a pos*/
+static int	set_pos(t_list **a, int old_pos, int result, int i)
+{
+	if (result == -1)
+		return (0);
+	if (result == 0)
+		return (old_pos);
+	if (result == 1 | result == 2)
+		return (i);
+	else
+		return (ft_lstsize(*a) - i);
+}
+
+
+
+/*Cuenta los movimientos necesarios para pasar un elento de la lista a a la lista b. Se calcula con el elemento que requiera menor cantidad de movimientos*/
+static void	min_move (t_list **a, t_list **b)
+{
+	int	i;
+	mov_properties	new_mov;
+	int	option;
+
+	if ((count_moves_b(*b, (*(int *)((*a)->content)), 0)) < 0)
+		new_mov.dir_b = -1;
+	else
+		new_mov.dir_b = 1;
+	new_mov.pos = 0;
+	new_mov.mov = ft_abs(count_moves_b(*b, (*(int *)((*a)->content)), 0));
+	i = 0;
+	while ((i < new_mov.mov && i < ft_lstsize(*a)) || new_mov.mov == 0)
 	{
-		direction_b = -1;
-		moves = ft_abs(moves);
-	}
-	i = 1;
-	while (i < moves && i < ft_lstsize(*a))
-	{
-		moves_a = count_moves_a(*a, i, -1);
-		num_b = *(int *)(ft_lstpos(*a, i)->content);
-		moves_b_dir = count_moves_b(*b, num_b, (-1) * moves_a);
-		moves_b = ft_abs(moves_b_dir);
-		if ((moves_a + moves_b) < moves)
-		{
-			pos = i;
-			direction_a = -1;
-			rotate = 1;
-			moves = moves_a + moves_b;
-			if (moves_b_dir < 0)
-				direction_b = -1;
-			else
-				direction_b = 1;
-		}
-		moves_b_dir = count_moves_b(*b, num_b, 0);
-		moves_b = ft_abs(moves_b_dir);
-		if ((moves_a + moves_b) < moves)
-		{
-			pos = i;
-			direction_a = -1;
-			rotate = 0;
-			moves = moves_a + moves_b;
-			if (moves_b_dir < 0)
-				direction_b = -1;
-			else
-				direction_b = 1;
-		}
-		moves_a = count_moves_a(*a, ft_lstsize(*a) - i, 1);
-		num_b = *(int *)(ft_lstpos(*a, ft_lstsize(*a) - i)->content);
-		moves_b_dir = count_moves_b(*b, num_b, moves_a);
-		moves_b = ft_abs(moves_b_dir);
-		if ((moves_a + moves_b) < moves)
-		{
-			pos = ft_lstsize(*a) - i;
-			direction_a = 1;
-			rotate = 1;
-			moves = moves_a + moves_b;
-			if (moves_b_dir < 0)
-				direction_b = -1;
-			else
-				direction_b = 1;
-		}
-		moves_b_dir = count_moves_b(*b, num_b, 0);
-		moves_b = ft_abs(moves_b_dir);
-		if ((moves_a + moves_b) < moves)
-		{
-			pos = ft_lstsize(*a) - i;
-			direction_a = 1;
-			rotate = 0;
-			moves = moves_a + moves_b;
-			if (moves_b_dir < 0)
-				direction_b = -1;
-			else
-				direction_b = 1;
-		}
+		option = min_move_ab(a, b, i, &new_mov);
+		new_mov.pos = set_pos(a, new_mov.pos, option, i);
+		new_mov.dir_a = set_direction_a(new_mov.dir_a, option);
+		new_mov.rotate = set_rotate(new_mov.rotate, option);
 		if (i >= (ft_lstsize(*a) / 2))
 			break ;
 		i++;
 	}
-	do_moves(a, b, pos, direction_a, direction_b, rotate);
-	moves++;
-	return (moves);
+	do_moves_a(a, b, new_mov);
+	do_moves_b(a, b, new_mov);
 }
 
 /*Funcion que traspasa todos los numeros de la lista b a la lista a (que aun tiene 2 elementos)*/
@@ -564,10 +610,6 @@ static int organize(t_list **a, t_list **b)
 		i = size_b - i;
 		direction_b = 1;
 	}
-	/*
-	if (i > 0)
-		ft_printf("Exec");
-	*/
 	while (i > 0)
 	{
 		if (direction_b == 1)
@@ -583,19 +625,13 @@ static int organize(t_list **a, t_list **b)
 		moves++;
 		i--;
 	}
-	/*
-	ft_printf("\n");
-	print_ab_lists(*a, *b);
-	ft_printf("\n");
-	if (size_b > 0)
-		ft_printf("Exec");
-	*/
+	//ft_printf("\n");
+	//print_ab_lists(*a, *b);
 	while (size_b > 0)
 	{
 		b_first = *(int *)((*b)->content); //70
 		a_last = *(int *)((ft_lstlast(*a))->content); //71
 		a_second_last = *(int *)((ft_lstsecondlast(*a))->content); //100
-		//ft_printf("Exec");
 		if (b_first > a_last || (b_first < a_last && b_first < a_second_last && a_second_last != ft_lstmax(*a)))
 		{
 			push(a, b);
@@ -612,14 +648,8 @@ static int organize(t_list **a, t_list **b)
 		{
 			ft_printf("\n");
 		}
-		/*
-		ft_printf("\n");
-		print_ab_lists(*a, *b);
-		ft_printf("\n");
-		*/
 		size_b = ft_lstsize(*b);
 	}
-	//ft_printf("\n");
 	return (moves);
 }
 
@@ -629,27 +659,24 @@ static int organize(t_list **a, t_list **b)
 
 static int     push_swap(t_list **a, t_list **b)
 {
-	int	moves;
 	int	size;
 
 	push(b, a);
 	push(b, a);
 	ft_printf("pb\n");
 	ft_printf("pb\n");
-	moves = 2;
 	size = ft_lstsize(*a);
 	while (size > 2)
 	{
-		moves = moves + min_move(a, b);
+		min_move(a, b);
 		size = ft_lstsize(*a);
 	}
 	if ((*(int *)((*a)->content)) > (*(int *)(((*a)->next)->content)))
 	{
 		swap(a);
-		moves++;
 		ft_printf("sa\n");
 	}
-	moves = moves + organize(a, b);
+	organize(a, b);
 	return (1);
 }
 
@@ -674,6 +701,8 @@ int     main(int argc, char **argv)
 		return (1);
 	}
 	push_swap(&a, &b);
+	//ft_printf("\n");
+	//print_ab_lists(a, b);
 	ft_printf("\n");
 	ft_lstclear(&a, free);
 	return (0);
