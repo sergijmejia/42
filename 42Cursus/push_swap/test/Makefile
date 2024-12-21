@@ -6,18 +6,18 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/12/14 19:59:51 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/12/21 13:53:43 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 TARGET	= push_swap
 OBJ_DIR	= ./obj
-INC_DIR	= ..
+INC_DIR	= .
 SRC_DIR	= .
 LIB_DIR = ..
 OBJS	= $(OBJ_DIR)/test.o
 
-HEADER	= $(INC_DIR)/libft.h
+HEADER	= $(INC_DIR)/push_swap.h
 
 CFLAGS	= -I$(INC_DIR) -g
 CC	= cc
