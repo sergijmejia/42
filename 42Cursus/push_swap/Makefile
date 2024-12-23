@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/12/03 16:02:23 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/12/23 13:10:08 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,7 +84,6 @@ SRC	= $(OBJ_DIR)/ft_isalpha.o		\
 	  $(OBJ_DIR)/ft_hexa_num_lower.o	\
 	  $(OBJ_DIR)/ft_hexa_num_upper.o	\
 	  $(OBJ_DIR)/ft_create_character_arg.o	\
-	  #$(OBJ_DIR)/push_swap.o
 
 HEADER	= libft.h
 

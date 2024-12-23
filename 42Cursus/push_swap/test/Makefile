@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/12/21 13:53:43 by smejia-a         ###   ########.fr        #
+#    Updated: 2024/12/23 13:06:49 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,16 @@ OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= .
 LIB_DIR = ..
-OBJS	= $(OBJ_DIR)/test.o
+OBJS	= $(OBJ_DIR)/push_swap.o		\
+	  $(OBJ_DIR)/push_swap_rules.o		\
+	  $(OBJ_DIR)/push_swap_rules_2.o	\
+	  $(OBJ_DIR)/push_swap_utils.o		\
+	  $(OBJ_DIR)/push_swap_utils_2.o	\
+	  $(OBJ_DIR)/push_swap_organize.o	\
+	  $(OBJ_DIR)/push_swap_count_moves.o	\
+	  $(OBJ_DIR)/push_swap_do_moves.o	\
+	  $(OBJ_DIR)/push_swap_setters.o	\
+	  $(OBJ_DIR)/push_swap_min_move.o
 
 HEADER	= $(INC_DIR)/push_swap.h
 
