@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 11:01:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/23 11:37:20 by smejia-a         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:35:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static void	organize_a(t_list **a, t_list **b, int size_b)
 
 /*Funcion que calcula los movimientos y la direccion para tener max arriba de
 la lista*/
-/*CUANDO SE SEPAREN LOS ARCHIVOS CAMBIAR NOMBRE A MOVES_TO_MAX*/
 static int	move_max(t_list *lst, int max, int size, t_mov_properties *new)
 {
 	int	i;

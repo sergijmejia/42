@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 10:42:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/23 13:06:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/04 13:14:45 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,14 @@ t_list	*ft_free_lst(t_list **lst)
 
 /*Verifica que la lista de enteros de entrada no contiene caracteres no 
 admitidos*/
-int	check_error(char *str)
+int	check_error_str(char *str)
 {
 	while (*str != '\0')
 	{
 		if (!ft_isdigit(*str) && !(*str >= '\t' && *str <= '\r'))
 		{
 			if (*str != '+' && *str != '-' && *str != ' ')
-			{
-				ft_printf("Error\n");
 				return (0);
-			}
 		}
 		str++;
 	}
@@ -46,6 +43,8 @@ t_list	*create_list(t_list **lst, char *str)
 	int		*new_num;
 	t_list	*new_node;
 
+	while ((*str >= '\t' && *str <= '\r') || *str == ' ')
+		str++;
 	while (*str != '\0')
 	{
 		new_num = (int *) malloc (sizeof(int));
@@ -59,11 +58,9 @@ t_list	*create_list(t_list **lst, char *str)
 			return (ft_free_lst(lst));
 		}
 		ft_lstadd_back(lst, new_node);
-		while (*str >= '\t' && *str <= '\r')
+		while (*str == 45 || *str == 43 || (*str >= 48 && *str <= 57))
 			str++;
-		while (*str == '-' || *str == '+' || *str == ' ')
-			str++;
-		while (*str >= '0' && *str <= '9')
+		while ((*str >= '\t' && *str <= '\r') || *str == ' ')
 			str++;
 	}
 	return (*lst);

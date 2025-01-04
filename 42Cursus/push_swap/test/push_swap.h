@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 13:50:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/23 12:55:22 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/04 13:16:17 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_properties
 /*Funciones auxiliares*/
 
 t_list	*ft_free_lst(t_list **lst);
-int		check_error(char *str);
+int		check_error_str(char *str);
 t_list	*create_list(t_list **lst, char *str);
 int		ft_lstmin(t_list *lst);
 int		ft_lstmax(t_list *lst);
@@ -39,6 +39,7 @@ t_list	*ft_lstsecondlast(t_list *lst);
 t_list	*ft_lstdup(t_list *lst);
 void	print_lst(t_list *lst);
 void	print_ab_lists(t_list *a, t_list *b);
+int		check_error(t_list *lst);
 
 /*Funciones de movimiento*/
 

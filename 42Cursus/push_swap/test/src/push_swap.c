@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/23 12:56:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/04 16:03:27 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 
 /* **************************  FUNCION  PUSH_SWAP  ************************** */
 
+/*Funcion qu vacia la lista lst e imprime "Error" por el fd 2*/
+static int	ft_error(t_list *lst)
+{
+	ft_lstclear(&lst, free);
+	write(2, "Error\n", 6);
+	return (1);
+}
+
+/*Funcion principal push_swap*/
 int	push_swap(t_list **a, t_list **b)
 {
 	int	size;
@@ -43,20 +52,23 @@ int	main(int argc, char **argv)
 	t_list	*a;
 	t_list	*b;
 	char	*str;
+	int		i;
 
-	if (argc != 2)
-		return (1);
 	a = NULL;
 	b = NULL;
-	str = argv[1];
-	if (!check_error(str))
-		return (1);
-	create_list(&a, str);
-	if (!a)
+	i = 1;
+	while (i < argc)
 	{
-		ft_printf("Error\n");
-		return (1);
+		str = argv[i];
+		if (!check_error_str(str))
+			return (ft_error(a));
+		create_list(&a, str);
+		if (!a)
+			return (ft_error(a));
+		i++;
 	}
+	if (check_error(a) == -1)
+		return (ft_error(a));
 	push_swap(&a, &b);
 	ft_printf("\n");
 	ft_lstclear(&a, free);
