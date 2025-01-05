@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 10:42:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/04 13:14:45 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/05 12:54:44 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,11 @@
 
 /* *************************  FUNCIONES AUXILIARES  ************************* */
 
-/*Funcion para limpiar listas*/
-t_list	*ft_free_lst(t_list **lst)
+/*Funcion para avanzar en un string str todos los espacios, tabuladores, ect.*/
+static void	move_pnt_to_next(char **str)
 {
-	ft_lstclear(lst, free);
-	return (*lst);
-}
-
-/*Verifica que la lista de enteros de entrada no contiene caracteres no 
-admitidos*/
-int	check_error_str(char *str)
-{
-	while (*str != '\0')
-	{
-		if (!ft_isdigit(*str) && !(*str >= '\t' && *str <= '\r'))
-		{
-			if (*str != '+' && *str != '-' && *str != ' ')
-				return (0);
-		}
-		str++;
-	}
-	return (1);
+	while ((**str >= '\t' && **str <= '\r') || **str == ' ')
+		(*str)++;
 }
 
 /*Crea la lista de enteros lst a partir del string str*/
@@ -43,10 +27,11 @@ t_list	*create_list(t_list **lst, char *str)
 	int		*new_num;
 	t_list	*new_node;
 
-	while ((*str >= '\t' && *str <= '\r') || *str == ' ')
-		str++;
+	move_pnt_to_next(&str);
 	while (*str != '\0')
 	{
+		if (ft_atol(str) < INT_MIN || ft_atol(str) > INT_MAX)
+			return (ft_free_lst(lst));
 		new_num = (int *) malloc (sizeof(int));
 		if (!new_num)
 			return (ft_free_lst(lst));
@@ -58,11 +43,17 @@ t_list	*create_list(t_list **lst, char *str)
 			return (ft_free_lst(lst));
 		}
 		ft_lstadd_back(lst, new_node);
-		while (*str == 45 || *str == 43 || (*str >= 48 && *str <= 57))
+		while (*str == '-' || *str == '+' || ft_isdigit(*str))
 			str++;
-		while ((*str >= '\t' && *str <= '\r') || *str == ' ')
-			str++;
+		move_pnt_to_next(&str);
 	}
+	return (*lst);
+}
+
+/*Funcion para limpiar listas*/
+t_list	*ft_free_lst(t_list **lst)
+{
+	ft_lstclear(lst, free);
 	return (*lst);
 }
 

@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/01/04 13:17:11 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/01/05 14:41:19 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ OBJS	= $(OBJ_DIR)/push_swap.o		\
 	  $(OBJ_DIR)/push_swap_utils.o		\
 	  $(OBJ_DIR)/push_swap_utils_2.o	\
 	  $(OBJ_DIR)/push_swap_utils_3.o	\
+	  $(OBJ_DIR)/push_swap_errors.o		\
 	  $(OBJ_DIR)/push_swap_organize.o	\
 	  $(OBJ_DIR)/push_swap_count_moves.o	\
 	  $(OBJ_DIR)/push_swap_do_moves.o	\

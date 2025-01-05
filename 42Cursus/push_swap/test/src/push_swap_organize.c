@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 11:01:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/26 16:35:32 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/05 14:11:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,13 @@ static void	organize_a(t_list **a, t_list **b, int size_b)
 		if (option == 1)
 		{
 			push(a, b);
-			ft_printf("pa");
+			ft_printf("pa\n");
 		}
 		else
 		{
 			reverse_rotate(a);
-			ft_printf("rra");
+			ft_printf("rra\n");
 		}
-		if (size_b != 1)
-			ft_printf("\n");
 		size_b = ft_lstsize(*b);
 	}
 }
@@ -115,8 +113,15 @@ void	organize(t_list **a, t_list **b)
 	int	size_b;
 	int	a_last;
 	int	a_second_last;
+	int	min;
 
 	size_b = ft_lstsize(*b);
 	organize_b(b, size_b);
 	organize_a(a, b, size_b);
+	min = ft_lstmin(*a);
+	while (min != *(int *)((*a)->content))
+	{
+		reverse_rotate(a);
+		ft_printf("rra\n");
+	}
 }

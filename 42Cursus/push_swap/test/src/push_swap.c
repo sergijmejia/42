@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/04 16:03:27 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/05 14:52:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,34 @@ static int	ft_error(t_list *lst)
 int	push_swap(t_list **a, t_list **b)
 {
 	int	size;
+	int	init_size;
 
-	push(b, a);
-	push(b, a);
-	ft_printf("pb\n");
-	ft_printf("pb\n");
-	size = ft_lstsize(*a);
-	while (size > 2)
+	init_size = ft_lstsize(*a);
+	if (init_size == 1)
+		return (1);
+	if (init_size > 2)
 	{
-		min_move(a, b);
-		size = ft_lstsize(*a);
+		push(b, a);
+		ft_printf("pb\n");
+		if (init_size > 3)
+		{
+			push(b, a);
+			ft_printf("pb\n");
+			size = init_size - 2;
+			while (size > 2)
+			{
+				min_move(a, b);
+				size = ft_lstsize(*a);
+			}
+		}
 	}
 	if ((*(int *)((*a)->content)) > (*(int *)(((*a)->next)->content)))
 	{
 		swap(a);
 		ft_printf("sa\n");
 	}
-	organize(a, b);
+	if (init_size > 2)
+		organize(a, b);
 	return (1);
 }
 
@@ -67,10 +78,21 @@ int	main(int argc, char **argv)
 			return (ft_error(a));
 		i++;
 	}
-	if (check_error(a) == -1)
+	//print_ab_lists(a, b);
+	if (check_error_lst(a) == -1)
 		return (ft_error(a));
-	push_swap(&a, &b);
-	ft_printf("\n");
+	//print_ab_lists(a, b);
+	if (!organized_lst(a))
+		push_swap(&a, &b);
+	else
+	{
+		while (*(int *)(a->content) != ft_lstmin(a))
+		{
+			reverse_rotate(&a);
+			ft_printf("rra\n");
+		}
+	}
+	//print_ab_lists(a, b);
 	ft_lstclear(&a, free);
 	return (0);
 }
