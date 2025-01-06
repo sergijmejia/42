@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2024/12/23 13:10:08 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/01/04 15:01:35 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,6 +56,7 @@ SRC	= $(OBJ_DIR)/ft_isalpha.o		\
 	  $(OBJ_DIR)/ft_putnbr_fd.o		\
 	  $(OBJ_DIR)/ft_putchar.o		\
 	  $(OBJ_DIR)/ft_putstr.o		\
+	  $(OBJ_DIR)/ft_atol.o			\
 	  $(OBJ_DIR)/ft_lstnew.o		\
 	  $(OBJ_DIR)/ft_lstadd_front.o		\
 	  $(OBJ_DIR)/ft_lstsize.o		\

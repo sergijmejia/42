@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2024/12/23 13:11:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:01:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int		ft_intlen(int n, int base);
 int		ft_abs(int num);
 int		ft_putchar(char c);
 int		ft_putstr(char *str);
+long	ft_atol(const char *nptr);
 
 /*get_next_line*/
 
