@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:15:12 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/05 14:41:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/06 22:57:55 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ int	organized_lst(t_list *lst)
 				return (0);
 		}
 		current = *(int *)(lst->content);
-		lst =  lst->next;
+		lst = lst->next;
 	}
-	if (current > first)
+	if (current > first && current != max)
 		return (0);
 	return (1);
 }

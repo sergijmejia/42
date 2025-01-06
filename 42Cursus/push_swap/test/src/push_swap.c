@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/05 14:52:19 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/06 22:36:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,21 +78,18 @@ int	main(int argc, char **argv)
 			return (ft_error(a));
 		i++;
 	}
-	//print_ab_lists(a, b);
 	if (check_error_lst(a) == -1)
 		return (ft_error(a));
-	//print_ab_lists(a, b);
 	if (!organized_lst(a))
 		push_swap(&a, &b);
 	else
 	{
-		while (*(int *)(a->content) != ft_lstmin(a))
+		while ((*(int *)(a->content)) != (ft_lstmin(a)))
 		{
 			reverse_rotate(&a);
 			ft_printf("rra\n");
 		}
 	}
-	//print_ab_lists(a, b);
 	ft_lstclear(&a, free);
 	return (0);
 }

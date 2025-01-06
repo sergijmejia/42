@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 11:01:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/05 14:11:53 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/06 22:37:45 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@ static	int	pa_or_rra(t_list *a, int b_first, int a_last, int a_second_last)
 	int	option;
 	int	max;
 
-	option = 0;
 	max = ft_lstmax(a);
 	if (b_first > a_last)
 		option = 1;
-	if (b_first < a_last && b_first < a_second_last && a_second_last != max)
+	else if (*(int *)(a->content) > a_last)
+		option = 0;
+	else if (b_first > *(int *)(a->content))
+		option = 0;
+	else
 		option = 1;
 	return (option);
 }
