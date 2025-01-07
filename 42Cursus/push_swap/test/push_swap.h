@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 13:50:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/05 14:40:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/07 21:53:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ void	min_move(t_list **a, t_list **b);
 void	organize(t_list **a, t_list **b);
 
 /*Funcion push_swap*/
-int		push_swap(t_list **a, t_list **b);
+void	push_swap(t_list **a, t_list **b);
 
 #endif

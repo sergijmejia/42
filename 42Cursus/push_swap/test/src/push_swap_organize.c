@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 11:01:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/06 22:37:45 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/07 21:56:44 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,22 @@
 
 /*Funcion que realiza el movimiento push o reverse_rotate en base a los valores
 recibidos*/
-static	int	pa_or_rra(t_list *a, int b_first, int a_last, int a_second_last)
+static int	pa_or_rra(t_list *a, int b_first, int a_last)
 {
 	int	option;
 	int	max;
+	int	min;
+	int	a_first;
 
+	min = ft_lstmin(a);
 	max = ft_lstmax(a);
-	if (b_first > a_last)
+	a_first = *(int *)(a->content);
+	option = 0;
+	if (b_first < a_last && b_first < a_first && a_last == max)
 		option = 1;
-	else if (*(int *)(a->content) > a_last)
-		option = 0;
-	else if (b_first > *(int *)(a->content))
-		option = 0;
-	else
+	if (b_first > a_last && b_first < a_first)
+		option = 1;
+	if (b_first > a_last && b_first > a_first && a_first == min)
 		option = 1;
 	return (option);
 }
@@ -39,15 +42,13 @@ static void	organize_a(t_list **a, t_list **b, int size_b)
 {
 	int	b_first;
 	int	a_last;
-	int	a_second_last;
 	int	option;
 
 	while (size_b > 0)
 	{
 		b_first = *(int *)((*b)->content);
 		a_last = *(int *)((ft_lstlast(*a))->content);
-		a_second_last = *(int *)((ft_lstsecondlast(*a))->content);
-		option = pa_or_rra(*a, b_first, a_last, a_second_last);
+		option = pa_or_rra(*a, b_first, a_last);
 		if (option == 1)
 		{
 			push(a, b);
@@ -110,7 +111,7 @@ static void	organize_b(t_list **lst, int size)
 }
 
 /*Funcion que traspasa todos los numeros de la lista b a la lista a (que aun 
-tiene 2 elementos)*/
+tiene 3 elementos)*/
 void	organize(t_list **a, t_list **b)
 {
 	int	size_b;

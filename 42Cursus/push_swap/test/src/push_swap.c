@@ -6,13 +6,24 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/06 22:36:54 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/07 21:58:34 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /* **************************  FUNCION  PUSH_SWAP  ************************** */
+
+/*Funcion que hace girar una lista organizada de 3 elementos hasta tener el min
+en la primera posicion*/
+static	void	organize_min_lst(t_list **lst)
+{
+	while ((*(int *)((*lst)->content)) != (ft_lstmin(*lst)))
+	{
+		reverse_rotate(lst);
+		ft_printf("rra\n");
+	}
+}
 
 /*Funcion qu vacia la lista lst e imprime "Error" por el fd 2*/
 static int	ft_error(t_list *lst)
@@ -23,38 +34,43 @@ static int	ft_error(t_list *lst)
 }
 
 /*Funcion principal push_swap*/
-int	push_swap(t_list **a, t_list **b)
+void	push_swap(t_list **a, t_list **b)
 {
 	int	size;
 	int	init_size;
 
+	if (organized_lst(*a))
+	{
+		organize_min_lst(a);
+		return ;
+	}
 	init_size = ft_lstsize(*a);
 	if (init_size == 1)
-		return (1);
-	if (init_size > 2)
+		return ;
+	if (init_size > 3)
 	{
 		push(b, a);
 		ft_printf("pb\n");
-		if (init_size > 3)
+		if (init_size > 4)
 		{
 			push(b, a);
 			ft_printf("pb\n");
 			size = init_size - 2;
-			while (size > 2)
+			while (size > 3)
 			{
 				min_move(a, b);
 				size = ft_lstsize(*a);
 			}
 		}
 	}
-	if ((*(int *)((*a)->content)) > (*(int *)(((*a)->next)->content)))
+	if (!organized_lst(*a))
 	{
 		swap(a);
 		ft_printf("sa\n");
+		organize_min_lst(a);
 	}
-	if (init_size > 2)
+	if (init_size > 3)
 		organize(a, b);
-	return (1);
 }
 
 /*Programa main principal*/
@@ -80,16 +96,7 @@ int	main(int argc, char **argv)
 	}
 	if (check_error_lst(a) == -1)
 		return (ft_error(a));
-	if (!organized_lst(a))
-		push_swap(&a, &b);
-	else
-	{
-		while ((*(int *)(a->content)) != (ft_lstmin(a)))
-		{
-			reverse_rotate(&a);
-			ft_printf("rra\n");
-		}
-	}
+	push_swap(&a, &b);
 	ft_lstclear(&a, free);
 	return (0);
 }
