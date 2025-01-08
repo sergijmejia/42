@@ -6,14 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 13:50:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/07 21:53:19 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/08 09:28:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include "../libft.h"
+# include "./libft/libft.h"
 
 typedef struct s_properties
 {

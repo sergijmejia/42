@@ -79,11 +79,13 @@ static char	*create_print_arg(char *s, va_list args)
 int	ft_create_arg(const char *s, va_list args, char **arg)
 {
 	char	*str;
+	size_t	len_str;
 	size_t	len_arg;
 
 	str = cpy_arg(s);
 	if (!str)
 		return (-1);
+	len_str = ft_strlen(str);
 	if (!check_arg(str))
 	{
 		free(str);
