@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:07:20 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/07 21:58:34 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:11:50 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /* **************************  FUNCION  PUSH_SWAP  ************************** */
 
-/*Funcion que hace girar una lista organizada de 3 elementos hasta tener el min
-en la primera posicion*/
+/*Funcion que hace girar una lista organizada de tres elementos hasta tener el
+min en la primera posicion*/
 static	void	organize_min_lst(t_list **lst)
 {
 	while ((*(int *)((*lst)->content)) != (ft_lstmin(*lst)))
@@ -25,7 +25,7 @@ static	void	organize_min_lst(t_list **lst)
 	}
 }
 
-/*Funcion qu vacia la lista lst e imprime "Error" por el fd 2*/
+/*Funcion que vacia la lista lst e imprime "Error" por el fd 2*/
 static int	ft_error(t_list *lst)
 {
 	ft_lstclear(&lst, free);
@@ -33,10 +33,30 @@ static int	ft_error(t_list *lst)
 	return (1);
 }
 
+/*Funcion que mueve de forma ordenada elementos a la lista b hasta tener
+max tres elementos en a*/
+static void	move_b_multiple_elements(t_list **a, t_list **b, int init_size)
+{
+	int	size;
+
+	push(b, a);
+	ft_printf("pb\n");
+	if (init_size > 4)
+	{
+		push(b, a);
+		ft_printf("pb\n");
+		size = init_size - 2;
+		while (size > 3)
+		{
+			min_move(a, b);
+			size = ft_lstsize(*a);
+		}
+	}
+}
+
 /*Funcion principal push_swap*/
 void	push_swap(t_list **a, t_list **b)
 {
-	int	size;
 	int	init_size;
 
 	if (organized_lst(*a))
@@ -48,21 +68,7 @@ void	push_swap(t_list **a, t_list **b)
 	if (init_size == 1)
 		return ;
 	if (init_size > 3)
-	{
-		push(b, a);
-		ft_printf("pb\n");
-		if (init_size > 4)
-		{
-			push(b, a);
-			ft_printf("pb\n");
-			size = init_size - 2;
-			while (size > 3)
-			{
-				min_move(a, b);
-				size = ft_lstsize(*a);
-			}
-		}
-	}
+		move_b_multiple_elements(a, b, init_size);
 	if (!organized_lst(*a))
 	{
 		swap(a);
@@ -84,6 +90,8 @@ int	main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	i = 1;
+	if (argc < 2)
+		return (1);
 	while (i < argc)
 	{
 		str = argv[i];

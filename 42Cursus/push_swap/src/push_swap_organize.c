@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 11:01:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/07 21:56:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:15:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,6 @@ tiene 3 elementos)*/
 void	organize(t_list **a, t_list **b)
 {
 	int	size_b;
-	int	a_last;
-	int	a_second_last;
 	int	min;
 
 	size_b = ft_lstsize(*b);

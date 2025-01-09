@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:12:27 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/04 15:01:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/09 13:46:46 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+t_list	*ft_lstpos(t_list *lst, int x);
+t_list	*ft_lstsecondlast(t_list *lst);
 
 void	ft_strtoupper(void *str);
 int		ft_strcontains(const char *str, char c);

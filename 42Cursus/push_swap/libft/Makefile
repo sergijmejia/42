@@ -66,6 +66,8 @@ SRC	= $(OBJ_DIR)/ft_isalpha.o		\
 	  $(OBJ_DIR)/ft_lstclear.o		\
 	  $(OBJ_DIR)/ft_lstiter.o		\
 	  $(OBJ_DIR)/ft_lstmap.o		\
+	  $(OBJ_DIR)/ft_lstpos.o		\
+	  $(OBJ_DIR)/ft_lstsecondlast.o		\
 	  $(OBJ_DIR)/get_next_line.o		\
 	  $(OBJ_DIR)/ft_check_newline.o		\
 	  $(OBJ_DIR)/ft_free_str.o		\

@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   ft_lstpos.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/05 12:08:16 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/09 10:25:32 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/01/09 13:47:10 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/01/09 13:50:37 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-long	ft_atol(const char *nptr)
-{
-	long	res;
-	int		negative;
+#include "libft.h"
 
-	negative = 1;
-	res = 0;
-	while (*nptr && ((*nptr >= '\t' && *nptr <= '\r') || (*nptr == ' ')))
-		nptr++;
-	if (*nptr == '-')
-		negative = -1;
-	if (*nptr == '-' || *nptr == '+')
-		nptr++;
-	while (*nptr && *nptr >= '0' && *nptr <= '9')
+/*Devuelve un puntero a la posicion x de la lista lst*/
+t_list	*ft_lstpos(t_list *lst, int x)
+{
+	int		size;
+	int		i;
+	t_list	*pnt;
+
+	size = ft_lstsize(lst);
+	if (x >= size || x < 0)
+		return (NULL);
+	pnt = lst;
+	i = 0;
+	while (i < x)
 	{
-		res = res * 10 + (*nptr - 48);
-		nptr++;
+		pnt = pnt->next;
+		i++;
 	}
-	return (res * negative);
+	return (pnt);
 }

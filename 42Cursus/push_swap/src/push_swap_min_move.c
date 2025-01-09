@@ -6,32 +6,13 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 10:58:14 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/05 14:14:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:07:36 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /* ***************************  FUNCION MIN_MOVE  *************************** */
-
-/*Calcula si es mas eficiente utilizar rotate o no*/
-static int	rotate_definition(t_list **a, t_list **b, int moves, int i)
-{
-	int	moves_a;
-	int	moves_b;
-	int	num_b;
-	int	rotate;
-
-	moves_a = count_moves_a(*a, i, -1);
-	num_b = *(int *)(ft_lstpos(*a, i)->content);
-	moves_b = ft_abs(count_moves_b(*b, num_b, (-1) * moves_a));
-	if ((moves_a + moves_b) < moves)
-		rotate = 1;
-	moves_b = ft_abs(count_moves_b(*b, num_b, 0));
-	if ((moves_a + moves_b) < moves)
-		rotate = 0;
-	return (rotate);
-}
 
 /*Calcula la minima combinacion de move_a y move_b*/
 static int	min_mov_ab(t_list **a, t_list **b, int i, t_mov_properties *new)
