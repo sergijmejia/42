@@ -1,204 +1,232 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:58:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/01/22 11:39:27 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:41:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-/*Abrimos el archivo1*/
-
-/*Definimos el proceso que lee del archivo1 -> esto no es asi porque el archivo1
-lo lee el padre y psa la informacion directa al pipe*/
-pid_t	file_pipe(int fd_pipe[2], int fd, char *str) //para el primer comando
+/*Funcion para mostrar por su canal correspondiente los mensajes de error*/
+void	ft_print_error(void)
 {
-	pid_t	pid;
-	char	**str_split;
-	char    *cmd;
+	char	*str_error;
+	int		len;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("Error al crear hijo");
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-		dup2(fd_pipe[1], STDOUT_FILENO);
-		close(fd_pipe[0]);
-		close(fd_pipe[1]);
-	}
-	else
-		close(fd_pipe[1]);
-	str_split = ft_split(str, ' ');
-	cmd = malloc (9 + ft_strlen(str_split[0]) + 1);
-	ft_memcpy(cmd, "/usr/bin/", 9);
-	ft_memcpy(cmd + 9, str_split[0], ft_strlen(str_split[0]));
-	cmd[9 + ft_strlen(str_split[0])] = '\0';
-	ft_printf("Vamos a ejecutar el comando %s\n", cmd);
-	if (execve(cmd, str_split, NULL) == -1)
-	{
-		perror("Error al ejecutar el comando");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
+	str_error = strerror(errno);
+	str_error = ft_strjoin(str_error, "\n");
+	len = (int) ft_strlen(str_error);
+	write (2, str_error, len);
+	free(str_error);
 }
 
-pid_t	pipe_pipe(int fd_pipe_in[2], int fd_pipe_out[2], char *str) //para los comandos intermedios entre pipes
+/*Funcion de libearacion de memoria del split*/
+char	*ft_clean_split(char **str)
 {
-	pid_t	pid;
-	char	**str_split;
-	char	*cmd;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("Error al crear hijo");
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		dup2(fd_pipe_in[0], STDIN_FILENO);
-		dup2(fd_pipe_out[1], STDOUT_FILENO);
-		close(fd_pipe_in[0]);
-		close(fd_pipe_in[1]);
-		close(fd_pipe_out[0]);
-		close(fd_pipe_out[1]);
-	}
-	str_split = ft_split(str, ' ');
-	cmd = malloc (9 + ft_strlen(str_split[0]) + 1);
-	ft_memcpy(cmd, "/usr/bin/", 9);
-	ft_memcpy(cmd + 9, str_split[0], ft_strlen(str_split[0]));
-	cmd[9 + ft_strlen(str_split[0])] = '\0';
-	ft_printf("Vamos a ejecutar el comando %s\n", cmd);
-	if (execve(cmd, str_split, NULL) == -1)
-	{
-		perror("Error al ejecutar el comando");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-pid_t	pipe_file(int fd_pipe[2], int fd, char *str)
-{
-	pid_t	pid;
-	char	**str_split;
-	char    *cmd;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("Error al crear hijo");
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		dup2(fd_pipe[1], STDIN_FILENO);
-		close(fd_pipe[0]);
-		close(fd_pipe[1]);
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-	}
-	str_split = ft_split(str, ' ');
-	cmd = malloc (9 + ft_strlen(str_split[0]) + 1);
-	ft_memcpy(cmd, "/usr/bin/", 9);
-	ft_memcpy(cmd + 9, str_split[0], ft_strlen(str_split[0]));
-	cmd[9 + ft_strlen(str_split[0])] = '\0';
-	ft_printf("Vamos a ejecutar el comando %s\n", cmd);
-	if (execve(cmd, str_split, NULL) == -1)
-	{
-		perror("Error al ejecutar el comando");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
-/*Definimos el  que es el comandon*/
-
-
-/*Definimos el hijo_a2 que es el achivo2*/
-
-
-/*Pipe que conecta el archivo1 con el comando1*/
-
-
-/*Pipe que conecta dos comandos
-static void	def_pipe(int fd_pipe[2], int fd)
-{
-	if (pipe(fd_pipe) == -1)
-	}
-		perror("Error al crear pipe");
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-}*/
-
-/*Pipe que conecta el ultimo comando con el archivo2*/
-
-/*Programa main principal*/
-int	main(int argc, char **argv)
-{
-	int	fd_infile;
-	int	fd_outfile;
-	int	num_pipes;
-	int	(*fd_pipe)[2]; //deben haber tantos fd como hijos
 	int	i;
-	pid_t	*pid;
 
-	fd_infile = open(argv[1], O_RDONLY);
-	fd_outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_infile == -1 || fd_outfile == -1)
-	{
-		perror("Error al abrir archivos");
-		exit(EXIT_FAILURE);
-	}
-	num_pipes = argc - 4;
-	fd_pipe = (int (*)[2])malloc(sizeof(int[2])*num_pipes);
-	if (!fd_pipe)
-	{
-		perror("Error al asignar memoria para los pipes"); //verificar este mensaje
-		exit(EXIT_FAILURE);
-	}
 	i = 0;
-	while (i < num_pipes) //se definen todos los pipes que se vana utilizar
+	while (str[i] != NULL)
 	{
-		if (pipe(fd_pipe[i]) == -1)
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
+	return (NULL);
+}
+
+/*Obtener la ruta del comando*/
+char	*get_cmd_path(char *argv, char **envp)
+{
+	int		i;
+	char	**str_split;
+	char	*str;
+
+	if (argv == NULL)
+		return (NULL);
+	if (access(argv, X_OK) == 0)
+		return (argv);
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+			break ;
+		i++;
+	}
+	if (envp[i] == NULL)
+		return (NULL);
+	str_split = ft_split(envp[i] + 5, ':');
+	if (str_split == NULL)
+		return (NULL);
+	while (str_split[i] != NULL)
+	{
+		str = ft_strjoin(ft_strjoin(str_split[i], "/"), argv);
+		if (str == NULL || access(str, X_OK) == 0)
 		{
-			perror("Error crear pipe");
-			exit(EXIT_FAILURE);
+			ft_clean_split(str_split);
+			return (str);
 		}
+		//ft_printf("Esta entrando una vezi, el str_split es: %s\n", str_split[i]);
+		//ft_printf("El argv es: %s\n", argv);
+		free(str);
 		i++;
 	}
-	pid = (pid_t *) malloc (sizeof(pid_t) * (num_pipes + 1));
-	i = 0;
-	while (i <= num_pipes)
-	{
-		if (i == 0)
-			pid[i] = file_pipe(fd_pipe[i], fd_infile, argv[i + 2]);
-		else if (i == num_pipes)
-			pid[i] = pipe_file(fd_pipe[i], fd_outfile, argv[i + 2]);
-		else
-			pid[i] = pipe_pipe(fd_pipe[i - 1], fd_pipe[i], argv[i + 2]);
+	return (ft_clean_split(str_split));
+}
 
-		i++;
-	}
-	/*Para cada uno de los comandos tengo que aplicar la funcion split para poder llamar */
-	i = 0;
-	while (i <= num_pipes)
+/*Funcion hijo que lee el file1 y escribe en el pipe entre los comandos*/
+int	file_pipe(int fd_in, int fd_pipe[2], char **argv, char **envp)
+{
+	char	**str_split1;
+	char	*cmd1;
+
+	close(fd_pipe[0]);
+	dup2(fd_in, STDIN_FILENO);
+	close(fd_in);
+	dup2(fd_pipe[1], STDOUT_FILENO);
+	close(fd_pipe[1]);
+	str_split1 = ft_split(argv[2], ' ');
+	if (str_split1 == NULL)
 	{
-		if (waitpid(pid[i], NULL, 0) == -1)
-			perror("Error al esperar hijo");
+		//perror("Error al hacer split");
+		ft_print_error();
+		exit(EXIT_FAILURE);
 	}
-	free(fd_pipe);
-	free(pid);
+	cmd1 = get_cmd_path(str_split1[0], envp);
+	fprintf(stderr, "%s\n", cmd1);  			//orden de impresion
+	/*if (cmd1 == NULL)
+	{
+		perror("Error al localizar comando1");
+		exit(EXIT_FAILURE);
+	}*/
+	ft_printf("Vamos a ejecutar el comando %s\n", cmd1);
+	if (execve(cmd1, str_split1, NULL) == -1)
+	{
+		//perror("Error al ejecutar el comando1");
+		//fprintf(stderr, "Esta entrando en 1");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
 	return (1);
 }
 
+/*Funcion hijo que lee del pipe entre comandos y escribe en el file2*/
+int	pipe_file(int fd_out, int fd_pipe[2], char **argv, char **envp)
+{
+	char	**str_split2;
+	char	*cmd2;
+
+	dup2(fd_pipe[0], STDIN_FILENO);
+	close(fd_pipe[0]);
+	dup2(fd_out, STDOUT_FILENO);
+	close(fd_out);
+	str_split2 = ft_split(argv[3], ' ');
+	if (str_split2 == NULL)
+	{
+		//perror("Error al hacer split");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	cmd2 = get_cmd_path(str_split2[0], envp);
+	/*if (cmd2 == NULL)
+	{
+		perror("Error al reservar memoria");
+		exit(EXIT_FAILURE);
+	}*/
+	//ft_printf("Vamos a ejecutar el comando %s %s\n", str_split2[0], str_split2[1]);
+	if (execve(cmd2, str_split2, NULL) == -1)
+	{
+		//perror("Error al ejecutar el comando2");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	return (1);
+}
+
+/*Funcion padre*/
+int	parent(int fd_in, int fd_out, int fd_pipe[2], char **argv, char **envp)
+{
+	pid_t	pid_out;
+
+	close(fd_pipe[1]);
+	close(fd_in);
+	pid_out = fork();
+	if (pid_out == -1)
+	{
+		//perror("Error al hacer el fork()");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	//fd_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (pid_out == 0)
+		pipe_file(fd_out, fd_pipe, argv, envp);
+	else
+	{
+		close(fd_pipe[0]);
+		waitpid(pid_out, NULL, 0);
+		close(fd_out);
+	}
+	return (1);
+}
+
+/*Funcion pipex*/
+int	ft_pipex(char **argv, char **envp)
+{
+	int		fd_in;
+	int		fd_out;
+	int		fd_pipe[2];
+	pid_t	pid_in;
+
+	if (pipe(fd_pipe) == -1)
+	{
+		//perror("Error");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	fd_in = open(argv[1], O_RDONLY);
+	fd_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd_in == -1 || fd_out == -1)
+	{
+		//perror("Error al abrir files");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	pid_in = fork();
+	if (pid_in == -1)
+	{
+		//perror("Error al hacer el fork");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	if (pid_in == 0)
+		file_pipe(fd_in, fd_pipe, argv, envp);
+	else
+	{
+		parent(fd_in, fd_out, fd_pipe, argv, envp);
+		waitpid(pid_in, NULL, 0);
+		close(fd_in);
+		close(fd_out);
+	}
+	return (1);
+}
+
+/*Programa main principal*/
+int	main(int argc, char **argv, char **envp)
+{
+	if (argc != 5)
+	{
+		//perror("Error");
+		ft_print_error();
+		exit(EXIT_FAILURE);
+	}
+	if (ft_pipex(argv, envp) == 1)
+		exit(EXIT_SUCCESS);
+	return (0);
+}

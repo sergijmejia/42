@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:47:48 by smejia-a          #+#    #+#              #
-#    Updated: 2025/01/21 16:26:58 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/01/29 15:41:16 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJS	= $(OBJ_DIR)/pipex.o#		\
 
 HEADER	= $(INC_DIR)/pipex.h
 
-CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g
+CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g #-fsanitize=address
 CC	= cc
 LIBS	= $(LIB_DIR)/libft.a
 
