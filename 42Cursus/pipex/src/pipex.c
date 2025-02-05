@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:58:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/04 18:45:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/05 17:11:00 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,37 @@ static char	*ft_clean_split(char **str)
 	return (NULL);
 }
 
-/*Obtener la ruta del comando*/
-static char	*get_cmd_path(char *argv, char **envp)
+/*Funcion para construir la ruta del comando*/
+static char	*build_cmd_path(char *cmd, char **paths)
 {
 	int		i;
-	char	**str_split;
-	char	*str;
-	char	*str_tmp;
+	char	*tmp_path;
+	char	*cmd_path;
+
+	i = 0;
+	while (paths[i] != NULL)
+	{
+		tmp_path = ft_strjoin(paths[i], "/");
+		if (tmp_path == NULL)
+			return (NULL);
+		cmd_path = ft_strjoin(tmp_path, cmd);
+		free(tmp_path);
+		if (cmd_path == NULL)
+			return (NULL);
+		if (access(cmd_path, X_OK) == 0)
+			return (cmd_path);
+		free(cmd_path);
+		i++;
+	}
+	return (NULL);
+}
+
+/*Funcion para obtener la ruta del comando*/
+static char	*get_cmd_path(char *cmd, char **envp)
+{
+	int		i;
+	char	**paths;
+	char	*cmd_path;
 
 	i = 0;
 	while (envp[i] != NULL)
@@ -44,38 +68,59 @@ static char	*get_cmd_path(char *argv, char **envp)
 			break ;
 		i++;
 	}
-	str_split = ft_split(envp[i] + 5, ':');
-	if (str_split == NULL)
+	if (envp[i] == NULL)
 		return (NULL);
-	i = 0;
-	while (str_split[i] != NULL)
+	paths = ft_split(envp[i] + 5, ':');
+	if (paths == NULL)
+		return (NULL);
+	cmd_path = build_cmd_path(cmd, paths);
+	ft_clean_split(paths);
+	return (cmd_path);
+}
+
+/*Funcion que maneja el error de execve*/
+static void	execve_error(char **cmd_args)
+{
+	int	exit_code;
+
+	if (errno == EACCES)
 	{
-		str_tmp = ft_strjoin(str_split[i], "/");
-		if (str_tmp == NULL)
-		{
-			ft_clean_split(str_split);
-			return (NULL);
-		}
-		str = ft_strjoin(str_tmp, argv);
-		if (str == NULL || access(str, X_OK) == 0)
-		{
-			free(str_tmp);
-			ft_clean_split(str_split);
-			return (str);
-		}
-		free(str_tmp);
-		free(str);
-		i++;
+		exit_code = ft_print_command_error(cmd_args[0]);
+		ft_clean_split(cmd_args);
+		exit(exit_code);
 	}
-	ft_clean_split(str_split);
-	return (NULL);
+	else
+	{
+		ft_clean_split(cmd_args);
+		ft_print_error();
+	}
+}
+
+/*Funcion que maneja la ejecucion del comando*/
+static void	execute_command(char **cmd_args, t_arguments arg)
+{
+	char	*cmd;
+	int		exit_code;
+
+	cmd = get_cmd_path(cmd_args[0], arg.envp);
+	if (cmd == NULL)
+	{
+		errno = ENOENT;
+		exit_code = ft_print_command_error(cmd_args[0]);
+		ft_clean_split(cmd_args);
+		exit(exit_code);
+	}
+	if (execve(cmd, cmd_args, NULL) == -1)
+	{
+		free(cmd);
+		execve_error(cmd_args);
+	}
 }
 
 /*Funcion hijo que lee el file1 y escribe en el pipe entre los comandos*/
-static void	file_pipe(int fd_in, int fd_pipe[2], char **argv, char **envp)
+static void	file_pipe(int fd_in, int fd_pipe[2], t_arguments arg)
 {
-	char	**str_split1;
-	char	*cmd1;
+	char	**cmd_args;
 
 	close(fd_pipe[0]);
 	if (dup2(fd_in, STDIN_FILENO) == -1)
@@ -84,33 +129,16 @@ static void	file_pipe(int fd_in, int fd_pipe[2], char **argv, char **envp)
 	if (dup2(fd_pipe[1], STDOUT_FILENO) == -1)
 		ft_print_error();
 	close(fd_pipe[1]);
-	str_split1 = ft_split(argv[2], ' ');
-	if (str_split1 == NULL)
+	cmd_args = ft_split(arg.argv[2], ' ');
+	if (cmd_args == NULL)
 		ft_print_error();
-	cmd1 = get_cmd_path(str_split1[0], envp);
-	if (cmd1 == NULL)
-	{
-		free(cmd1);
-		ft_clean_split(str_split1);
-		errno = ENOENT;
-		ft_print_command_error(argv[2]);
-	}
-	if (execve(cmd1, str_split1, NULL) == -1)
-	{
-		free(cmd1);
-		ft_clean_split(str_split1);
-		if (errno == EACCES)
-			ft_print_command_error(argv[2]);
-		else
-			ft_print_error();
-	}
+	execute_command(cmd_args, arg);
 }
 
 /*Funcion hijo que lee del pipe entre comandos y escribe en el file2*/
-static void	pipe_file(int fd_out, int fd_pipe[2], char **argv, char **envp)
+static void	pipe_file(int fd_out, int fd_pipe[2], t_arguments arg)
 {
-	char	**str_split2;
-	char	*cmd2;
+	char	**cmd_args;
 
 	if (dup2(fd_pipe[0], STDIN_FILENO) == -1)
 		ft_print_error();
@@ -118,41 +146,42 @@ static void	pipe_file(int fd_out, int fd_pipe[2], char **argv, char **envp)
 	if (dup2(fd_out, STDOUT_FILENO) == -1)
 		ft_print_error();
 	close(fd_out);
-	str_split2 = ft_split(argv[3], ' ');
-	if (str_split2 == NULL)
+	cmd_args = ft_split(arg.argv[3], ' ');
+	if (cmd_args == NULL)
 		ft_print_error();
-	cmd2 = get_cmd_path(str_split2[0], envp);
-	if (cmd2 == NULL)
-	{
-		free(cmd2);
-		ft_clean_split(str_split2);
-		errno = ENOENT;
-		ft_print_command_error(argv[3]);
-	}
-	if (execve(cmd2, str_split2, NULL) == -1)
-	{
-		free(cmd2);
-		ft_clean_split(str_split2);
-		if (errno == EACCES)
-			ft_print_command_error(argv[2]);
-		else
-			ft_print_error();
-	}
+	execute_command(cmd_args, arg);
 }
 
+/*Funcion hijo que lee de un pipe entre comandos y escribe a otro pipe entre
+comandos
+static void	pipe_pipe(int fd_in[2], int fd_out[2], t_arguments arg)
+{
+	char	**cmd_args;
+
+	close(fd_in[1]);
+	close(fd_out[0]);
+	if (dup2(fd_in[0], STDIN_FILENO) == -1)
+		fd_print_error();
+	close(fd_in[0]);
+	if (dup2(fd_out[1], STDOUT_FILENO) == -1)
+		fd_print_error();
+}*/
+
 /*Funcion padre*/
-static int	parent(int fd_out, int fd_pipe[2], char **argv, char **envp)
+static void	parent(int fd_file[2], int fd_pipe[2], t_arguments arg)
 {
 	pid_t	pid_out;
 	int		status;
 	int		exit_code;
 
+	if (fd_file[0] != -1)
+		close(fd_file[0]);
 	close(fd_pipe[1]);
 	pid_out = fork();
 	if (pid_out == -1)
 		ft_print_error();
 	if (pid_out == 0)
-		pipe_file(fd_out, fd_pipe, argv, envp);
+		pipe_file(fd_file[1], fd_pipe, arg);
 	else
 	{
 		close(fd_pipe[0]);
@@ -160,15 +189,20 @@ static int	parent(int fd_out, int fd_pipe[2], char **argv, char **envp)
 		exit_code = WEXITSTATUS(status);
 		if (exit_code != 0)
 			exit(exit_code);
-		close(fd_out);
+		close(fd_file[1]);
 	}
-	return (1);
 }
 
-/*Funcion que */
+/*Funcion que maneja el proceso hijo*/
+static void	child(int fd, int pipe[2], int saved_errno, t_arguments arg)
+{
+	if (fd == -1)
+		exit(ft_print_file_error(arg.argv[1], saved_errno));
+	file_pipe(fd, pipe, arg);
+}
 
 /*Funcion pipex*/
-static int	ft_pipex(char **argv, char **envp, int fd_file[2], int saved_errno[2])
+static int	ft_pipex(t_arguments arg, int fd_file[2], int saved_errno[2])
 {
 	int		fd_pipe[2];
 	int		status;
@@ -180,18 +214,12 @@ static int	ft_pipex(char **argv, char **envp, int fd_file[2], int saved_errno[2]
 	if (pid_in == -1)
 		ft_print_error();
 	if (pid_in == 0)
-	{
-		if (fd_file[0] == -1)
-			ft_print_file_error(argv[1], saved_errno[0]);
-		file_pipe(fd_file[0], fd_pipe, argv, envp);
-	}
+		child(fd_file[0], fd_pipe, saved_errno[0], arg);
 	else
 	{
 		if (fd_file[1] == -1)
-			ft_print_file_error(argv[4], saved_errno[1]);
-		if (fd_file[0] != -1)
-			close(fd_file[0]);
-		parent(fd_file[1], fd_pipe, argv, envp);
+			exit(ft_print_file_error(arg.argv[4], saved_errno[1]));
+		parent(fd_file, fd_pipe, arg);
 		waitpid(pid_in, &status, 0);
 		if (WEXITSTATUS(status) != 0)
 			exit(WEXITSTATUS(status));
@@ -202,30 +230,37 @@ static int	ft_pipex(char **argv, char **envp, int fd_file[2], int saved_errno[2]
 }
 
 /*Funcion que inicializa los fd de los archivos y gestiona la funcion fd_pipex*/
-static int	initialize(char **argv, char **envp)
+static int	initialize(t_arguments arg)
 {
 	int	fd_file[2];
 	int	saved_errno[2];
-	
+
+	saved_errno[0] = 0;
+	saved_errno[1] = 0;
+	fd_file[0] = open(arg.argv[1], O_RDONLY);
 	if (fd_file[0] == -1)
 		saved_errno[0] = errno;
-	fd_file[1] = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd_file[1] = open(arg.argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd_file[1] == -1)
 		saved_errno[1] = errno;
-	ft_pipex(argv, envp, fd_file, saved_errno);
-	return (1);
+	return (ft_pipex(arg, fd_file, saved_errno));
 }
 
 /*Programa main principal*/
 int	main(int argc, char **argv, char **envp)
 {
+	t_arguments	arg;
+
 	errno = 0;
 	if (argc != 5)
 	{
 		errno = EINVAL;
 		ft_print_error();
 	}
-	if (initialize(argv, envp) == 1)
+	arg.argc = argc;
+	arg.argv = argv;
+	arg.envp = envp;
+	if (initialize(arg) == 1)
 		exit(EXIT_SUCCESS);
 	else
 		exit(EXIT_FAILURE);

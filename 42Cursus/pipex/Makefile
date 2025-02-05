@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:47:48 by smejia-a          #+#    #+#              #
-#    Updated: 2025/02/04 17:28:35 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/02/05 17:16:59 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ OBJS	= $(OBJ_DIR)/pipex.o			\
 
 HEADER	= $(INC_DIR)/pipex.h
 
-CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g #-fsanitize=address
 CC	= cc
 LIBS	= $(LIB_DIR)/libft.a
 
@@ -35,7 +35,7 @@ LIBFT:
 	$(MAKE) -C $(LIB_DIR)
 
 $(TARGET) : $(OBJS) $(HEADER)
-	$(CC) -fsanitize=address $(OBJS) $(LIBS) -o $(TARGET)
+	$(CC) $(OBJS) $(LIBS) -o $(TARGET)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)

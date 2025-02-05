@@ -6,14 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:06:17 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/04 17:01:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/05 12:13:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 /*Funcion que imprime el error*/
-void	print_error(char *str, int exit_code)
+void	print_error(char *str)
 {
 	char	*str_error_to_print;
 	int		len;
@@ -25,13 +25,12 @@ void	print_error(char *str, int exit_code)
 	if (str_error_to_print == NULL)
 	{
 		errno = saved_errno;
-		exit(exit_code);
+		return ;
 	}
 	len = (int) ft_strlen(str_error_to_print);
 	if (write(2, str_error_to_print, len) == -1)
 		errno = saved_errno;
 	free(str_error_to_print);
-	exit(exit_code);
 }
 
 /*Funcion para mostrar por el canal correspondiente los mensajes de error
