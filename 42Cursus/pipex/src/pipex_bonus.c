@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:58:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/05 17:59:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:54:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,17 +136,19 @@ static void	file_pipe(int fd_in, int fd_pipe[2], t_arguments arg)
 }
 
 /*Funcion hijo que lee del pipe entre comandos y escribe en el file2*/
-static void	pipe_file(int fd_out, int fd_pipe[2], t_arguments arg)
+static void	pipe_file(int fd_out, int fd_pipe, t_arguments arg)
 {
 	char	**cmd_args;
+	char	*last_cmd;
 
-	if (dup2(fd_pipe[0], STDIN_FILENO) == -1)
+	if (dup2(fd_pipe, STDIN_FILENO) == -1)
 		ft_print_error();
-	close(fd_pipe[0]);
+	close(fd_pipe);
 	if (dup2(fd_out, STDOUT_FILENO) == -1)
 		ft_print_error();
 	close(fd_out);
-	cmd_args = ft_split(arg.argv[3], ' ');
+	last_cmd = arg.argv[arg.argc - 2];
+	cmd_args = ft_split(last_cmd, ' ');
 	if (cmd_args == NULL)
 		ft_print_error();
 	execute_command(cmd_args, arg.envp);
@@ -154,34 +156,48 @@ static void	pipe_file(int fd_out, int fd_pipe[2], t_arguments arg)
 
 /*Funcion hijo que lee de un pipe entre comandos y escribe a otro pipe entre
 comandos*/
-static void	pipe_pipe(int fd_in[2], int fd_out[2], char *cmd, char **envp)
+static void	pipe_pipe(t_arguments arg, int i, int fd_in, int fd_pipe_out[2])
 {
 	char	**cmd_args;
 
-	close(fd_in[1]);
-	close(fd_out[0]);
-	if (dup2(fd_in[0], STDIN_FILENO) == -1)
-		fd_print_error;
-	close(fd_in[0]);
-	if (dup2(fd_out[1], STDOUT_FILENO) == -1)
-		fd_print_error();
-	close(fd_out[1]);
-	cmd_args = ft_split(cmd, ' ');
+	close(fd_pipe_out[0]);
+	if (dup2(fd_in, STDIN_FILENO) == -1)
+		ft_print_error();
+	close(fd_in);
+	if (dup2(fd_pipe_out[1], STDOUT_FILENO) == -1)
+		ft_print_error();
+	close(fd_pipe_out[1]);
+	cmd_args = ft_split(arg.argv[i + 3], ' ');
 	if (cmd_args == NULL)
 		ft_print_error();
-	execute_commmand(cmd_args, envp);
+	execute_command(cmd_args, arg.envp);
 }
 
-/*Funcion hijo intermedia*/
-static void	internal_child(t_arguments arg, int i, int fd_in)
+/*Funcion hijo intermedio*/
+static int	internal_child(t_arguments arg, int i, int fd_pipe_in)
 {
-	pid_t	internal_pid;
-
-	internal_pid = fork();
-	if (internal_pid == -1)
+	pid_t	pid_cmd;
+	int		fd_pipe_out[2];
+	int		status;
+	int		exit_code;
+	
+	if (pipe(fd_pipe_out) == -1)
 		ft_print_error();
-	if (internal_pid == 0)
-		pipe_pipe()
+	pid_cmd = fork();
+	if (pid_cmd == -1)
+		ft_print_error();
+	if (pid_cmd == 0)
+		pipe_pipe(arg, i, fd_pipe_in, fd_pipe_out);
+	else
+	{
+		close(fd_pipe_in);
+		waitpid(pid_cmd, &status, 0);
+		exit_code = WEXITSTATUS(status);
+		if (exit_code != 0)
+			exit(exit_code);
+		close(fd_pipe_out[1]);
+	}
+	return (fd_pipe_out[0]);
 }
 
 /*Funcion padre*/
@@ -191,24 +207,26 @@ static void	parent(int fd_file[2], int fd_pipe[2], t_arguments arg)
 	int		i;
 	int		status;
 	int		exit_code;
+	int		fd_pipe_in;
 
 	if (fd_file[0] != -1)
 		close(fd_file[0]);
 	close(fd_pipe[1]);
+	fd_pipe_in = fd_pipe[0];
 	i = 0;
-	while (i < (argc - 5))
+	while (i < (arg.argc - 5))
 	{
-		fd_pipe[0] = internal_child(arg, i, fd_pipe[0]);
+		fd_pipe_in = internal_child(arg, i, fd_pipe_in);
 		i++;
 	}
 	pid_out = fork();
 	if (pid_out == -1)
 		ft_print_error();
 	if (pid_out == 0)
-		pipe_file(fd_file[1], fd_pipe, arg);
+		pipe_file(fd_file[1], fd_pipe_in, arg);
 	else
 	{
-		close(fd_pipe[0]);
+		close(fd_pipe_in);
 		waitpid(pid_out, &status, 0);
 		exit_code = WEXITSTATUS(status);
 		if (exit_code != 0)
@@ -218,7 +236,7 @@ static void	parent(int fd_file[2], int fd_pipe[2], t_arguments arg)
 }
 
 /*Funcion que maneja el proceso hijo*/
-static void	child(int fd, int pipe[2], int saved_errno, t_arguments arg)
+static void	first_child(int fd, int pipe[2], int saved_errno, t_arguments arg)
 {
 	if (fd == -1)
 		exit(ft_print_file_error(arg.argv[1], saved_errno));
@@ -228,15 +246,10 @@ static void	child(int fd, int pipe[2], int saved_errno, t_arguments arg)
 /*Funcion pipex*/
 static int	ft_pipex(t_arguments arg, int fd_file[2], int saved_errno[2])
 {
-	int		(*fd_pipe)[2];
+	int		fd_pipe[2];
 	int		status;
 	pid_t	pid_in;
-
-	fd_pipe = malloc ((arg.argc - 4) * sizeof(int[2]));
-	if (!fd_pipe)
-		ft_print_error();
-	// estoy haciendo el bucle para crear los pipes necesarios para multiples comandos
-
+	char	*exit_file;
 
 	if (pipe(fd_pipe) == -1)
 		ft_print_error();
@@ -244,11 +257,12 @@ static int	ft_pipex(t_arguments arg, int fd_file[2], int saved_errno[2])
 	if (pid_in == -1)
 		ft_print_error();
 	if (pid_in == 0)
-		child(fd_file[0], fd_pipe, saved_errno[0], arg);
+		first_child(fd_file[0], fd_pipe, saved_errno[0], arg);
 	else
 	{
+		exit_file = arg.argv[arg.argc - 1];
 		if (fd_file[1] == -1)
-			exit(ft_print_file_error(arg.argv[4], saved_errno[1]));
+			exit(ft_print_file_error(exit_file, saved_errno[1]));
 		parent(fd_file, fd_pipe, arg);
 		waitpid(pid_in, &status, 0);
 		if (WEXITSTATUS(status) != 0)
@@ -264,13 +278,15 @@ static int	initialize(t_arguments arg)
 {
 	int	fd_file[2];
 	int	saved_errno[2];
+	char	*exit_file;
 
 	saved_errno[0] = 0;
 	saved_errno[1] = 0;
+	exit_file = arg.argv[arg.argc - 1];
 	fd_file[0] = open(arg.argv[1], O_RDONLY);
 	if (fd_file[0] == -1)
 		saved_errno[0] = errno;
-	fd_file[1] = open(arg.argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd_file[1] = open(exit_file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd_file[1] == -1)
 		saved_errno[1] = errno;
 	return (ft_pipex(arg, fd_file, saved_errno));

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:58:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/05 17:11:00 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/06 11:16:11 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,12 @@ static void	execve_error(char **cmd_args)
 }
 
 /*Funcion que maneja la ejecucion del comando*/
-static void	execute_command(char **cmd_args, t_arguments arg)
+static void	execute_command(char **cmd_args, char **envp)
 {
 	char	*cmd;
 	int		exit_code;
 
-	cmd = get_cmd_path(cmd_args[0], arg.envp);
+	cmd = get_cmd_path(cmd_args[0], envp);
 	if (cmd == NULL)
 	{
 		errno = ENOENT;
@@ -132,7 +132,7 @@ static void	file_pipe(int fd_in, int fd_pipe[2], t_arguments arg)
 	cmd_args = ft_split(arg.argv[2], ' ');
 	if (cmd_args == NULL)
 		ft_print_error();
-	execute_command(cmd_args, arg);
+	execute_command(cmd_args, arg.envp);
 }
 
 /*Funcion hijo que lee del pipe entre comandos y escribe en el file2*/
@@ -149,34 +149,21 @@ static void	pipe_file(int fd_out, int fd_pipe[2], t_arguments arg)
 	cmd_args = ft_split(arg.argv[3], ' ');
 	if (cmd_args == NULL)
 		ft_print_error();
-	execute_command(cmd_args, arg);
+	execute_command(cmd_args, arg.envp);
 }
-
-/*Funcion hijo que lee de un pipe entre comandos y escribe a otro pipe entre
-comandos
-static void	pipe_pipe(int fd_in[2], int fd_out[2], t_arguments arg)
-{
-	char	**cmd_args;
-
-	close(fd_in[1]);
-	close(fd_out[0]);
-	if (dup2(fd_in[0], STDIN_FILENO) == -1)
-		fd_print_error();
-	close(fd_in[0]);
-	if (dup2(fd_out[1], STDOUT_FILENO) == -1)
-		fd_print_error();
-}*/
 
 /*Funcion padre*/
 static void	parent(int fd_file[2], int fd_pipe[2], t_arguments arg)
 {
 	pid_t	pid_out;
+	int		i;
 	int		status;
 	int		exit_code;
 
 	if (fd_file[0] != -1)
 		close(fd_file[0]);
 	close(fd_pipe[1]);
+	i = 0;
 	pid_out = fork();
 	if (pid_out == -1)
 		ft_print_error();
