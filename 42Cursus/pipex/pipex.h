@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/07 13:21:15 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:45:18 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ void	parent(int fd_file[2], int fd_pipe[2], t_arguments arg);
 void	child(int fd, int pipe[2], int saved_errno, t_arguments arg);
 
 /*Bonus Child_Parent*/
-void	parent_multiple(int fd_file[2], int fd_pipe[2], t_arguments arg);
+void	parent_multiple(int file[2], int pipe[2], t_arguments a, int sv_err);
 void	first_child(int fd, int pipe[2], int saved_errno, t_arguments arg);
 
 #endif
-
-

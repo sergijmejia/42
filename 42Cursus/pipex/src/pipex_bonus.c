@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:58:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/07 20:43:26 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:44:15 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,8 @@ static void	fst_parent(t_arguments a, int fd[2], int sv_err[2], int pipe[2])
 {
 	int		status;
 	int		final_status;
-	char	*exit_file;
 
-	exit_file = a.argv[a.argc - 1];
-	if (fd[1] == -1)
-		exit(ft_print_file_error(exit_file, sv_err[1]));
-	parent_multiple(fd, pipe, a);
+	parent_multiple(fd, pipe, a, sv_err[1]);
 	final_status = 0;
 	while (wait(&status) > 0)
 	{

@@ -39,7 +39,7 @@ else
 	MAIN = $(MAIN_PIPEX_BONUS)
 endif
 
-CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g #-fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g
 CC	= cc
 LIBS	= $(LIB_DIR)/libft.a
 
@@ -52,9 +52,6 @@ LIBFT:
 
 $(TARGET) : $(MAIN) $(OBJ) $(HEADER)
 	$(CC) $(MAIN) $(OBJ) $(LIBS) -o $(TARGET)
-
-#$(TARGET_BONUS)	: $(MAIN_BONUS) $(OBJS) $(OBJS_BONUS) $(HEADER)
-#	$(CC) $(MAIN_BONUS) $(OBJS) $(OBJS_BONUS) $(LIBS) -o $(TARGET_BONUS)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)
