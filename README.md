@@ -1,13 +1,14 @@
 ## 42 Common Core Repository 🚀
 
-Bienvenido a mi repositorio de **Campus 42**, donde almaceno todos mis proyectos del **Common Core** de la escuela 42 en la carpeta **42Cursus**, y el proyecto de repaso de la piscina en la carpeta **piscineReloaded**. Este repositorio contiene las diferentes tareas y desafíos de programación que he completado a lo largo de mi formación en 42, cubriendo desde algoritmia básica hasta conceptos avanzados de programación y estructuras de datos.
-Este repositorio se va a ir actualizando a medida que avance en el common-core de Campus 42.
+Bienvenido a mi repositorio de **Campus 42**, donde almaceno todos mis proyectos del **Common Core** de la escuela 42 en la carpeta **42Cursus**, y el proyecto de repaso de la piscina en la carpeta **piscineReloaded**. 
+Este repositorio contiene las diferentes tareas y desafíos de programación que he completado a lo largo de mi formación en 42, cubriendo desde algoritmia básica hasta conceptos avanzados de programación y estructuras de datos.
+(El contenido se va a ir actualizando a medida que avance en el common core de Campus 42)
 
 ---
 
 ## 📌 Contenido del Repositorio
 
-Este repositorio incluye los siguientes proyectos:
+Se incuyen los siguientes proyectos:
 
 ### 🏁 Preparatorio
 - **piscineReloaded** → Repaso de los proyectos realizados en la Piscina de 42. Este proyecto es obligatorio antes de iniciar **libft**, el primer proyecto del Common Core.
