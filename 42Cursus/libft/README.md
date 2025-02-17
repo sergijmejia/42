@@ -91,7 +91,7 @@ Estas funciones adicionales complementan la biblioteca básica:
   
   -```ft_putnbr_fd```: Escribe un número en un descriptor de archivo.
 
-#### 6. 🏆 Funciones Bonus
+### 6. 🏆 Funciones Bonus
 
 En la parte bonus, se implementan funciones para manipular listas enlazadas, una estructura de datos que permite la inserción y eliminación dinámica de elementos:
 
@@ -114,6 +114,22 @@ En la parte bonus, se implementan funciones para manipular listas enlazadas, una
   -```ft_lstiter```: Aplica una función a cada nodo de la lista.
   
   -```ft_lstmap```: Crea una nueva lista aplicando una función a cada nodo.
+
+### 7. 🏆 Funciones Extra
+
+Algunas funciones que no se piden en el enunciado han sido agregadas debido a su utilidad:
+
+  -```ft_strtoupper```: Convierte un string a mayúsculas.
+  
+  -```ft_strcontains```: Verifica si un string contiene un determinado caracter.
+
+  -```ft_countchar```: Cuenta la cantidad de veces que se encuetra un caracter en un string.
+
+  -```ft_countwords```: Cuenta la cantidad de palabras en un string.
+
+  -```ft_intlen```: Cuenta la catidad de digitos de un entero. Si es negativo el (-) cuenta como un digito.
+  
+  -```ft_abs```: cacula el valor absouto de un entero.
 
 ## ⚙️ Compilación
 
