@@ -1,6 +1,6 @@
 ## Pipex 🚰
 
-**Pipex** es un proyecto que replica el comportamiento de la redirección de tuberías (`|`) en la shell. Permite ejecutar dos comandos en secuencia, donde la salida del primer comando se convierte en la entrada del segundo, utilizando pipes en C.
+**Pipex** es un proyecto que replica el comportamiento de la redirección de tuberías (`|`) en shell. Permite ejecutar dos comandos en secuencia, donde la salida del primer comando se convierte en la entrada del segundo, utilizando pipes en C.
 
 ---
 
