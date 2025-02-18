@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/01/04 15:01:35 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/02/18 11:33:02 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -103,8 +103,8 @@ $(NAME) : $(OBJ) $(HEADER)
 	ar rcs $(NAME) $(OBJ)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
-	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)

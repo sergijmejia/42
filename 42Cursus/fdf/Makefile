@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/01/17 16:54:55 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/02/18 12:11:35 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ OBJS	=
 
 HEADER	= $(INC_DIR)/fdf.h
 
-CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g
+CFLAGS	= -Wall -Wextra -Werror -I./MLX42/include -I./libft -I$(INC_DIR) -g
+LDFLAGS = -lglfw -ldl -pthread -lm
 CC	= cc
 LIBS	= $(LIB_DIR)/libft.a		\
 	  $(MLX_DIR)/libmlx42.a
@@ -33,10 +34,10 @@ LIBS	= $(LIB_DIR)/libft.a		\
 all : LIBFT $(TARGET)
 
 LIBFT:
-	$(MAKE) -C $(LIB_DIR)
+	@$(MAKE) -C $(LIB_DIR)
 
 $(TARGET) : $(MAIN_FDF) $(OBJS) $(HEADER)
-	$(CC) $(MAIN_FDF) $(OBJS) $(LIBS) -o $(TARGET)
+	$(CC) $(MAIN_FDF) $(OBJS) $(LIBS) $(LDFLAGS) -o $(TARGET)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
 	mkdir -p $(OBJ_DIR)
