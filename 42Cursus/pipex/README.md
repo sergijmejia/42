@@ -51,7 +51,7 @@ Esto lista los archivos (`ls -l`), filtra los `.c` (`grep .c`), cuenta las líne
 
 ## Here\_doc 📜
 
-Como seunda parte del bonus pipex también soporta el modo **here\_doc**, que permite simular la entrada estándar a partir de un delimitador definido por el usuario.
+Como segunda parte del bonus pipex también soporta el modo **here\_doc**, que permite simular la entrada estándar a partir de un delimitador definido por el usuario.
 
 **Sintaxis:**
 

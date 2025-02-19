@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/02/18 12:11:35 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/02/19 10:59:49 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ OBJS	=
 HEADER	= $(INC_DIR)/fdf.h
 
 CFLAGS	= -Wall -Wextra -Werror -I./MLX42/include -I./libft -I$(INC_DIR) -g
-LDFLAGS = -lglfw -ldl -pthread -lm
+LDFLAGS = -lglfw -ldl -lpthread -lm
 CC	= cc
 LIBS	= $(LIB_DIR)/libft.a		\
 	  $(MLX_DIR)/libmlx42.a
