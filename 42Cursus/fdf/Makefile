@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/02/19 10:59:49 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/02/28 13:11:24 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRC_DIR	= ./src
 LIB_DIR = ./libft
 MLX_DIR = ./MLX42/build
 
-MAIN_FDF = $(OBJ_DIR)/fdf.o
+MAIN_FDF = $(OBJ_DIR)/fdf.o		\
+	   $(OBJ_DIR)/bresenham.o
 
 OBJS	= 
 
