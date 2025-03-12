@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:15:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/02/28 11:04:27 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:56:04 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 estructura s_line_data*/
 static void	line_limits(t_line_data *line, t_pixel_data p0, t_pixel_data p1)
 {
-	line->x0 = p0.iso_x;
-	line->y0 = p0.iso_y;
-	line->x1 = p1.iso_x;
-	line->y1 = p1.iso_y;
+	line->x0 = (int) round(p0.iso_x);
+	line->y0 = (int) round(p0.iso_y);
+	line->x1 = (int) round(p1.iso_x);
+	line->y1 = (int) round(p1.iso_y);
 	line->dx = line->x1 - line->x0;
 	line->dy = line->y1 - line->y0;
 }
@@ -73,9 +73,11 @@ static void	line_straight(t_line_data *line)
 static void	draw_pixel(mlx_image_t *img, t_line_data *line)
 {
 	int	index;
+	int	index_limit;
 
 	index = (line->y0 * img->width + line->x0) * 4;
-	if ((index >= 0) && (index < (int)(img->width * img->height * 4)))
+	index_limit = (int)(img->width * img->height * 4);
+	if (index >= 0 && index < index_limit && line->x0 > 0 && line->x0 < WIDTH)
 	{
 		img->pixels[index] = 255;
 		img->pixels[index + 1] = 255;

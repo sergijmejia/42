@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:15:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/07 19:28:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:05:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ t_pixel_data	*realloc_map(t_image_data *image, int old_len)
 }
 
 /*Funcion para copiar la memoria de un mapa a otro*/
-t_pixel_data	*home_map(t_pixel_data *map_points, int len)
+t_pixel_data	*copy_map(t_pixel_data *map_points, int len)
 {
 	int	i;
 	t_pixel_data	*home_map_points;
@@ -278,74 +278,184 @@ void	design_map(t_pixel_data *map_points, mlx_image_t *img, int len, int len_lin
 			draw_line(img, map_points[i - len_line], map_points[i]);
 		i++;
 	}
+
 }
 
-/*Funcion que gestiona el comportamiento del boton derecho del mouse*/
-
-/*Funcion que gestiona el comportamiento del boton izquierdo del mouse
-void	ft_mouse_left(t_image_data *image)
-{
-	
-}*/
-
 /*Funcion que gestiona el comportamiento de la barra espaciadora*/
-void	ft_space_key(t_image_data *image, t_pixel_data *home_image)
+void	ft_space_key(t_image_data *image)
 {
 	free(image->map);
 	mlx_delete_image(image->mlx, image->img);
-	image->map = home_map(home_image, image->len);
+	image->map = copy_map(image->home_map, image->len);
 	image->img = mlx_new_image(image->mlx, WIDTH, HEIGHT);
 	design_map(image->map, image->img, image->len, image->len_line);
 	mlx_image_to_window(image->mlx, image->img, 0, 0);
 }
 
+/*Funcion para realizar la rotacion respecto al movimiento del cursor*/
+void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
+{
+	t_pixel_data	*new_map;
+	int				i;
+	static int32_t	x0;
+	static int32_t	y0;
+	double			x_rel;
+	double			y_rel;
+	double			x_new;
+	double			y_new;
+	double			theta0;
+	static double	theta0_mod = 0.0;
+	double			theta1;
+	double			theta;
+
+
+	if (image->start_rotation == 1)
+	{
+		if (image->mod == 1)
+			mlx_get_mouse_pos(image->mlx, &x0, &y0);
+		else
+		{
+			x0 = WIDTH / 2;
+			y0 = HEIGHT / 2;
+		}
+		image->start_rotation = 0;
+		theta0_mod = 0.0;
+	}
+	if (image->mod == 1)
+		theta0 = theta0_mod;
+	else
+		theta0 = atan2(image->old_y - y0, image->old_x - x0);
+	new_map = copy_map(image->map, image->len);
+	i = 0;
+	//theta0 = atan2(image->old_y - y0, image->old_x - x0);
+	theta1 = atan2(ypos - y0, xpos - x0);
+	theta = theta1 - theta0;
+	if (image->mod == 1)
+		theta0_mod = theta1;
+	image->old_x = (int32_t) xpos;
+	image->old_y = (int32_t) ypos;
+	while (i < image->len)
+	{
+		x_rel = image->map[i].iso_x - x0;
+		y_rel = image->map[i].iso_y - y0;
+		x_new = x_rel * cos(theta) - y_rel * sin(theta);
+		y_new = x_rel * sin(theta) + y_rel * cos(theta);
+		new_map[i].iso_x = x_new + x0;
+		new_map[i].iso_y = y_new + y0;
+		i++;
+	}
+	free(image->map);
+	mlx_delete_image(image->mlx, image->img);
+	image->map = new_map;
+	image->img = mlx_new_image(image->mlx, WIDTH, HEIGHT);
+	design_map(image->map, image->img, image->len, image->len_line);
+	mlx_image_to_window(image->mlx, image->img, 0, 0);
+}
+
+/*Funcion para realizar la traslacion respecto al movimiento del cursor*/
+void	ft_image_traslation(t_image_data *image, double xpos, double ypos)
+{
+	t_pixel_data	*new_map;
+	double			dx;
+	double			dy;
+	int				i;
+
+	new_map = copy_map(image->map, image->len);
+	dx = xpos - image->old_x;
+	dy = ypos - image->old_y;
+	image->old_x = (int32_t) xpos;
+	image->old_y = (int32_t) ypos;
+	i = 0;
+	while (i < image->len)
+	{
+		new_map[i].iso_x = image->map[i].iso_x + dx;
+		new_map[i].iso_y  = image->map[i].iso_y + dy;
+		i++;
+	}
+	free(image->map);
+	mlx_delete_image(image->mlx, image->img);
+	image->map = new_map;
+	image->img = mlx_new_image(image->mlx, WIDTH, HEIGHT);
+	design_map(image->map, image->img, image->len, image->len_line);
+	mlx_image_to_window(image->mlx, image->img, 0, 0);
+}
+
+
 /*Funcion que gestiona el comportamiento cuando el cursor se mueve*/
 void	ft_chook(double xpos, double ypos, void *par)
 {
 	t_image_data *image; 
-	int32_t	dx;
-	int32_t	dy;
-	
+
 	image = (t_image_data *) par;
 	if (image->is_dragging)
 	{
-		dx = (int32_t) (xpos - image->old_x);
-		dy = (int32_t) (ypos - image->old_y);
-		image->img->instances[0].x = image->img->instances[0].x + dx;
-		image->img->instances[0].y = image->img->instances[0].y + dy;
-		image->old_x = xpos;
-		image->old_y = ypos;
+		if (image->translate)
+			ft_image_traslation(image, xpos, ypos);
+		else if (image->rotate)
+			ft_image_rotation(image, xpos, ypos);
 	}
 }
 
 /*Funcion que gestiona el comportamiento del boton izquierdo del mouse*/
 void	ft_mouse_left(action_t act, modifier_key_t mod, t_image_data *image)
 {
-	mouse_mode_t	mouse;
 	int32_t			old_x;
 	int32_t			old_y;
-	
+
 	if (act == MLX_PRESS)
 	{
-		if (mod)
-			mlx_get_mouse_pos(image->mlx, &old_x, &old_y);
+		if (mod == MLX_SHIFT)
+			image->mod = 1;
 		else
-			mlx_get_mouse_pos(image->mlx, &old_x, &old_y);
+			image->mod = 0;
+		mlx_get_mouse_pos(image->mlx, &old_x, &old_y);
 		image->old_x = old_x;
 		image->old_y = old_y;
 		image->is_dragging = 1;
-		mouse = MLX_MOUSE_HIDDEN;
-		mlx_set_cursor_mode(image->mlx, mouse);
+		image->translate = 1;
+		image->mouse = MLX_MOUSE_HIDDEN;
+		mlx_set_cursor_mode(image->mlx, image->mouse);
 	}
 	else if (act == MLX_RELEASE)
 	{
 		image->is_dragging = 0;
-		mouse = MLX_MOUSE_NORMAL;
-		mlx_set_cursor_mode(image->mlx, mouse);
+		image->translate = 0;
+		image->mod = 0;
+		image->mouse = MLX_MOUSE_NORMAL;
+		mlx_set_cursor_mode(image->mlx, image->mouse);
 	}
 }
 
 /*Funcion que gestiona el comportamiento del boton derecho del mouse*/
+void    ft_mouse_right(action_t act, modifier_key_t mod, t_image_data *image)
+{
+	int32_t			initial_x;
+	int32_t			initial_y;
+
+	if (act == MLX_PRESS)
+	{
+		if (mod == MLX_SHIFT)
+			image->mod = 1;
+		else
+			image->mod = 0;
+		mlx_get_mouse_pos(image->mlx, &initial_x, &initial_y);
+		image->old_x = initial_x;
+		image->old_y = initial_y;
+		image->is_dragging = 1;
+		image->rotate = 1;
+		image->mouse = MLX_MOUSE_HIDDEN;
+		mlx_set_cursor_mode(image->mlx, image->mouse);
+	}
+	else if (act == MLX_RELEASE)
+	{
+		image->is_dragging = 0;
+		image->rotate = 0;
+		image->start_rotation = 1;
+		image->mod = 0;
+		image->mouse = MLX_MOUSE_NORMAL;
+		mlx_set_cursor_mode(image->mlx, image->mouse);
+	}
+}
 
 /*Funcion que gestiona el comportamiento de teclas del mouse*/
 void	ft_mhook(mouse_key_t key, action_t act, modifier_key_t mod, void *par)
@@ -355,30 +465,38 @@ void	ft_mhook(mouse_key_t key, action_t act, modifier_key_t mod, void *par)
 	image = (t_image_data *) par;
 	if (key == MLX_MOUSE_BUTTON_LEFT)
 		ft_mouse_left(act, mod, image);
+	if (key == MLX_MOUSE_BUTTON_RIGHT)
+		ft_mouse_right(act, mod, image);
 }
 
 /*Funcion que gestiona el comportamiento de ciertas teclas del teclado*/
 void	ft_khook(mlx_key_data_t key_hook, void *param)
 {
 	t_image_data	*image;
-	static t_pixel_data	*home_image;
 
 	image = (t_image_data *) param;
-	if (home_image == NULL)
-		home_image = home_map(image->map, image->len);
 	if (key_hook.key == MLX_KEY_ESCAPE)
 		mlx_close_window(image->mlx);
 	if (key_hook.key == MLX_KEY_UP)
-		image->img->instances[0].y = image->img->instances[0].y - 10;
+		ft_image_traslation(image, image->old_x, image->old_y - 10);
 	if (key_hook.key == MLX_KEY_DOWN)
-		image->img->instances[0].y = image->img->instances[0].y + 10;
+		ft_image_traslation(image, image->old_x, image->old_y + 10);
 	if (key_hook.key == MLX_KEY_LEFT)
-		image->img->instances[0].x = image->img->instances[0].x - 10;
+		ft_image_traslation(image, image->old_x - 10, image->old_y);
 	if (key_hook.key == MLX_KEY_RIGHT)
-		image->img->instances[0].x = image->img->instances[0].x + 10;
+		ft_image_traslation(image, image->old_x + 10, image->old_y);
 	if (key_hook.key == MLX_KEY_SPACE)
-		ft_space_key(image, home_image);
+		ft_space_key(image);
 }
+
+/*Funcion que gestiona el comportamiento de scroll del mouse
+void	ft_shook(double xdelta, double ydelta, void* param)
+{
+	t_image_data	*image;
+	dou
+
+	image = (t_image_data *) param;
+}*/
 
 /*Funcion que incializa los valores de image*/
 void	start_image(t_image_data *image)
@@ -386,11 +504,17 @@ void	start_image(t_image_data *image)
 	image->mlx = NULL;
 	image->img = NULL;
 	image->map = NULL;
+	image->home_map = NULL;
+	image->mouse = MLX_MOUSE_NORMAL;
 	image->len = 0;
 	image->len_line = 0;
 	image->old_x = 0;
 	image->old_y = 0;
 	image->is_dragging = 0;
+	image->translate = 0;
+	image->rotate = 0;
+	image->start_rotation = 1;
+	image->mod = 0;
 }
 
 /*Funcion main de fdf*/
@@ -415,10 +539,12 @@ int	main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	design_map(image.map, image.img, image.len, image.len_line);
+	image.home_map = copy_map(image.map, image.len);
 	mlx_image_to_window(image.mlx, image.img, 0, 0);
 	mlx_key_hook(image.mlx, ft_khook, &image);
 	mlx_mouse_hook(image.mlx, ft_mhook, &image);
 	mlx_cursor_hook(image.mlx, ft_chook, &image);
+	//mlx_scroll_hook(image.mlx, ft_shook, &image);
 	mlx_loop(image.mlx);
 	mlx_terminate(image.mlx);
 	return (EXIT_SUCCESS);
