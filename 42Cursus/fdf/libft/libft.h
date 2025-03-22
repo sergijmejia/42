@@ -93,7 +93,7 @@ long	ft_atol(const char *nptr);
 # endif
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1024
 # endif
 
 # if BUFFER_SIZE > 1024

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:15:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/12 16:56:04 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/22 14:33:46 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,28 @@
 
 /*Funcion que recopila los datos de los puntos p1 y p0 y los almacena en la 
 estructura s_line_data*/
-static void	line_limits(t_line_data *line, t_pixel_data p0, t_pixel_data p1)
+static void	line_limits(t_line_data *line, t_pixel_data p0, t_pixel_data p1, int iso_pers)
 {
-	line->x0 = (int) round(p0.iso_x);
-	line->y0 = (int) round(p0.iso_y);
-	line->x1 = (int) round(p1.iso_x);
-	line->y1 = (int) round(p1.iso_y);
+	if (!iso_pers)
+	{
+		line->x0 = (int) round(p0.iso_x);
+		line->y0 = (int) round(p0.iso_y);
+		line->x1 = (int) round(p1.iso_x);
+		line->y1 = (int) round(p1.iso_y);
+	}
+	else
+	{
+		line->x0 = (int) round(p0.pers_x);
+        line->y0 = (int) round(p0.pers_y);
+        line->x1 = (int) round(p1.pers_x);
+        line->y1 = (int) round(p1.pers_y);
+	}
+	line->r0 = p0.r;
+	line->g0 = p0.g;
+	line->b0 = p0.b;
+	line->r1 = p1.r;
+	line->g1 = p1.g;
+	line->b1 = p1.b;
 	line->dx = line->x1 - line->x0;
 	line->dy = line->y1 - line->y0;
 }
@@ -70,19 +86,37 @@ static void	line_straight(t_line_data *line)
 
 /*Funion que aplica el color a cada uno de los pixeles localizados mediane
 (x, y)*/
-static void	draw_pixel(mlx_image_t *img, t_line_data *line)
+static void	draw_pixel(mlx_image_t *img, t_line_data *line, int clear)
 {
-	int	index;
-	int	index_limit;
+	int		index;
+	int		index_limit;
 
+	if (clear)
+	{
+		
+	}
 	index = (line->y0 * img->width + line->x0) * 4;
 	index_limit = (int)(img->width * img->height * 4);
 	if (index >= 0 && index < index_limit && line->x0 > 0 && line->x0 < WIDTH)
 	{
-		img->pixels[index] = 255;
-		img->pixels[index + 1] = 255;
-		img->pixels[index + 2] = 255;
-		img->pixels[index + 3] = 255;
+		if (!clear)
+		{
+			img->pixels[index] = line->r0 + (line->r1 - line->r0) * line->color_ratio;
+			img->pixels[index + 1] = line->g0 + (line->g1 - line->g0) * line->color_ratio;
+			img->pixels[index + 2] = line->b0 + (line->b1 - line->b0) * line->color_ratio;
+			img->pixels[index + 3] = 255;
+			if (line->dx > line->dy)
+				line->color_ratio = line->color_ratio + 1.0 / line->dx;
+			else
+				line->color_ratio = line->color_ratio + 1.0 / line->dy;
+		}
+		else
+		{
+			img->pixels[index] = 0;
+			img->pixels[index + 1] = 0;
+			img->pixels[index + 2] = 0;
+			img->pixels[index + 3] = 0;
+		}
 	}
 	if (line->adv >= 0)
 	{
@@ -99,13 +133,25 @@ static void	draw_pixel(mlx_image_t *img, t_line_data *line)
 }
 
 /*Algoritmo de Bresenham*/
-void	draw_line(mlx_image_t *img, t_pixel_data point0, t_pixel_data point1)
+void	draw_line(t_image_data *image, t_pixel_data point0, t_pixel_data point1, int clear)
 {
 	t_line_data	line;
 
-	line_limits(&line, point0, point1);
+	line_limits(&line, point0, point1, image->iso_pers);
+	//printf("El valor de r0 es: %d\n", point0.r);
+	//printf("El valor de r1 es: %d\n", point1.r);
+	//printf("El valor de g0 es: %d\n", point0.g);
+	//printf("El valor de g1 es: %d\n", point1.g);
+	//printf("El valor de b0 es: %d\n", point0.b);
+	//printf("El valor de b1 es: %d\n", point1.b);
 	line_inclined(&line);
 	line_straight(&line);
+	line.color_ratio = 0.0;
 	while (line.x0 != line.x1 || line.y0 != line.y1)
-		draw_pixel(img, &line);
+	{
+		if (image->iso_pers == 0)
+			draw_pixel(image->img_iso, &line, clear);
+		else
+			draw_pixel(image->img_pers, &line, clear);
+	}
 }
