@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:15:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/22 14:31:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/25 19:43:46 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ void	design_map(t_image_data *image, int clear)
 	int				i;
 	int				len;
 	int				len_line;
-	//mlx_image_t		*img;
 	t_pixel_data	*map_points;
 
 	len_line = image->len_line;
 	len = image->len;
-	//img = image->img;
 	map_points = image->map;
 	i = 1;
 	while (i < len)
@@ -42,12 +40,10 @@ void	clear_image(t_image_data *image)
 	int				i;
 	int				len;
 	int				len_line;
-	//mlx_image_t		*img;
 	t_pixel_data	*map_points;
 
 	len_line = image->len_line;
 	len = image->len;
-	//img = image->img;
 	map_points = image->map;
 	i = 1;
 	while (i < len)
@@ -299,36 +295,6 @@ void	iso_matrix(t_image_data *image)
 	free(iso_y);
 }
 
-
-/*void perspective_transform(t_pixel_data *map_points, t_isometric_data data, float *iso_x, float *iso_y, int len, int vanishing_x, int vanishing_y, double projection_distance) {
-    int i;
-    float dx;
-    float dy;
-    float distance;
-    float scale;
-    float x;
-    float y;
-
-    i = 0;
-    while (i < len) {
-        dx = iso_x[i] - (data.min_x + (data.max_x-data.min_x)/2); // centro el mapa
-        dy = iso_y[i] - (data.min_y + (data.max_y-data.min_y)/2); // centro el mapa
-
-        distance = sqrt(dx * dx + dy * dy); // Distancia al centro del mapa.
-
-        scale = projection_distance / (projection_distance + distance); // escala dependiendo de la distancia.
-
-        x = vanishing_x + dx * scale * 40; // multiplica por un factor para ajustar la escala.
-        y = vanishing_y + dy * scale * 40;
-
-        map_points[i].iso_x = (int)x;
-        map_points[i].iso_y = (int)y;
-        i++;
-    }
-}*/
-
-//asummo la camara en la posicion (100, 100, 500) y la distancia 800
-
 /*Funcion que calcula la proyecccion con perspectiva x sin transformar*/
 float	*proj_pers_x(t_pixel_data *map_points, int len, double d)
 {
@@ -342,7 +308,6 @@ float	*proj_pers_x(t_pixel_data *map_points, int len, double d)
 	i = 0;
 	cx = -650;
 	cz = 10000;
-	//printf("en proj_pers_x recibo d = %f\n", d);
 	pers_x = (float *) malloc (sizeof(float) * len);
 	while (i < len)
 	{
@@ -352,7 +317,6 @@ float	*proj_pers_x(t_pixel_data *map_points, int len, double d)
 			pers_x[i] = 4 * (x - cx) * d;
 		else
 			pers_x[i] = ((x - cx) / (cz -z)) * d;
-		//printf("El valor de x[%d] = %f\n", i, pers_x[i]);
 		i++;
 	}
 	return (pers_x);
@@ -371,31 +335,19 @@ float	*proj_pers_y(t_pixel_data *map_points, int len, double d)
 	i = 0;
 	cy = 2250;
 	cz = 10000;
-	//printf("en proj_pers_y recibo d = %f\n", d);
 	pers_y = (float *) malloc (sizeof(float) * len);
 	while (i < len)
 	{
 		y = (float) map_points[i].y;
 		z = (float) map_points[i].z;
 		if (z == cz)
-		{
 			pers_y[i] = 4 * (y - cy) * d;
-			//printf("Entra en opcion 1. cy = %f, cz = %f, y = %f, z = %f, d = %f, y guarda %f\n", cy, cz, y, z, d, pers_y[i]);
-		}
 		else
-		{
 			pers_y[i] = ((y - cy) / (cz -z)) * d;
-			//printf("Entra en opcion 2. cy = %f, cz = %f, y = %f, z = %f, d = %f, y guarda %f\n", cy, cz, y, z, d, pers_y[i]);
-		}
 		i++;
 	}
 	return (pers_y);
 }
-
-
-
-
-
 
 /*Funcion que transforma las proyecciones en perspectiva con proporcion en eje x*/
 void	transf_pers_matrix_prop_x(t_pixel_data *map_points, t_proj_data data, float *pers_x, float *pers_y, int len)
@@ -441,6 +393,7 @@ void	transf_pers_matrix_prop_y(t_pixel_data *map_points, t_proj_data data, float
 	}
 }
 
+/*Funcion para calcular las proyecciones conicas de una matriz de puntos*/
 void	perspective_matrix(t_image_data *image, double d_projection)
 {
 	t_proj_data	data;
@@ -543,8 +496,6 @@ int	count_nodes(int fd)
 void	create_matrix(int fd, t_image_data *image)
 {
 	char	*line;
-	//char	*line_trimmed;
-	//char	*trim_char;
 	char	**split_line;
 	char	**split_color;
 	int		len;
@@ -555,9 +506,7 @@ void	create_matrix(int fd, t_image_data *image)
 	old_len = 0;
 	image->len_line = 0;
 	j = 0;
-	printf("Entra en la funcion count_nodes\n");
 	image->len = count_nodes(fd);
-	printf("La longitud del array es: %d\n", image->len);
 	image->map = (t_pixel_data *) malloc (sizeof(t_pixel_data) * (image->len));
 	lseek(fd, 0, SEEK_SET);
 	line = get_next_line(fd);
@@ -577,8 +526,6 @@ void	create_matrix(int fd, t_image_data *image)
 			image->map[old_len + i].x = i;
 			image->map[old_len + i].y = j;
 			split_color = ft_split(split_line[i], ',');
-			//printf("nodo %d, z = %s, color = %s\n", i, split_color[0], split_color[1]);
-			//image->map[old_len + i].z = ft_atoi(split_line[i]);
 			image->map[old_len + i].z = ft_atoi(split_color[0]);
 			if (split_color[1] != NULL)
 			{
@@ -597,20 +544,13 @@ void	create_matrix(int fd, t_image_data *image)
 			if (i > 0)
 				image->map[old_len + i].net_x = 1;
 			if (i < image->len_line)
-			{
 				image->map[old_len + i].net_y = 1;
-				//printf("net_y puesto a 1\n");
-			}
-			//printf("Va a hacer un free split_color");
 			ft_clean_split(split_color);
 			i++;
 		}
-		//printf("Va a hacer un free line");
 		free(line);
-		//free(line_trimmed);
 		ft_clean_split(split_line);
 		line = get_next_line(fd);
-		//line_trimmed = ft_strtrim(line, trim_char);
 		if (line != NULL && line[ft_strlen(line)- 1] == '\n')
 			line[ft_strlen(line)- 1] = '\0';
 		image->len_line = len;
@@ -623,30 +563,6 @@ void	create_matrix(int fd, t_image_data *image)
 	iso_matrix(image);
 	perspective_matrix(image, 200.0);
 }
-
-/*Funcion para dibujar el mapa de la matriz
-void	design_map(t_image_data *image, int clear)
-{
-	int				i;
-	int				len;
-	int				len_line;
-	mlx_image_t		*img;
-	t_pixel_data	*map_points;
-
-	len_line = image->len_line;
-	len = image->len;
-	img = image->img;
-	map_points = image->map;
-	i = 1;
-	while (i < len)
-	{
-		if (map_points[i].net_x)
-			draw_line(img, map_points[i - 1], map_points[i], clear);
-		if (map_points[i].net_y)
-			draw_line(img, map_points[i - len_line], map_points[i], clear);
-		i++;
-	}
-}*/
 
 /*Funcion que gestiona el comportamiento de la barra espaciadora*/
 void	ft_space_key(t_image_data *image)
@@ -662,7 +578,7 @@ void	ft_space_key(t_image_data *image)
 	}
 	else
 	{
-		mlx_delete_image(image->mlx, image->img_iso);
+		mlx_delete_image(image->mlx, image->img_pers);
 		image->map = copy_map(image->home_map, image->len);
 		image->img_pers = mlx_new_image(image->mlx, WIDTH, HEIGHT);
 		design_map(image, 0);
@@ -673,7 +589,6 @@ void	ft_space_key(t_image_data *image)
 /*Funcion para realizar la rotacion respecto al movimiento del cursor*/
 void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
 {
-	//t_pixel_data	*new_map;
 	static struct timespec	last_update;
 	struct timespec			current_time;
 	double					elapsed_time;
@@ -682,8 +597,6 @@ void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
 	static int32_t	y0;
 	double			x_rel;
 	double			y_rel;
-	//double			x_new;
-	//double			y_new;
 	double			theta0;
 	static double	theta0_mod = 0.0;
 	double			theta1;
@@ -709,7 +622,6 @@ void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
 			theta0 = theta0_mod;
 		else
 			theta0 = atan2(image->old_y - y0, image->old_x - x0);
-		//new_map = copy_map(image->map, image->len);
 		i = 0;
 		theta1 = atan2(ypos - y0, xpos - x0);
 		theta = theta1 - theta0;
@@ -718,24 +630,29 @@ void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
 		image->old_x = (int32_t) xpos;
 		image->old_y = (int32_t) ypos;
 		clear_image(image);
-		while (i < image->len)
+		if (image->iso_pers)
 		{
-			x_rel = image->map[i].iso_x - x0;
-			y_rel = image->map[i].iso_y - y0;
-			image->map[i].iso_x = x_rel * cos(theta) - y_rel * sin(theta) + x0;
-			image->map[i].iso_y = x_rel * sin(theta) + y_rel * cos(theta) + y0;
-			//new_map[i].iso_x = x_new + x0;
-			//new_map[i].iso_y = y_new + y0;
-			i++;
+			while (i < image->len)
+			{
+				x_rel = image->map[i].pers_x - x0;
+				y_rel = image->map[i].pers_y - y0;
+				image->map[i].pers_x = x_rel * cos(theta) - y_rel * sin(theta) + x0;
+				image->map[i].pers_y = x_rel * sin(theta) + y_rel * cos(theta) + y0;
+				i++;
+			}
 		}
-		//clear_image(image);
-		//free(image->map);
-		//mlx_delete_image(image->mlx, image->img);
-		//image->map = new_map;
-		//image->img = mlx_new_image(image->mlx, WIDTH, HEIGHT);
-		//design_map(image->map, image->img, image->len, image->len_line);
+		else
+		{
+			while (i < image->len)
+			{
+				x_rel = image->map[i].iso_x - x0;
+				y_rel = image->map[i].iso_y - y0;
+				image->map[i].iso_x = x_rel * cos(theta) - y_rel * sin(theta) + x0;
+				image->map[i].iso_y = x_rel * sin(theta) + y_rel * cos(theta) + y0;
+				i++;
+			}
+		}
 		design_map(image, 0);
-		mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
 		clock_gettime(CLOCK_MONOTONIC, &last_update);
 	}
 }
@@ -743,7 +660,6 @@ void	ft_image_rotation(t_image_data *image, double xpos, double ypos)
 /*Funcion para realizar la traslacion respecto al movimiento del cursor*/
 void	ft_image_traslation(t_image_data *image, double xpos, double ypos)
 {
-	//t_pixel_data	*new_map;
 	static struct timespec	last_update;
 	struct timespec			current_time;
 	double					elapsed_time;
@@ -755,39 +671,31 @@ void	ft_image_traslation(t_image_data *image, double xpos, double ypos)
 	elapsed_time = (current_time.tv_sec - last_update.tv_sec) + (current_time.tv_nsec - last_update.tv_nsec) / 1e9;
 	if (elapsed_time >= 1.0 / 60.0)
 	{
-		//new_map = copy_map(image->map, image->len);
-		//printf("Entra en la traslacion\n");
 		dx = xpos - image->old_x;
 		dy = ypos - image->old_y;
 		image->old_x = (int32_t) xpos;
 		image->old_y = (int32_t) ypos;
 		i = 0;
-		/*while (i < image->len)
-		{
-			new_map[i].iso_x = image->map[i].iso_x + dx;
-			new_map[i].iso_y = image->map[i].iso_y + dy;
-			i++;
-		}*/
-		/*while (i < image->len)
-		{
-			image->iso_x_moved[i] = image->map[i].iso_x + dx;
-			image->iso_y_moved[i] = image->map[i].iso_y + dy;
-		}*/
 		clear_image(image);
-		//free(image->map);
-		//printf("Limpia la imagen\n");
-		while (i < image->len)
+		if (image->iso_pers)
 		{
-			image->map[i].iso_x = image->map[i].iso_x + dx;
-			image->map[i].iso_y = image->map[i].iso_y + dy;
-			i++;
+			while (i < image->len)
+			{
+				image->map[i].pers_x = image->map[i].pers_x + dx;
+				image->map[i].pers_y = image->map[i].pers_y + dy;
+				i++;
+			}
 		}
-		//mlx_delete_image(image->mlx, image->img);
-		//image->map = new_map;
-		//image->img = mlx_new_image(image->mlx, WIDTH, HEIGHT);
-		//design_map(image->map, image->img, image->len, image->len_line);
+		else
+		{
+			while (i < image->len)
+			{
+				image->map[i].iso_x = image->map[i].iso_x + dx;
+				image->map[i].iso_y = image->map[i].iso_y + dy;
+				i++;
+			}
+		}
 		design_map(image, 0);
-		mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
 		clock_gettime(CLOCK_MONOTONIC, &last_update);
 	}
 }
@@ -869,27 +777,26 @@ void	ft_mouse_right(action_t act, modifier_key_t mod, t_image_data *image)
 }
 
 /*Funcion que gestiona el comportamiento de la letra a para cambiar de mapas*/
-void	ft_a_key(t_image_data *image)
+void	ft_a_key(action_t act, t_image_data *image)
 {
-	free(image->map);
-	if (image->iso_pers == 0)
+	if (act == MLX_PRESS)
 	{
-		image->iso_pers = 1;
-		mlx_delete_image(image->mlx, image->img_iso);
-		image->img_pers = mlx_new_image(image->mlx, WIDTH, HEIGHT);
-		design_map(image, 0);
-		mlx_image_to_window(image->mlx, image->img_pers, 0, 0);
-	}
-	else
-	{
-		image->iso_pers = 0;
-		mlx_delete_image(image->mlx, image->img_pers);
-		image->img_iso = mlx_new_image(image->mlx, WIDTH, HEIGHT);
-		design_map(image, 0);
-		mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
+		if (image->iso_pers == 0)
+		{
+			clear_image(image);
+			image->iso_pers = 1;
+			design_map(image, 0);
+			mlx_image_to_window(image->mlx, image->img_pers, 0, 0);
+		}
+		else
+		{
+			clear_image(image);
+			image->iso_pers = 0;
+			design_map(image, 0);
+			mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
+		}
 	}
 }
-
 
 /*Funcion que gestiona el comportamiento de teclas del mouse*/
 void	ft_mhook(mouse_key_t key, action_t act, modifier_key_t mod, void *par)
@@ -922,7 +829,7 @@ void	ft_khook(mlx_key_data_t key_hook, void *param)
 	if (key_hook.key == MLX_KEY_SPACE)
 		ft_space_key(image);
 	if (key_hook.key == MLX_KEY_A)
-		ft_a_key(image);
+		ft_a_key(key_hook.action, image);
 }
 
 /*Funcion que gestiona el zoom de la imagen*/
@@ -940,27 +847,52 @@ void	ft_zoom(t_image_data *image, double delta, int32_t x, int32_t y)
 	{
 		new_map = copy_map(image->map, image->len);
 		i = 0;
-		while (i < image->len)
+		if (image->iso_pers)
 		{
-			if (delta > 0)
+			while (i < image->len)
 			{
-				new_map[i].iso_x = (image->map[i].iso_x - x) * (1.1 * delta) + x;
-				new_map[i].iso_y = (image->map[i].iso_y - y) * (1.1 * delta) + y;
+				if (delta > 0)
+				{
+					new_map[i].pers_x = (image->map[i].pers_x - x) * (1.1 * delta) + x;
+					new_map[i].pers_y = (image->map[i].pers_y - y) * (1.1 * delta) + y;
+				}
+				else if (delta < 0)
+				{
+					new_map[i].pers_x = (image->map[i].pers_x - x) / (-1.1 * delta) + x;
+					new_map[i].pers_y = (image->map[i].pers_y - y) / (-1.1 * delta) + y;
+				}
+				i++;
 			}
-			else if (delta < 0)
-			{
-				new_map[i].iso_x = (image->map[i].iso_x - x) / (-1.1 * delta) + x;
-				new_map[i].iso_y = (image->map[i].iso_y - y) / (-1.1 * delta) + y;
-			}
-			i++;
+			free(image->map);
+			mlx_delete_image(image->mlx, image->img_pers);
+			image->map = new_map;
+			image->img_pers = mlx_new_image(image->mlx, WIDTH, HEIGHT);
+			design_map(image, 0);
+			mlx_image_to_window(image->mlx, image->img_pers, 0, 0);
 		}
-		free(image->map);
-		mlx_delete_image(image->mlx, image->img_iso);
-		image->map = new_map;
-		image->img_iso = mlx_new_image(image->mlx, WIDTH, HEIGHT);
-		//design_map(image->map, image->img, image->len, image->len_line);
-		design_map(image, 0);
-		mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
+		else
+		{
+			while (i < image->len)
+			{
+				if (delta > 0)
+				{
+					new_map[i].iso_x = (image->map[i].iso_x - x) * (1.1 * delta) + x;
+					new_map[i].iso_y = (image->map[i].iso_y - y) * (1.1 * delta) + y;
+				}
+				else if (delta < 0)
+				{
+					new_map[i].iso_x = (image->map[i].iso_x - x) / (-1.1 * delta) + x;
+					new_map[i].iso_y = (image->map[i].iso_y - y) / (-1.1 * delta) + y;
+				}
+				i++;
+			}
+			free(image->map);
+			mlx_delete_image(image->mlx, image->img_iso);
+			image->map = new_map;
+			image->img_iso = mlx_new_image(image->mlx, WIDTH, HEIGHT);
+			design_map(image, 0);
+			mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
+		}
 		clock_gettime(CLOCK_MONOTONIC, &last_update);
 	}
 }
@@ -1013,26 +945,32 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	fd = open(argv[1], O_RDONLY);
 	start_image(&image);
+	printf("Flag 1\n");
 	create_matrix(fd, &image);
 	close(fd);
+	printf("Flag 2\n");
 	image.mlx = mlx_init(WIDTH, HEIGHT, "My MLX42", true);
 	if (image.mlx == NULL)
 		exit(EXIT_FAILURE);
+	printf("Flag 3\n");
 	image.img_iso = mlx_new_image(image.mlx, WIDTH, HEIGHT);
+	image.img_pers = mlx_new_image(image.mlx, WIDTH, HEIGHT);
 	if (!(image.img_iso))
 	{
 		mlx_terminate(image.mlx);
 		exit(EXIT_FAILURE);
 	}
-	//design_map(image.map, image.img, image.len, image.len_line);
+	printf("Flag 4\n");
 	design_map(&image, 0);
 	image.home_map = copy_map(image.map, image.len);
 	mlx_image_to_window(image.mlx, image.img_iso, 0, 0);
+	printf("Flag 5\n");
 	mlx_key_hook(image.mlx, ft_khook, &image);
 	mlx_mouse_hook(image.mlx, ft_mhook, &image);
 	mlx_cursor_hook(image.mlx, ft_chook, &image);
 	mlx_scroll_hook(image.mlx, ft_shook, &image);
 	mlx_loop(image.mlx);
+	free(image.home_map);
 	mlx_terminate(image.mlx);
 	return (EXIT_SUCCESS);
 }

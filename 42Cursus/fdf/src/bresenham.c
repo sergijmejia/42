@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:15:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/22 14:33:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:45:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,6 @@ static void	draw_pixel(mlx_image_t *img, t_line_data *line, int clear)
 	int		index;
 	int		index_limit;
 
-	if (clear)
-	{
-		
-	}
 	index = (line->y0 * img->width + line->x0) * 4;
 	index_limit = (int)(img->width * img->height * 4);
 	if (index >= 0 && index < index_limit && line->x0 > 0 && line->x0 < WIDTH)
@@ -137,16 +133,16 @@ void	draw_line(t_image_data *image, t_pixel_data point0, t_pixel_data point1, in
 {
 	t_line_data	line;
 
+	//printf("Entra en el draw_line\n");
 	line_limits(&line, point0, point1, image->iso_pers);
-	//printf("El valor de r0 es: %d\n", point0.r);
-	//printf("El valor de r1 es: %d\n", point1.r);
-	//printf("El valor de g0 es: %d\n", point0.g);
-	//printf("El valor de g1 es: %d\n", point1.g);
-	//printf("El valor de b0 es: %d\n", point0.b);
-	//printf("El valor de b1 es: %d\n", point1.b);
+	//printf("Hace el paso 5.4.1\n");
 	line_inclined(&line);
+	//printf("Hace el paso 5.4.1\n");
 	line_straight(&line);
+	//printf("Hace el paso 5.4.1\n");
 	line.color_ratio = 0.0;
+	//printf("Hace el paso 5.4.1\n");
+	//printf("Entra en el while\n");
 	while (line.x0 != line.x1 || line.y0 != line.y1)
 	{
 		if (image->iso_pers == 0)
