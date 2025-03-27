@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/02/28 13:11:24 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/03/27 18:11:00 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,15 @@ SRC_DIR	= ./src
 LIB_DIR = ./libft
 MLX_DIR = ./MLX42/build
 
-MAIN_FDF = $(OBJ_DIR)/fdf.o		\
-	   $(OBJ_DIR)/bresenham.o
+MAIN_FDF = $(OBJ_DIR)/fdf.o					\
+	   $(OBJ_DIR)/bresenham.o				\
+	   $(OBJ_DIR)/create_matrix.o			\
+	   $(OBJ_DIR)/isometric_matrix.o		\
+	   $(OBJ_DIR)/perspective_matrix.o		\
+	   $(OBJ_DIR)/fdf_utils.o				\
+	   $(OBJ_DIR)/drawing_map_functions.o	\
+	   $(OBJ_DIR)/image_rotation.o			\
+	   $(OBJ_DIR)/image_traslation.o
 
 OBJS	= 
 

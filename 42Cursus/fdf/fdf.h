@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:16:24 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/25 18:53:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:09:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,25 @@ typedef struct s_line_data
 # ifndef HEIGHT
 #  define HEIGHT 1882
 # endif
+
+/*Funciones divididas*/
+void	create_matrix(int fd, t_image_data *image);
+void	iso_matrix(t_image_data *image);
+void	perspective_matrix(t_image_data *image, double d_projection);
+
+/*Utils*/
+float	ft_max_float(float *cord, int len);
+float	ft_min_float(float *cord, int len);
+char	*ft_clean_split(char **str);
+
+/*Funciones de dibujo:*/
+void	draw_map(t_image_data *image, int clear);
+void	clear_image(t_image_data *image);
+int 	get_color(char const *s, char *color);
+
+/*Funciones de movimiento*/
+void	ft_image_rotation(t_image_data *image, double xpos, double ypos);
+void	ft_image_traslation(t_image_data *image, double xpos, double ypos);
 
 /*Algoritmo de Bresenham para dibijar una linea entre dos puntos*/
 void	draw_line(t_image_data *image, t_pixel_data point0, t_pixel_data point1, int clear);
