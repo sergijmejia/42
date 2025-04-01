@@ -6,11 +6,12 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:57 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 12:56:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:15:40 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
 
 /*Funcion que calcula la proyecccion isometrica x sin transformar*/
 static float	*proj_iso_x(t_pixel_data *map_points, int len)

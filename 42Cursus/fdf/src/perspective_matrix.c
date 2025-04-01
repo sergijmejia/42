@@ -6,11 +6,12 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:59:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 15:07:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:15:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
 
 /*Funcion que calcula la proyecccion con perspectiva x sin transformar*/
 static float	*proj_pers_x(t_pixel_data *map_points, int len, double d)

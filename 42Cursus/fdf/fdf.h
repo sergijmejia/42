@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:16:24 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 18:09:57 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/01 18:00:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "./libft/libft.h"
 # include <math.h>
 # include <time.h>
+# include <errno.h>
 
 /*Estructura de las dimensiones de la ventana*/
 typedef struct s_window
@@ -118,23 +119,33 @@ void	create_matrix(int fd, t_image_data *image);
 void	iso_matrix(t_image_data *image);
 void	perspective_matrix(t_image_data *image, double d_projection);
 
+/*Funciones de dibujo:*/
+void	draw_map(t_image_data *image, int clear);
+void	clear_image(t_image_data *image);
+int		get_color(char const *s, char *color);
+
+/*Funciones de modificacion de imagen*/
+void	ft_image_rotation(t_image_data *image, double xpos, double ypos);
+void	ft_image_traslation(t_image_data *image, double xpos, double ypos);
+void	ft_zoom(t_image_data *image, double delta, int32_t x, int32_t y);
+
+/*Algoritmo de Bresenham para dibijar una linea entre dos puntos*/
+void	draw_line(t_image_data *img, t_pixel_data p0, t_pixel_data p1, int clr);
+
+/*Hooks*/
+void	ft_chook(double xpos, double ypos, void *par);
+void	ft_mhook(mouse_key_t key, action_t act, modifier_key_t mod, void *par);
+void	ft_shook(double xdelta, double ydelta, void *param);
+void	ft_khook(mlx_key_data_t key_hook, void *param);
+
+/*Prueba*/
+int		get_color(char const *s, char *color);
+
 /*Utils*/
+void	end_image(t_image_data *image);
+t_pixel_data	*copy_map(t_pixel_data *map_points, int len);
 float	ft_max_float(float *cord, int len);
 float	ft_min_float(float *cord, int len);
 char	*ft_clean_split(char **str);
 
-/*Funciones de dibujo:*/
-void	draw_map(t_image_data *image, int clear);
-void	clear_image(t_image_data *image);
-int 	get_color(char const *s, char *color);
-
-/*Funciones de movimiento*/
-void	ft_image_rotation(t_image_data *image, double xpos, double ypos);
-void	ft_image_traslation(t_image_data *image, double xpos, double ypos);
-
-/*Algoritmo de Bresenham para dibijar una linea entre dos puntos*/
-void	draw_line(t_image_data *image, t_pixel_data point0, t_pixel_data point1, int clear);
-
-/*Prueba*/
-int	get_color(char const *s, char *color);
 #endif

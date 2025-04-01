@@ -6,11 +6,41 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 12:05:59 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 12:09:49 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:14:10 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
+
+/*Funcion para manejar los errores*/
+void	end_image(t_image_data *image)
+{
+	free(image->iso_x_moved);
+	free(image->iso_y_moved);
+	free(image->map);
+	free(image->home_map);
+	mlx_delete_image(image->mlx, image->img_iso);
+	mlx_delete_image(image->mlx, image->img_pers);
+}
+
+/*Funcion para copiar la memoria de un mapa a otro*/
+t_pixel_data	*copy_map(t_pixel_data *map_points, int len)
+{
+	int				i;
+	t_pixel_data	*new_map_points;
+
+	new_map_points = (t_pixel_data *) malloc (sizeof(t_pixel_data) * len);
+	if (!new_map_points)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_map_points[i] = map_points[i];
+		i++;
+	}
+	return (new_map_points);
+}
 
 /*Funcion para encontrar el valor maximo de un array de float*/
 float	ft_max_float(float *cord, int len)

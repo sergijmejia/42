@@ -6,11 +6,12 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:15:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/25 17:45:57 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:22:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
 
 /*Funcion que recopila los datos de los puntos p1 y p0 y los almacena en la 
 estructura s_line_data*/
@@ -26,9 +27,9 @@ static void	line_limits(t_line_data *line, t_pixel_data p0, t_pixel_data p1, int
 	else
 	{
 		line->x0 = (int) round(p0.pers_x);
-        line->y0 = (int) round(p0.pers_y);
-        line->x1 = (int) round(p1.pers_x);
-        line->y1 = (int) round(p1.pers_y);
+		line->y0 = (int) round(p0.pers_y);
+		line->x1 = (int) round(p1.pers_x);
+		line->y1 = (int) round(p1.pers_y);
 	}
 	line->r0 = p0.r;
 	line->g0 = p0.g;
@@ -129,25 +130,19 @@ static void	draw_pixel(mlx_image_t *img, t_line_data *line, int clear)
 }
 
 /*Algoritmo de Bresenham*/
-void	draw_line(t_image_data *image, t_pixel_data point0, t_pixel_data point1, int clear)
+void	draw_line(t_image_data *img, t_pixel_data p0, t_pixel_data p1, int clr)
 {
 	t_line_data	line;
 
-	//printf("Entra en el draw_line\n");
-	line_limits(&line, point0, point1, image->iso_pers);
-	//printf("Hace el paso 5.4.1\n");
+	line_limits(&line, p0, p1, img->iso_pers);
 	line_inclined(&line);
-	//printf("Hace el paso 5.4.1\n");
 	line_straight(&line);
-	//printf("Hace el paso 5.4.1\n");
 	line.color_ratio = 0.0;
-	//printf("Hace el paso 5.4.1\n");
-	//printf("Entra en el while\n");
 	while (line.x0 != line.x1 || line.y0 != line.y1)
 	{
-		if (image->iso_pers == 0)
-			draw_pixel(image->img_iso, &line, clear);
+		if (img->iso_pers == 0)
+			draw_pixel(img->img_iso, &line, clr);
 		else
-			draw_pixel(image->img_pers, &line, clear);
+			draw_pixel(img->img_pers, &line, clr);
 	}
 }

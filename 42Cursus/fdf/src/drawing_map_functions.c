@@ -6,11 +6,12 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:30:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 16:50:06 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/01 18:25:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
 
 /*Funcion que devuelve la posicion en que se encuentra c en str*/
 static int	hexapos(const char *str, char c)
@@ -119,5 +120,6 @@ int	get_color(char const *s, char *color)
 		number = hexa_to_int(one_color, 2);
 		free(one_color);
 	}
+	free(color_trimmed);
 	return (number);
 }

@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/03/27 18:11:00 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/03/31 12:20:56 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,15 @@ MAIN_FDF = $(OBJ_DIR)/fdf.o					\
 	   $(OBJ_DIR)/fdf_utils.o				\
 	   $(OBJ_DIR)/drawing_map_functions.o	\
 	   $(OBJ_DIR)/image_rotation.o			\
-	   $(OBJ_DIR)/image_traslation.o
+	   $(OBJ_DIR)/image_traslation.o		\
+	   $(OBJ_DIR)/image_zoom.o				\
+	   $(OBJ_DIR)/mouse_hook.o				\
+	   $(OBJ_DIR)/key_hook.o
 
 OBJS	= 
 
-HEADER	= $(INC_DIR)/fdf.h
+HEADER	= $(INC_DIR)/fdf.h					\
+		  $(INC_DIR)/fdf_utils.h
 
 CFLAGS	= -Wall -Wextra -Werror -I./MLX42/include -I./libft -I$(INC_DIR) -g
 LDFLAGS = -lglfw -ldl -lpthread -lm

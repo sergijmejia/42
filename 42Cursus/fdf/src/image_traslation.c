@@ -6,11 +6,12 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 18:07:19 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/27 18:33:00 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:13:18 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include <fdf_utils.h>
 
 /*Funcion que establece las nuevas coordenadas en isometrico*/
 static void	set_rt_iso(t_image_data *image, double dx, double dy)
