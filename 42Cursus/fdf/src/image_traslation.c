@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 18:07:19 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/31 12:13:18 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:06:40 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	execute_traslation(t_image_data *image, double xpos, double ypos)
 	dy = ypos - image->old_y;
 	image->old_x = (int32_t) xpos;
 	image->old_y = (int32_t) ypos;
-	clear_image(image);
+	draw_map(image, 1);
 	if (image->iso_pers)
 		set_rt_pers(image, dx, dy);
 	else

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:52:30 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/31 12:15:22 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:08:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static void	execute_rotation(t_image_data *image, double xpos, double ypos)
 	theta = rt_angle(image, xpos, ypos, &xy[0]);
 	image->old_x = (int32_t) xpos;
 	image->old_y = (int32_t) ypos;
-	clear_image(image);
+	draw_map(image, 1);
 	if (image->iso_pers)
 		set_rt_pers(image, &xy[0], theta);
 	else

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 15:30:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/04/01 18:25:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 14:54:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	hexapos(const char *str, char c)
 }
 
 /*Funcion que transforma un string hexadecimal en entero*/
-static int	hexa_to_int(char *s, int len)
+int	hexa_to_int(char *s, int len)
 {
 	int	number;
 	int	i;
@@ -43,21 +43,21 @@ static int	hexa_to_int(char *s, int len)
 		if (ft_strcontains("0123456789abcdef", (char) ft_tolower(s[i])))
 			number = number * 16 + hexapos("0123456789abcdef", s[i]);
 		else
-			return (0);
+			return (255);
 		i++;
 	}
 	return (number);
 }
 
-/*Funcion para dibujar el mapa de la matriz*/
+/*Funcion para dibujar el mapa de la matriz (clear = 0) o borrar el mapa
+de la matriz (clear = 1)*/
 void	draw_map(t_image_data *image, int clear)
 {
 	int				i;
 	int				len;
-	int				len_line;
+	int				pos;
 	t_pixel_data	*map_points;
 
-	len_line = image->len_line;
 	len = image->len;
 	map_points = image->map;
 	i = 1;
@@ -66,34 +66,17 @@ void	draw_map(t_image_data *image, int clear)
 		if (map_points[i].net_x)
 			draw_line(image, map_points[i - 1], map_points[i], clear);
 		if (map_points[i].net_y)
-			draw_line(image, map_points[i - len_line], map_points[i], clear);
+		{
+			pos = map_points[i].x + 1;
+			while (map_points[i].x != map_points[i - pos].x)
+				pos++;
+			draw_line(image, map_points[i - pos], map_points[i], clear);
+		}
 		i++;
 	}
 }
 
-/*Funcion para limpiar la imagen*/
-void	clear_image(t_image_data *image)
-{
-	int				i;
-	int				len;
-	int				len_line;
-	t_pixel_data	*map_points;
-
-	len_line = image->len_line;
-	len = image->len;
-	map_points = image->map;
-	i = 1;
-	while (i < len)
-	{
-		if (map_points[i].net_x)
-			draw_line(image, map_points[i - 1], map_points[i], 1);
-		if (map_points[i].net_y)
-			draw_line(image, map_points[i - len_line], map_points[i], 1);
-		i++;
-	}
-}
-
-/*Funcion para obtener los colores rgb a partir de un formato hexadecimal con
+/*Funcion para obtener los colores bgr a partir de un formato hexadecimal con
 prefijo*/
 int	get_color(char const *s, char *color)
 {

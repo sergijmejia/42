@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:15:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/04/01 19:09:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:14:46 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	start_image(t_image_data *image)
 	image->start_rotation = 1;
 	image->mod = 0;
 	image->iso_pers = 0;
+	image->rgb = 0;
 }
 
 /*Funcion que lee los datos y genera el mapa*/
@@ -66,13 +67,29 @@ static void	create_map(t_image_data *image, char *str)
 	}
 }
 
+/*Funcion del loop del fdf*/
+static void	loop(t_image_data *image)
+{
+	mlx_key_hook(image->mlx, ft_khook, image);
+	mlx_mouse_hook(image->mlx, ft_mhook, image);
+	mlx_cursor_hook(image->mlx, ft_chook, image);
+	mlx_scroll_hook(image->mlx, ft_shook, image);
+	mlx_loop(image->mlx);
+}
+
 /*Funcion main de fdf*/
 int	main(int argc, char **argv)
 {
 	t_image_data	image;
 
+	if (argc != 2)
+	{
+		write(2, "Wrong number of arguments. ", 28);
+		write(2, "Fdf can only handle one file at a time.\n", 41);
+		exit(EXIT_FAILURE);
+	}
 	start_image(&image);
-	create_map(&image, argv[1], fd);
+	create_map(&image, argv[1]);
 	draw_map(&image, 0);
 	image.home_map = copy_map(image.map, image.len);
 	if (mlx_image_to_window(image.mlx, image.img_iso, 0, 0) == -1)
@@ -82,11 +99,7 @@ int	main(int argc, char **argv)
 		perror("Error rendering image");
 		exit(EXIT_FAILURE);
 	}
-	mlx_key_hook(image.mlx, ft_khook, &image);
-	mlx_mouse_hook(image.mlx, ft_mhook, &image);
-	mlx_cursor_hook(image.mlx, ft_chook, &image);
-	mlx_scroll_hook(image.mlx, ft_shook, &image);
-	mlx_loop(image.mlx);
+	loop(&image);
 	end_image(&image);
 	mlx_terminate(image.mlx);
 	return (EXIT_SUCCESS);

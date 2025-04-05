@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:41:57 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/31 12:13:34 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 18:56:46 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,33 @@ static void	ft_a_key(action_t act, t_image_data *image)
 	{
 		if (image->iso_pers == 0)
 		{
-			clear_image(image);
+			draw_map(image, 1);
 			image->iso_pers = 1;
 			draw_map(image, 0);
 			mlx_image_to_window(image->mlx, image->img_pers, 0, 0);
 		}
 		else
 		{
-			clear_image(image);
+			draw_map(image, 1);
 			image->iso_pers = 0;
 			draw_map(image, 0);
 			mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
 		}
+	}
+}
+
+/*Funcion para cambiar los colores*/
+static void	ft_c_key(action_t act, t_image_data *image)
+{
+	if (act == MLX_PRESS)
+	{
+		draw_map(image, 1);
+		ft_color_switch(image);
+		draw_map(image, 0);
+		if (image->iso_pers == 0)
+			mlx_image_to_window(image->mlx, image->img_iso, 0, 0);
+		else
+			mlx_image_to_window(image->mlx, image->img_pers, 0, 0);
 	}
 }
 
@@ -77,4 +92,6 @@ void	ft_khook(mlx_key_data_t key_hook, void *param)
 		ft_space_key(image);
 	if (key_hook.key == MLX_KEY_A)
 		ft_a_key(key_hook.action, image);
+	if (key_hook.key == MLX_KEY_C)
+		ft_c_key(key_hook.action, image);
 }

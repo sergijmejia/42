@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:16:24 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/04/01 18:00:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/05 12:48:11 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ typedef struct s_pixel_data
 	double			iso_y;
 	double			pers_x;
 	double			pers_y;
-	//char			color[9];
 	int				r;
 	int				g;
 	int				b;
+	int				r0;
+	int				g0;
+	int				b0;
 }	t_pixel_data;
 
 /*Estructura que contiene la informacion de la imagen*/
@@ -65,6 +67,9 @@ typedef struct s_image_data
 	int				start_rotation;
 	int				mod;
 	int				iso_pers;
+	int				rgb;
+	int				min;
+	int				max;
 }	t_image_data;
 
 /*Estructura que contiene los valores maximo y minimo de la proyeccion
@@ -121,15 +126,19 @@ void	perspective_matrix(t_image_data *image, double d_projection);
 
 /*Funciones de dibujo:*/
 void	draw_map(t_image_data *image, int clear);
-void	clear_image(t_image_data *image);
 int		get_color(char const *s, char *color);
+void	change_color(t_image_data *image);
 
 /*Funciones de modificacion de imagen*/
 void	ft_image_rotation(t_image_data *image, double xpos, double ypos);
 void	ft_image_traslation(t_image_data *image, double xpos, double ypos);
 void	ft_zoom(t_image_data *image, double delta, int32_t x, int32_t y);
+void	ft_color_switch(t_image_data *image);
 
 /*Algoritmo de Bresenham para dibijar una linea entre dos puntos*/
+void	line_straight(t_line_data *line);
+void	line_inclined(t_line_data *line);
+void	line_limits(t_line_data *ln, t_pixel_data p0, t_pixel_data p1, int i_p);
 void	draw_line(t_image_data *img, t_pixel_data p0, t_pixel_data p1, int clr);
 
 /*Hooks*/
@@ -138,14 +147,7 @@ void	ft_mhook(mouse_key_t key, action_t act, modifier_key_t mod, void *par);
 void	ft_shook(double xdelta, double ydelta, void *param);
 void	ft_khook(mlx_key_data_t key_hook, void *param);
 
-/*Prueba*/
-int		get_color(char const *s, char *color);
-
-/*Utils*/
-void	end_image(t_image_data *image);
-t_pixel_data	*copy_map(t_pixel_data *map_points, int len);
-float	ft_max_float(float *cord, int len);
-float	ft_min_float(float *cord, int len);
-char	*ft_clean_split(char **str);
+/*Errores*/
+void	error_file(char *line);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:57 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/03/31 12:15:40 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/04/04 19:23:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static float	*proj_iso_x(t_pixel_data *map_points, int len)
 	iso_x = (float *) malloc (sizeof(float) * len);
 	while (i < len)
 	{
-		x = 12 * map_points[i].x;
-		y = 12 * map_points[i].y;
+		x = 6 * map_points[i].x;
+		y = 6 * map_points[i].y;
 		iso_x[i] = (x - y) * cos(M_PI / 6);
 		i++;
 	}
@@ -46,8 +46,8 @@ static float	*proj_iso_y(t_pixel_data *map_points, int len)
 	iso_y = (float *) malloc (sizeof(float) * len);
 	while (i < len)
 	{
-		x = 12 * map_points[i].x;
-		y = 12 * map_points[i].y;
+		x = 6 * map_points[i].x;
+		y = 6 * map_points[i].y;
 		z = map_points[i].z;
 		iso_y[i] = (-1) * (z) + (x + y) * sin(M_PI / 6);
 		i++;
