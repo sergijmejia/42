@@ -24,7 +24,7 @@ Se incuyen los siguientes proyectos:
 
 ### ⚙️ Sistemas y redes
 - **pipex** → Manejo de pipes en procesos en C.
-- **Philosophers** → Implementación del problema clásico de los filósofos cenando con hilos en C.
+- **philosophers** → Implementación del problema clásico de los filósofos cenando con hilos en C.
 
 ### 🖥️ Proyectos Avanzados
 - **minishell** → Implementación de un shell básico en C.
