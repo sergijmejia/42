@@ -1,0 +1,1 @@
+cat fichero | wc -l && true || echo -e "hola"

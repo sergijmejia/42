@@ -1,33 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_lst.c                                        :+:      :+:    :+:   */
+/*   parentheses_divider.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 12:14:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/07/15 13:28:43 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/07/17 16:58:35 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/07/17 17:17:27 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Imprime por pantalla la lista lst*/
-void	print_lst(t_list *lst)
-{
-	t_token *token;
-	int		len;
 
-	if (lst == NULL)
-		return ;
-	token = (t_token *) (lst->content);
-	len = ft_strlen((char *)(token->value));
-	/*ft_printf("len = %d   ", len);*/
-	ft_printf("%s", (char *)(token->value));
-	ft_printf("(%d)\n", token->type);
-	if (lst->next != NULL)
-	{
-		print_lst(lst->next);
-		return ;
-	}
-}

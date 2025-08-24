@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/06/08 13:49:13 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/07/20 21:17:14 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,14 @@ LIB_DIR = ./libft
 
 MAIN_MINISHELL = $(OBJ_DIR)/main.o 
 
-OBJS	= $(OBJ_DIR)/quote_divider.o		\
-		  $(OBJ_DIR)/print_lst.o
+OBJS	= $(OBJ_DIR)/quote_divider.o				\
+		  $(OBJ_DIR)/space_divider.o				\
+		  $(OBJ_DIR)/special_char_divider.o			\
+		  $(OBJ_DIR)/special_char_divider_2.o		\
+		  $(OBJ_DIR)/print_lst.o					\
+		  $(OBJ_DIR)/ft_lstadd_pos.o				\
+		  $(OBJ_DIR)/check_parentheses_balance.o	\
+		  $(OBJ_DIR)/find_command_option.o
 
 MAIN_BONUS =
 

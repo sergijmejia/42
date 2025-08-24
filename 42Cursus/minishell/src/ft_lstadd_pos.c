@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_lst.c                                        :+:      :+:    :+:   */
+/*   ft_lstadd_pos.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 12:14:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/07/15 13:28:43 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/07/05 13:52:40 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/07/05 14:00:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Imprime por pantalla la lista lst*/
-void	print_lst(t_list *lst)
+/*Funcion que agrega a la lista lst, el nodo new, siendo el next del nodo i*/
+void	ft_lstadd_pos(t_list **lst, t_list *new, int i)
 {
-	t_token *token;
+	t_list	*aux;
 	int		len;
 
-	if (lst == NULL)
+	if ((lst == NULL) || (new == NULL))
 		return ;
-	token = (t_token *) (lst->content);
-	len = ft_strlen((char *)(token->value));
-	/*ft_printf("len = %d   ", len);*/
-	ft_printf("%s", (char *)(token->value));
-	ft_printf("(%d)\n", token->type);
-	if (lst->next != NULL)
+	len = ft_lstsize(*lst);
+	if (i >= len)
+		return ;
+	else
 	{
-		print_lst(lst->next);
-		return ;
+		aux = ft_lstpos(*lst, i);
+		new->next = aux->next;
+		aux->next = new;
 	}
 }
