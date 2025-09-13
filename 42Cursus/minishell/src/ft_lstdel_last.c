@@ -1,40 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_pos.c                                    :+:      :+:    :+:   */
+/*   ft_lstdel_last.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/05 13:52:40 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/05 08:36:20 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/08/30 11:45:23 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/09/03 12:30:49 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Funcion que agrega a la lista lst, el nodo new, en la posicion i*/
-void	ft_lstadd_pos(t_list **lst, t_list *new, int i)
+/*Funcion que elimina e ultimo elemento de una lista*/
+void	ft_lstdel_last(t_list **lst, void (*del)(void*))
 {
-	t_list	*front;
-	t_list	*back;
-	int		len;
+	t_list	*second_last;
+	t_list	*last;
+	int	len;
 
-	if ((lst == NULL) || (new == NULL))
+	if (!lst || !del)
 		return ;
 	len = ft_lstsize(*lst);
-	if (i < 0)
-		return ;
-	if (i == 0)
-		ft_lstadd_front(lst, new);
-	else if (i < len)
-	{
-		front = ft_lstpos(*lst, i - 1);
-		back = ft_lstpos(*lst, i);
-		new->next = back;
-		front->next = new;
-	}
-	else if (i == len)
-		ft_lstadd_back(lst, new);
+	if (len > 1)
+		second_last = ft_lstsecondlast(*lst);
+	last = ft_lstlast(*lst);
+	ft_lstdelone(last, del);
+	if (len > 1)
+		second_last->next = NULL;
 	else
-		return ;
+		*lst = NULL;
+	return ;
 }

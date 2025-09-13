@@ -1,2 +1,4 @@
 '   Esta'" es" una '' ()()
-pru|eb(a 'para v><er si "guarda -c'om)il<<-las < do&&ble||s o "comillas> 	 simples " com|o -la&s de a|q""ui  
+VAR1=hola pru|eb(a|'para v><er VAR2=hola si "guarda -c'om _VAR3=hola )il<<-las < $? 4_VAR=hola do&&ble||s o "comillas>  $?	 simples " com|o -la&s de a|q""ui  
+
+pru|eb(a 'para v><er VAR2=hola si "guarda -c'om )il<<-las < $? do&&ble||s o "comillas>  $?	 simples " com|o -la&s de a|q""ui  

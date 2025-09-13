@@ -6,103 +6,179 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/22 21:16:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/12 11:09:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*Funcion que agrega una nueva lista new_list despues del nodo x de token_list*/
 static void	replace_lstpos(t_list **token_list, t_list **new_list, int x)
 {
-	ft_lstlast(*new_list)->ft_lstpos(*token_list, x)->next;
+	t_list	*last;
+	t_list	*first;
+
+	last = ft_lstlast(*new_list);
+	last->next = ft_lstpos(*token_list, x + 1);
 	ft_lstdel_pos(token_list, delete_token, x);
 	if (x == 0)
 		token_list = new_list;
 	else
-		ft_lstpos(*token_list, x - 1)->next = new_list;
+	{
+		first = ft_lstpos(*token_list, x - 1);
+		first->next = *new_list;
+	}
 }
 
-static void	word(t_list **token_list, int x)
+/*Funcion que gestiona la expansion de variables en TOKEN_WORD*/
+static t_list	**word(t_list **token_list, int x)
 {
 	int		len;
 	char	*str;
+	char	*new_str;
+	t_list	*token;
 	t_list	**new_lst;
 
-	str = token_list[x]->content->value;
+	token = ft_lstpos(*token_list, x);
+	str = ((t_token *)(token->content))->value;
 	len = (int) ft_strlen(str);
 	if (str[0] == '$' && len > 1)
 	{
-		new_lst = lexer(getenv(&str[1]));
+		if (len == 2 && str[1] == '?')
+		{
+			new_str = ft_itoa(g_exit_status);
+			if (new_str == NULL)
+				return (NULL);
+		}
+		else
+		{
+			new_str = getenv(&str[1]);
+			if (new_str == NULL)
+			{
+				ft_lstdel_pos(token_list, delete_token, x);
+				return (token_list);
+			}
+		}
+		new_lst = lexer(new_str);
+		free(new_str);
+		if (new_lst == NULL)
+			return (NULL);
 		replace_lstpos(token_list, new_lst, x);
+		free(new_lst);
 	}
-	
+	return (token_list);
 }
 
-static int	include_string(char **str, int pos)
+/*Funcion que remplaza el la $VAR en posicion i por el new_str*/
+static int	replace_string(char **str, char *new_str, int command_len, int pos)
 {
-	int		j;
+	int		len;
+	int		div;
+	int		len_str;
 	int		new_len;
-	char	*command;
-	char	*expanded_str;
-	char	*new_str;
+	char	*replace_str;
 
-	j = pos + 1;
-	len = 0;
-	while (ft_isalpha((*str)[j]) || ft_isdigit((*str)[j]) || (*str)[j] == '_')
-		len++;
-	command = malloc (len + 2);
-	ft_strlcpy(&command[0], &(*str)[pos], len + 2);
-	expanded_str = getenv(command);
-	free(command);
-	new_len = (int) (ft_strlen(expanded_str) + ft_strlen(*str) - len);
-	new_str = malloc(new_len + 1);
-	if (!new_str)
-		error_list(token_list);
-	new_str[len + 2] = '\0';
-	ft_strlcpy(&new_str[0], *str, pos);
-	ft_strlcpy(&new_str[pos + 1], expanded_str, len);
-	ft_strlcpy(&new_str[i + len + 1], &(*str)[pos + len + 1], len);
+	new_len = (int) (ft_strlen(new_str));
+	len = (int) (new_len + ft_strlen(*str) - command_len);
+	replace_str = malloc(len + 1);
+	if (!replace_str)
+		return (-1);
+	replace_str[len] = '\0';
+	div = pos + command_len;
+	len_str = (int) (ft_strlen(*str)) - pos - command_len;
+	ft_strlcpy(&replace_str[0], *str, pos + 1);
+	ft_strlcpy(&replace_str[pos], new_str, new_len + 1);
+	ft_strlcpy(&replace_str[pos + new_len], &((*str)[div]), len_str + 1);
 	free(*str);
-	*str = new_str;
-	return (pos + ft_srlen(expanded_str));
+	*str = replace_str;
+	return (pos + new_len);
 }
 
-static void	expandible_string(t_list **token_list, int x)
+/*Funcion que devueve el comando*/
+static char	*get_command(char *str, int x)
 {
 	int		i;
+	int		len;
+	char	*command;
+
+	i = x + 1;
+	len = 0;
+	while (ft_isalpha(str[i]) || ft_isdigit(str[i]) || str[i] == '_')
+		len++;
+	command = malloc (len + 2);
+	if (!command)
+		return (NULL);
+	ft_strlcpy(&command[0], &str[i], len + 2);
+	return (command);
+}
+
+/*Funcion que gestiona la expansion de varables en TOKEN_EXPANDIBLE_STRINGS*/
+static t_list	**expandible_string(t_list **token_list, int x)
+{
+	int		i;
+	int		command_len;
+	char	*str;
+	char	*command;
+	char	*new_str;
 
 	i = 0;
-	str = token_list[x]->content->value;
+	str = ((t_token *)((ft_lstpos(*token_list, x))->content))->value;
 	while (str[i])
 	{
 		if (str[i] == '$' && str[i + 1] != '\0')
 		{
 			if (str[i + 1] == '?')
 			{
-				/*Tenemos que almacenar el valor del ultimo (exit status)*/
-				return ;
+				command_len = 2;
+				new_str = ft_itoa(g_exit_status);
+				if (new_str == NULL)
+					return (NULL);
 			}
 			else
-				i = include_string(&str, i);
+			{
+				command = get_command(str, i);
+				if (command == NULL)
+					return (NULL);
+				command_len = ft_strlen(command);
+				new_str = getenv(&command[1]);
+				free(command);
+			}
+			i = replace_string(&str, new_str, command_len, i);
+			free(new_str);
+			if (i == -1)
+				return (NULL);
+			((t_token *)((ft_lstpos(*token_list, x))->content))->value = str;
 		}
 		else
 			i++;
 	}
+	return (token_list);
 }
 
-void	variable_expansion(t_list **token_list)
+/*Funcion que gestiona la exansion de variables*/
+t_list	**variable_expansion(t_list **token_list)
 {
 	int		i;
+	t_token	*token;
+	t_list	*lst;
 
-	if (token_list == NULL)
-		return ;
 	i = 0;
-	while (token_list[i])
+	lst = ft_lstpos(*token_list, i);
+	while (lst != NULL)
 	{
-		if (token_list[i]->content->type == TOKEN_WORD)
-			word(token_list, i)
-		else if (token_list[i]->content->type == TOKEN_EXPANDIBLE_STRING)
-			expandible_string(token_list, i);
+		token = (t_token *)(lst->content);
+		if (token->type == TOKEN_WORD)
+		{
+			if (word(token_list, i) == NULL)
+				return (error_list(token_list));
+		}
+		else if (token->type == TOKEN_EXPANDIBLE_STRINGS)
+		{
+			if (expandible_string(token_list, i) == NULL)
+				return (error_list(token_list));
+		}
 		i++;
+		lst = ft_lstpos(*token_list, i);
 	}
+	return (token_list);
 }

@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/07/20 21:17:14 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/09/09 13:24:21 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,18 +17,26 @@ OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= ./src
 TEST_DIR = ./test
-LIB_DIR = ./libft
+LIB_DIR = ./lib
 
 MAIN_MINISHELL = $(OBJ_DIR)/main.o 
 
-OBJS	= $(OBJ_DIR)/quote_divider.o				\
+OBJS	= $(OBJ_DIR)/check_parentheses_balance.o	\
+		  $(OBJ_DIR)/check_quote_balance.o			\
+		  $(OBJ_DIR)/lexer.o 						\
+		  $(OBJ_DIR)/assignment_divider.o			\
+		  $(OBJ_DIR)/quote_divider.o				\
 		  $(OBJ_DIR)/space_divider.o				\
 		  $(OBJ_DIR)/special_char_divider.o			\
 		  $(OBJ_DIR)/special_char_divider_2.o		\
+		  $(OBJ_DIR)/find_command_option.o			\
+		  $(OBJ_DIR)/variable_expansion.o			\
+		  $(OBJ_DIR)/delete_quotes.o				\
+		  $(OBJ_DIR)/errors.o						\
 		  $(OBJ_DIR)/print_lst.o					\
 		  $(OBJ_DIR)/ft_lstadd_pos.o				\
-		  $(OBJ_DIR)/check_parentheses_balance.o	\
-		  $(OBJ_DIR)/find_command_option.o
+		  $(OBJ_DIR)/ft_lstdel_pos.o				\
+		  $(OBJ_DIR)/ft_lstdel_last.o
 
 MAIN_BONUS =
 
@@ -42,14 +50,14 @@ HEADER	= $(INC_DIR)/minishell.h
 
 CFLAGS	= -Wall -Wextra -Werror -I$(INC_DIR) -g
 CC	= cc
-LIBS	= $(LIB_DIR)/libft.a
+LIBS	= $(LIB_DIR)/libft/libft.a -lreadline
 
 .PHONY : all bonus test clean fclean re
 
 all : LIBFT $(TARGET)
 
 LIBFT:
-	$(MAKE) -C $(LIB_DIR)
+	$(MAKE) -C $(LIB_DIR)/libft
 
 $(TARGET) : $(MAIN_MINISHELL) $(OBJS) $(HEADER)
 	$(CC) $(MAIN_MINISHELL) $(OBJS) $(LIBS) -o $(TARGET)

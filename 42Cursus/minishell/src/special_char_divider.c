@@ -6,35 +6,76 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 13:27:55 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/22 20:07:04 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/12 10:41:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Funcion que crear una lueva lista para agregarla a lst original*/
-static t_list	*create_new_lst_token(t_list *token, int pos)
+/*Funcion que encuentra la siguiente comilla*/
+static int	next_quote(char *str, int pos)
+{
+	char	c;
+
+	c = str[pos];
+	pos++;
+	while (str[pos] && str[pos] != c)
+		pos++;
+	return (pos);
+}
+
+/*Verifica el type*/
+static t_type_lexer	check_type(t_list *lst)
+{
+	char	*str;
+	int		literal;
+	int		i;
+
+	literal = 0;
+	i = 0;
+	str = ((t_token *)(lst->content))->value;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+		{
+			i = next_quote(str, i);
+			literal = 1;
+		}
+		if (str[i] == '\"')
+			return (TOKEN_EXPANDIBLE_STRINGS);
+		i++;
+	}
+	if (literal == 1)
+		return (TOKEN_STRING_LITERAL);
+	else
+		return (TOKEN_WORD);
+}
+
+/*Funcion que crear un nuevo token para agregarla a lst original*/
+static t_list	*create_new_lst_token(t_list *lst, int pos)
 {
 	int		len_str;
 	char	*str;
+	t_token	*token;
 	t_token	*new_token;
 	t_list	*new_list_token;
 
-	len_str = (int) ft_strlen(((t_token *)(token->content))->value); 
-	str = ft_substr(((t_token *)(token->content))->value, pos, len_str);
+	token = (t_token *)(lst->content);
+	len_str = (int) ft_strlen(token->value); 
+	str = ft_substr(token->value, pos, len_str);
 	if (!str)
-		return NULL;
+		return (NULL);
 	new_token = (t_token *) malloc (sizeof (t_token));
 	if (!new_token)
 	{
 		free(str);
-		retur (NULL);
+		return (NULL);
 	}
 	new_token->value = str;
-	new_token->type = TOKEN_WORD;
 	new_list_token = ft_lstnew(new_token);
-	if (new_list_token)
+	if (!new_list_token)
 		delete_token(new_token);
+	new_token->type = check_type(new_list_token);
 	return (new_list_token);
 }
 
@@ -48,6 +89,8 @@ static int	ft_pos_special(char *str, char *special_char)
 	len = (int) ft_strlen(str);
 	while (str[pos])
 	{
+		if (str[pos] == '\'' || str[pos] == '\"')
+            pos = next_quote(str, pos);
 		if (ft_strcontains(special_char, str[pos]))
 			break ;
 		pos++;
@@ -58,7 +101,7 @@ static int	ft_pos_special(char *str, char *special_char)
 }
 
 /*Funcion que agrega un nodo de caracter especial al la lista*/
-static void	create_special(t_list **token_list, int i)
+static t_list	**create_special(t_list **token_list, int i)
 {
 	char	*str;
 	t_list	*token;
@@ -66,50 +109,65 @@ static void	create_special(t_list **token_list, int i)
 	token = ft_lstpos(*token_list, i);
 	str = ((t_token *)(token->content))->value;
 	if ((str[0] == str[1]) && (str[0] != ')') && (str[0] != '('))
-		double_special_char(token_list, i);
+	{
+		if (double_special_char(token_list, i) == NULL)
+			return (NULL);
+	}
 	else
-		simple_special_char(token_list, i);
-	return ;
+	{
+		if (simple_special_char(token_list, i) == NULL)
+			return (NULL);
+	}
+	return (token_list);
 }
 
 /*Funcion que divide los TOKEN_WORD de los caracteres especiales*/
-static int	divide_special(t_list **token_list, int i, char *special_char)
+static t_list	**divide_special(t_list **token_list, int *i, char *special_char)
 {
-	t_list	*token;
+	t_list	*lst;
 	t_list	*new_list_token;
+	t_token	*token;
+	int		len;
 	char	*str;
 	int		pos;
 
-	token = ft_lstpos(*token_list, i);
-	if ((token == NULL) || (((t_token *)(token->content))->type != TOKEN_WORD))
-		return (i);
-	pos = ft_pos_special(((t_token *)(token->content))->value, special_char);
+	len = ft_lstsize(*token_list);
+	lst = ft_lstpos(*token_list, *i);
+	if (lst == NULL)
+		return (token_list);
+	token = (t_token *)(lst->content);
+	pos = ft_pos_special(token->value, special_char);
 	if (pos == -1)
-		return (i);
+		return (token_list);
 	else if (pos == 0)
-		create_special(token_list, i);
+	{
+		if (create_special(token_list, *i) == NULL)
+			return (NULL);
+	}
 	else
 	{
-		str = ft_substr(((t_token *)(token->content))->value, 0, pos);
+		str = ft_substr(token->value, 0, pos);
 		if (!str)
-			error_list(token_list);
-		new_list_token = create_new_lst_token(token, pos);
+			return (NULL);
+		new_list_token = create_new_lst_token(lst, pos);
+		free(((t_token *)(lst->content))->value);
+		((t_token *)(lst->content))->value = str;
+		((t_token *)(lst->content))->type = check_type(lst);
 		if (!new_list_token)
-			error_token(token_list, str);
-		free(((t_token *)(token->content))->value);
-		((t_token *)(token->content))->value = str;
-		ft_lstadd_pos(token_list, new_list_token, i);
+			return (NULL);
+		ft_lstadd_pos(token_list, new_list_token, *i + 1);
 	}
-	i++;
+	(*i)++;
 	return (divide_special(token_list, i, special_char));
 }
 
 /*Funcion para buscar los caracteres especiales en todos los TOKEN_WORD*/
-void    special_char_divider(t_list **token_list)
+t_list	**special_char_divider(t_list **token_list)
 {
 	int		len;
 	int		i;
 	t_list	*token_list_aux;
+	t_token	*token;
 	char	special_char[7];
 
 	len = ft_lstsize(*token_list);
@@ -124,13 +182,14 @@ void    special_char_divider(t_list **token_list)
 	while (i < len)
 	{
 		token_list_aux = ft_lstpos(*token_list, i);
+		token = (t_token *)(token_list_aux->content);
 		if (!token_list_aux)
-			error_list(token_list);
-		if (((t_token *)(token_list_aux->content))->type == TOKEN_WORD) 
-			i = divide_special(token_list, i, &special_char[0]);
-		if (i == -1)
-			error_list(token_list);
+			return (error_list(token_list));
+		if (token->type == TOKEN_WORD || token->type == TOKEN_STRING_LITERAL || token->type == TOKEN_EXPANDIBLE_STRINGS) 
+			if (divide_special(token_list, &i, &special_char[0]) == NULL)
+				return (error_list(token_list));
 		i++;
 		len = ft_lstsize(*token_list);
 	}
+	return (token_list);
 }

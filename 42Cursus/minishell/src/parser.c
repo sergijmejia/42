@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdel_pos.c                                    :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 15:09:37 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/27 12:36:46 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/09/08 12:32:23 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/09/08 14:04:34 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Fucion que elimina de la lista lst el nodo old, en la posicion x*/
-void	ft_lstdel_pos(t_list **lst, void (*del)(void*), int x)
+t_ast	*parser(t_list **token_list, t_ast *ast, char **envp)
 {
-	int		size;
-	t_list	*old;
-
-	size = (int) ft_lstsize(*lst);
-	if ((x < 0) || (x >= size))
-		return ;
-	old = ft_lstpos(*lst, x);
-	if (x == 0)
-		lst = &old->next;
-	if (x > 0)
-		ft_lstpos(*lst, x - 1)->next = old->next;
-	ft_lstdelone(old, del);
-	return ;
+	
 }

@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdel_pos.c                                    :+:      :+:    :+:   */
+/*   check_quote_balance.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 15:09:37 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/27 12:36:46 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/09/01 14:46:15 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/09/05 08:35:20 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Fucion que elimina de la lista lst el nodo old, en la posicion x*/
-void	ft_lstdel_pos(t_list **lst, void (*del)(void*), int x)
+int	check_quote_balance(char *str)
 {
-	int		size;
-	t_list	*old;
+	int		i;
+	char	c;
 
-	size = (int) ft_lstsize(*lst);
-	if ((x < 0) || (x >= size))
-		return ;
-	old = ft_lstpos(*lst, x);
-	if (x == 0)
-		lst = &old->next;
-	if (x > 0)
-		ft_lstpos(*lst, x - 1)->next = old->next;
-	ft_lstdelone(old, del);
-	return ;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			c = str[i];
+			i++;
+			while (str[i] && str[i] != c)
+				i++;
+			if (!str[i])
+				return (1);
+		}
+		i++;
+	}
+	return (0);
 }

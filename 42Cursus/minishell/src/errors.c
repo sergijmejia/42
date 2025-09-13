@@ -1,42 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   delete_token.c                                     :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 17:01:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/18 18:26:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/12 11:53:19 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*Funcion que gestiona la eliminacion de un token*/
-void	delete_token(t_token *token)
+void	delete_token(void *content)
 {
+	t_token	*token;
+
+	token = (t_token *)content;
 	free(token->value);
 	free(token);
 }
 
 /*Funcion que gestiona el fallo de un token*/
-void	error_token(t_list **token_list, char *str)
-{
-	ft_lstclear(token_list, delete_token);
-	free(str);
-	exit(EXIT_FAILURE);
-}
-
-/*Funcion que gestiona el fallo de un string de un token*/
-void	error_token_value(t_list **token_list, t_token token, char *str)
+t_list	**error_token(t_list **token_list, t_token *token)
 {
 	delete_token(token);
-	error_token(token_list, str);
+	ft_lstclear(token_list, delete_token);
+	return (NULL);
 }
 
-/*Funcion que gestiona la ampliacion o modificacion de la lista*/
-void	error_list(t_list **token_list)
+/*Funcion que gestiona el fallo en la ampliacion o modificacion de la lista*/
+t_list	**error_list(t_list **token_list)
 {
 	ft_lstclear(token_list, delete_token);
-	exit(EXIT_FAILURE);
+	return (NULL);
 }
