@@ -1,18 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_command_option.c                              :+:      :+:    :+:   */
+/*   find_wildcard.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/20 21:04:53 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/15 12:50:21 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/09/15 13:27:05 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/09/15 13:38:59 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	**find_command_option(t_list **token_list)
+static int	wildcard(char *str)
+{
+	while (*str)
+	{
+		if (*str == '*')
+			return (1);
+		str++;
+	} 
+	return (0);
+}
+
+t_list	**find_wildcard(t_list **token_list)
 {
 	t_list	*token;
 	int		len;
@@ -31,8 +42,8 @@ t_list	**find_command_option(t_list **token_list)
 			str = ((t_token *)(token->content))->value;
 			if (!str)
 				return (NULL);
-			if (str[0] == '-' && ((t_token *)(token->content))->finished == 0)
-				((t_token *)(token->content))->type = TOKEN_COMMAND_OPTION;
+			if (wildcard(str) && ((t_token *)(token->content))->finished == 0)
+				((t_token *)(token->content))->type = TOKEN_WILDCARD;
 		}
 		i++;
 	}

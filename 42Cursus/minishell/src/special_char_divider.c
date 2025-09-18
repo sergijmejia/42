@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 13:27:55 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/12 10:41:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/18 14:08:01 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static t_list	*create_new_lst_token(t_list *lst, int pos)
 		return (NULL);
 	}
 	new_token->value = str;
+	new_token->finished = 0;
 	new_list_token = ft_lstnew(new_token);
 	if (!new_list_token)
 		delete_token(new_token);
@@ -92,7 +93,15 @@ static int	ft_pos_special(char *str, char *special_char)
 		if (str[pos] == '\'' || str[pos] == '\"')
             pos = next_quote(str, pos);
 		if (ft_strcontains(special_char, str[pos]))
-			break ;
+		{
+			if (str[pos] != '&')
+				break ;
+			else
+			{
+				if (str[pos + 1] == '&')
+					break ;
+			}
+		}
 		pos++;
 	}
 	if (pos == len)
@@ -185,9 +194,12 @@ t_list	**special_char_divider(t_list **token_list)
 		token = (t_token *)(token_list_aux->content);
 		if (!token_list_aux)
 			return (error_list(token_list));
-		if (token->type == TOKEN_WORD || token->type == TOKEN_STRING_LITERAL || token->type == TOKEN_EXPANDIBLE_STRINGS) 
-			if (divide_special(token_list, &i, &special_char[0]) == NULL)
-				return (error_list(token_list));
+		if (token->finished == 0)
+		{
+			if (token->type == TOKEN_WORD || token->type == TOKEN_STRING_LITERAL || token->type == TOKEN_EXPANDIBLE_STRINGS) 
+				if (divide_special(token_list, &i, &special_char[0]) == NULL)
+					return (error_list(token_list));
+		}
 		i++;
 		len = ft_lstsize(*token_list);
 	}

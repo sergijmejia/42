@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/09/09 13:24:21 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/09/17 13:48:09 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,16 +24,21 @@ MAIN_MINISHELL = $(OBJ_DIR)/main.o
 OBJS	= $(OBJ_DIR)/check_parentheses_balance.o	\
 		  $(OBJ_DIR)/check_quote_balance.o			\
 		  $(OBJ_DIR)/lexer.o 						\
+		  $(OBJ_DIR)/parentheses_divider.o			\
 		  $(OBJ_DIR)/assignment_divider.o			\
 		  $(OBJ_DIR)/quote_divider.o				\
 		  $(OBJ_DIR)/space_divider.o				\
 		  $(OBJ_DIR)/special_char_divider.o			\
 		  $(OBJ_DIR)/special_char_divider_2.o		\
 		  $(OBJ_DIR)/find_command_option.o			\
+		  $(OBJ_DIR)/find_wildcard.o				\
 		  $(OBJ_DIR)/variable_expansion.o			\
 		  $(OBJ_DIR)/delete_quotes.o				\
+		  $(OBJ_DIR)/assignment_selection.o			\
+		  $(OBJ_DIR)/transition_lex_par.o			\
 		  $(OBJ_DIR)/errors.o						\
 		  $(OBJ_DIR)/print_lst.o					\
+		  $(OBJ_DIR)/print_lst_tr.o					\
 		  $(OBJ_DIR)/ft_lstadd_pos.o				\
 		  $(OBJ_DIR)/ft_lstdel_pos.o				\
 		  $(OBJ_DIR)/ft_lstdel_last.o

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:09:37 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/08/27 12:36:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 11:21:31 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_lstdel_pos(t_list **lst, void (*del)(void*), int x)
 		return ;
 	old = ft_lstpos(*lst, x);
 	if (x == 0)
-		lst = &old->next;
+		*lst = old->next;
 	if (x > 0)
 		ft_lstpos(*lst, x - 1)->next = old->next;
 	ft_lstdelone(old, del);

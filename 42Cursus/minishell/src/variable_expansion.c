@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/12 11:09:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:53:47 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,12 +167,12 @@ t_list	**variable_expansion(t_list **token_list)
 	while (lst != NULL)
 	{
 		token = (t_token *)(lst->content);
-		if (token->type == TOKEN_WORD)
+		if (token->type == TOKEN_WORD && token->finished == 0)
 		{
 			if (word(token_list, i) == NULL)
 				return (error_list(token_list));
 		}
-		else if (token->type == TOKEN_EXPANDIBLE_STRINGS)
+		else if (token->type == TOKEN_EXPANDIBLE_STRINGS && token->finished == 0)
 		{
 			if (expandible_string(token_list, i) == NULL)
 				return (error_list(token_list));

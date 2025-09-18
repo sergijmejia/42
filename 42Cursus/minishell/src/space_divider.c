@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:55:03 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/12 10:40:22 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/18 17:11:10 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static t_list	*create_new_lst_token(t_list *token, int pos_space)
 	}
 	new_token->value = str;
 	new_token->type = TOKEN_WORD;
+	new_token->finished = 0;
 	new_list_token = ft_lstnew(new_token);
 	if (!new_list_token)
 		delete_token(new_token);
@@ -110,6 +111,13 @@ static t_list	**divide_space(t_list **token_list, int *i, char *trim_char)
 	str = ft_strtrim((((t_token *)(first_token->content))->value), trim_char);
 	if (!str)
 		return (NULL);
+	if (*str == '\0')
+	{
+		ft_lstdel_pos(token_list, delete_token, *i);
+		(*i)--;
+		free(str);
+		return (token_list);
+	}
 	free(((t_token *)(first_token->content))->value);
 	((t_token *)(first_token->content))->value = str;
 	pos = ft_pos_char(str);

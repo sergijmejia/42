@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 12:39:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/12 10:44:29 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:56:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ t_list	**simple_special_char(t_list **token_list, int i)
 		return (NULL);
 	}
 	new_token->type = check_type(new);
+	new_token->finished = 0;
 	free(((t_token *)(token->content))->value);
 	((t_token *)(token->content))->value = str;
 	type = select_single_type(((t_token *)(token->content))->value);
@@ -181,6 +182,7 @@ t_list	**double_special_char(t_list **token_list, int i)
 		return (NULL);
 	}
 	new_token->type = check_type(new);
+	new_token->finished = 0;
 	free(((t_token *)(token->content))->value);
 	((t_token *)(token->content))->value = str;
 	type = select_double_type(((t_token *)(token->content))->value);

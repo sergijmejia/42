@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:56:15 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/09 16:18:53 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:55:30 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,11 @@ t_list	**delete_quotes(t_list **token_list)
 		if (!token_list_aux)
 			return (error_list(token_list));
 		if (token->type == TOKEN_STRING_LITERAL || token->type == TOKEN_EXPANDIBLE_STRINGS)
+		{
 			if (quote_list(token_list, i) == NULL)
 				return (error_list(token_list));
+			token->finished = 1;
+		}
 		i++;
 	}
 	return (token_list);
