@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 17:01:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 17:05:35 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/19 17:25:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ void	delete_token_ast(void *content)
 t_list	**error_token(t_list **token_list, t_token *token)
 {
 	delete_token(token);
-	ft_lstclear(token_list, delete_token);
-	return (NULL);
+	return (error_list(token_list));
 }
 
 /*Funcion que gestiona el fallo en la ampliacion o modificacion de la lista*/

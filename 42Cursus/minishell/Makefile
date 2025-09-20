@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/09/17 13:48:09 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/09/19 17:22:34 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ OBJS	= $(OBJ_DIR)/check_parentheses_balance.o	\
 		  $(OBJ_DIR)/lexer.o 						\
 		  $(OBJ_DIR)/parentheses_divider.o			\
 		  $(OBJ_DIR)/assignment_divider.o			\
-		  $(OBJ_DIR)/quote_divider.o				\
 		  $(OBJ_DIR)/space_divider.o				\
 		  $(OBJ_DIR)/special_char_divider.o			\
 		  $(OBJ_DIR)/special_char_divider_2.o		\

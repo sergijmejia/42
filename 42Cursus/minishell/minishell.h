@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/17 13:48:59 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/20 12:07:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		check_parentheses_balance(char *str);
 int		check_quote_balance (char *str);
 t_list	**parentheses_divider(t_list **token_list, char *str);
 t_list	**assignment_divider(t_list **token_list);
-t_list	**quote_divider(t_list **token_list);
+//t_list	**quote_divider(t_list **token_list);
 t_list	**space_divider(t_list **token_list);
 t_list	**special_char_divider(t_list **token_list);
 t_list	**simple_special_char(t_list **token_list, int i);
@@ -81,7 +81,8 @@ typedef enum e_type_lexer
 	TOKEN_RPAREN,
 	TOKEN_LPAREN,
 	TOKEN_BACKGROUND,
-	TOKEN_WILDCARD
+	TOKEN_WILDCARD,
+	TOKEN_REDIRECTION_WORD
 } t_type_lexer;
 
 /*Estructura token usada en el lexer*/

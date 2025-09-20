@@ -1,0 +1,4 @@
+cat fichero | wc -l && true || echo -e "hola"
+echo adios > ls << ls hola | echo mundo    ----> MUY RARO
+ls > ls << ls -la | echo mundo    ----> IGUAL QUE EL ANTERIOR
+ls > ls << $VAR -la | echo mundo   ----> IGUAL QUE LOS ANTERIORES

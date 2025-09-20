@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 16:58:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/17 17:49:37 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/19 17:28:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,24 +91,6 @@ static t_list	**create_unique_node(t_list **token_list, char *str)
 	return (token_list);
 }
 
-/*static void	join_lst(t_list **token_list, t_list **new_token_list)
-{
-	t_list	*aux_lst;
-	int		size;
-
-	size = ft_lstsize(*token_list);
-	if (size == 0)
-	{
-		token_list = new_token_list;
-	}
-	else
-	{
-		aux_lst = ft_lstlast(*token_list);
-		aux_lst->next = *new_token_list;
-	}
-	return ;
-}*/
-
 /*Funcion que gestiona la creacion del TOKEN_WORD hasta el parentesis*/
 static t_list	**start_list(t_list **token_list, char *str, int open)
 {
@@ -169,18 +151,10 @@ static t_list	**end_list(t_list **token_list, char *str, int close, int len)
 {
 	char	*str_token;
 	t_list	**new_token_list;
-	//t_token	*new_token;
-	//t_list	*new_node;
 
 	str_token = (char *) malloc (sizeof(char) * (len - close + 1));
 	if (!str_token)
 		return (NULL);
-	/*new_token = (t_token *) malloc (sizeof (t_token));
-	if (!new_token)
-	{
-		free(str_token);
-		return (NULL);
-	}*/
 	ft_strlcpy(str_token, &str[close], len - close + 1);
 	new_token_list = (t_list **) malloc (sizeof(t_list *));
 	if (!new_token_list)
@@ -199,16 +173,6 @@ static t_list	**end_list(t_list **token_list, char *str, int close, int len)
 	free(new_token_list);
 	free(str_token);
 	return (token_list);
-	/*new_token->value = str_token;
-	new_token->type = TOKEN_WORD;
-	new_node = ft_lstnew(new_token);
-	if (!new_node)
-	{
-		delete_token(new_token);
-		return (NULL);
-	}
-	ft_lstadd_back(token_list, new_node);
-	return (token_list);*/
 }
 
 /*Funcion que llama a lexer de forma recursiva para manejar los parentesis*/

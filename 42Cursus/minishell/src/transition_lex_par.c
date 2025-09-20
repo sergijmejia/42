@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 11:37:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 17:08:41 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/19 16:50:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ static t_list	**make_transition(t_list **token_list)
 		else
 			new_node = command_node(token_list, &pos);
 		if (!new_node)
-			error_tr(new_lst);
+			return (error_tr(new_lst));
 		ft_lstadd_back(new_lst, new_node);
 	}
 	ft_lstclear(token_list, delete_token);
@@ -244,10 +244,7 @@ static t_list	**lst_until_open(t_list **token_list, int open)
 			return (error_list(new_lst));
 		new_node = ft_lstnew(new_token);
 		if (!new_node)
-		{
-			delete_token(new_token);
-			return (error_list(new_lst));
-		}
+			return (error_token(new_lst, new_token));
 		ft_lstadd_back(new_lst, new_node);
 		i++;
 	}
@@ -263,11 +260,7 @@ static t_list	**start_list(t_list **token_list, t_list **new_list, int open)
 	if (!lst_aux)
 		return (NULL);
 	if (make_transition(lst_aux) == NULL)
-	{
-		error_list(lst_aux);
-		free(lst_aux);
-		return (NULL);
-	}
+		return (error_list(lst_aux));
 	ft_lstadd_back(new_list, *lst_aux);
 	free(lst_aux);
 	return (new_list);
@@ -293,10 +286,7 @@ static t_list	**lst_inside_parentheses(t_list **lst, int open, int close)
 			return (error_list(new_lst));
 		new_node = ft_lstnew(new_token);
 		if (!new_node)
-		{
-			delete_token(new_token);
-			return (error_list(new_lst));
-		}
+			return (error_token(new_lst, new_token));
 		ft_lstadd_back(new_lst, new_node);
 		open++;
 	}
@@ -341,14 +331,10 @@ static t_list	**parentheses_list(t_list **token_list, t_list **new, int open)
 	if (!lst_aux)
 		return (NULL);
 	if (transition_lex_par(lst_aux) == NULL)
-	{
-		free(lst_aux);
 		return (NULL);
-	}
 	ft_lstadd_back(new, *lst_aux);
 	free(lst_aux);
 	return (new);
-
 }
 
 /*Funcion que crea la lista desde '('*/
@@ -393,13 +379,10 @@ static t_list	**end_list(t_list **token_list, t_list **new_list, int close)
 	type = ((t_token *)((ft_lstpos(*token_list, close))->content))->type;
 	new_node = special_node(token_list, close, type);
 	if (!new_node)
-			error_list(lst_aux);
+		return (error_list(lst_aux));
 	ft_lstadd_back(new_list, new_node);
 	if (transition_lex_par(lst_aux) == NULL)
-	{
-		free(lst_aux);
 		return (NULL);
-	}
 	ft_lstadd_back(new_list, *lst_aux);
 	free(lst_aux);
 	return (new_list);
@@ -477,19 +460,19 @@ t_list	**transition_lex_par(t_list **token_list)
 	if (start_list(token_list, new_lst, open) == NULL)
 	{
 		error_tr(new_lst);
-		free(new_lst);
+		//free(new_lst);
 		return (error_list(token_list));
 	}
 	if (parentheses_list(token_list, new_lst, open) == NULL)
 	{
 		error_tr(new_lst);
-		free(new_lst);
+		//free(new_lst);
 		return (error_list(token_list));
 	}
 	if (end_list(token_list, new_lst, close) == NULL)
 	{
 		error_tr(new_lst);
-		free(new_lst);
+		//free(new_lst);
 		return (error_list(token_list));
 	}
 	ft_lstclear(token_list, delete_token);
