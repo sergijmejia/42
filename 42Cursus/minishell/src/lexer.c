@@ -29,6 +29,8 @@ t_list	**lexer(char *str)
 		return (NULL);
 	if (special_char_divider(lst) == NULL)
 		return (NULL);
+	if (find_redirection(lst) == NULL)
+		return (NULL);
 	if (find_command_option(lst) == NULL)
 		return (NULL);
 	if (find_wildcard(lst) == NULL)
