@@ -6,14 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/20 12:07:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:27:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "./lib/libft/libft.h"
+# include "../lib/libft/libft.h"
 # include <aio.h>
 # include <sys/wait.h>
 # include <errno.h>
@@ -38,6 +38,7 @@ t_list	**space_divider(t_list **token_list);
 t_list	**special_char_divider(t_list **token_list);
 t_list	**simple_special_char(t_list **token_list, int i);
 t_list	**double_special_char(t_list **token_list, int i);
+t_list	**find_redirection(t_list **token_list);
 t_list	**find_command_option(t_list **token_list);
 t_list	**find_wildcard(t_list **token_list);
 t_list	**variable_expansion(t_list **token_list);
@@ -51,6 +52,7 @@ void	ft_lstdel_last(t_list **lst, void (*del)(void*));
 /*Transicion Lexer/Parser*/
 t_list	**assignment_selection(t_list **token_list);
 t_list	**transition_lex_par(t_list **token_list);
+t_list	**command_union(t_list **token_list);
 
 /*Parser*/
 
@@ -133,7 +135,8 @@ typedef enum e_type_tr
 	AND,
 	OR,
 	L_PARENTHESIS,
-	R_PARENTHESIS
+	R_PARENTHESIS,
+	NAME
 } t_type_tr;
 
 /*Estructura intermedia entre lexer y parser*/

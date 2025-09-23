@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 17:06:36 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:48:17 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,12 @@ int	main(void)
 				exit(EXIT_FAILURE);
 			}
 			printf("\nA la salida de tansition:\n");
+			print_lst_tr(*lst);
+			if (command_union(lst) == NULL)
+			{
+				exit(EXIT_FAILURE);
+			}
+			printf("\nA la salida de union:\n");
 			print_lst_tr(*lst);
 			error_tr(lst);
 			//free(lst);

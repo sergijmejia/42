@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 11:37:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/19 16:50:41 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:46:14 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static  t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
 	new_token->value = str;
 	if (type == 0)
 		tr_type = 0;
+	else if (type == 17)
+		tr_type = 11;
 	else
 	{
 		if (type >= 4 && type <= 8)
@@ -94,6 +96,7 @@ static char	**create_str_command(t_list **lst, int start, int end)
 	char	*str_lst;
 	int		i;
 
+	printf("La longitud definida es len=%d\n", end - start + 1);
 	str = ft_calloc (end - start + 1, sizeof(char *));
 	if (!str)
 		return (NULL);
@@ -111,6 +114,7 @@ static char	**create_str_command(t_list **lst, int start, int end)
 		i++;
 		start++;
 	}
+	str[i] = NULL;
 	return (str);
 }
 
@@ -131,6 +135,7 @@ static char	**str_command(t_list **lst, int *pos)
 			break ;
 		(*pos)++;
 	}
+	printf("\nstart=%d   end=%d\n", start, *pos);
 	str = create_str_command(lst, start, *pos);
 	if(!str)
 		return (NULL);
@@ -205,7 +210,7 @@ static t_list	**make_transition(t_list **token_list)
 	while (pos < len)
 	{
 		type = ((t_token *)((ft_lstpos(*token_list, pos))->content))->type;
-		if ((type >= 4 && type <= 8) || (type >= 10 && type <= 14))
+		if (type >= 4)
 		{
 			new_node = special_node(token_list, pos, type);
 			pos++;
