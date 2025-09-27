@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/23 16:27:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/27 12:21:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,11 @@ int		check_parentheses_balance(char *str);
 int		check_quote_balance (char *str);
 t_list	**parentheses_divider(t_list **token_list, char *str);
 t_list	**assignment_divider(t_list **token_list);
-//t_list	**quote_divider(t_list **token_list);
 t_list	**space_divider(t_list **token_list);
 t_list	**special_char_divider(t_list **token_list);
 t_list	**simple_special_char(t_list **token_list, int i);
 t_list	**double_special_char(t_list **token_list, int i);
 t_list	**find_redirection(t_list **token_list);
-t_list	**find_command_option(t_list **token_list);
 t_list	**find_wildcard(t_list **token_list);
 t_list	**variable_expansion(t_list **token_list);
 t_list	**delete_quotes(t_list **token_list);
@@ -55,6 +53,7 @@ t_list	**transition_lex_par(t_list **token_list);
 t_list	**command_union(t_list **token_list);
 
 /*Parser*/
+//t_token_ast	*duplicate_token_tr(t_token_ast *token);
 
 /*Estructura de la lista de variables asignadas*/
 typedef struct s_temp_lst
@@ -108,7 +107,8 @@ typedef enum e_type_parser
 	TOKEN_P_ASSIGNMENT,
 	TOKEN_P_AND,
 	TOKEN_P_OR,
-	TOKEN_P_PARENTHESIS
+	TOKEN_P_PARENTHESIS,
+	TOKEN_P_NAME
 } t_type_parser;
 
 /*Estructura usada en el parser*/

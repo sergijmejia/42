@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/23 15:48:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/27 12:50:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,6 @@ int	main(void)
 			printf("\n");
 			print_lst(*lst);
 			printf("\n");
-			if (assignment_selection(lst) == NULL)
-			{
-				error_list(lst);
-				free(lst);
-				exit(EXIT_FAILURE);
-			}
 			lst = transition_lex_par(lst);
 			if (!lst)
 			{

@@ -6,56 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 10:42:13 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/23 17:18:00 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:42:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*Funcion que duplica un token*/
-static t_token_ast	*duplicate_token(t_token_ast *token)
-{
-	t_token_ast	*new_token;
-	char		**str;
-	char		**new_str;
-	int			len;
-	int			i;
-
-	printf("\nEntra en el duplicate_token\n");
-	str = (char **)(token->value);
-	len = 0;
-	while (str[len])
-	{
-		printf("Imprime %s\n",str[len]);
-		printf("len=%d\n", len);
-		len++;
-	}
-	printf("Calcula len=%d", len);
-	new_str = (char	**) malloc (len * sizeof(char *));
-	if (new_str == NULL)
-		return (NULL);
-	new_str[len] = NULL;
-	i = 0;
-	while (i < len - 1)
-	{
-		new_str[i] = strdup(str[i]);
-		if (new_str[i] == NULL)
-		{
-			free_str(new_str);
-			return (NULL);
-		}
-	}
-	new_token = (t_token_ast *) malloc (sizeof(t_token_ast));
-	if (!new_token)
-	{
-		free_str(new_str);
-		return (NULL);
-	}
-	new_token->value = new_str;
-	new_token->type = token->type;
-	new_token->wildcard = token->wildcard;
-	return (new_token);
-}
 
 /*Funcion que calcula la cantidad de strings que hay en un string doble*/
 static int	calculate_strlen(t_token_ast *token)
@@ -72,6 +27,46 @@ static int	calculate_strlen(t_token_ast *token)
 	return (len);
 }
 
+/*Funcion que duplica un token*/
+static t_token_ast	*duplicate_token_tr(t_token_ast *token)
+{
+	t_token_ast	*new_token;
+	char		**str;
+	char		**new_str;
+	int			len;
+	int			i;
+
+	len = calculate_strlen(token);
+	if (len == -1)
+		return (NULL);
+	str = (char **)(token->value);
+	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
+	if (new_str == NULL)
+		return (NULL);
+	new_str[len] = NULL;
+	i = 0;
+	while (i < len)
+	{
+		new_str[i] = strdup(str[i]);
+		if (new_str[i] == NULL)
+		{
+			free_str(new_str);
+			return (NULL);
+		}
+		i++;
+	}
+	new_token = (t_token_ast *) malloc (sizeof(t_token_ast));
+	if (!new_token)
+	{
+		free_str(new_str);
+		return (NULL);
+	}
+	new_token->value = new_str;
+	new_token->type = token->type;
+	new_token->wildcard = token->wildcard;
+	return (new_token);
+}
+
 /*Funcion que agrega el str del token en pos a new_token*/
 static t_token_ast	**join_nodes(t_token_ast **new, t_token_ast *token)
 {
@@ -80,10 +75,9 @@ static t_token_ast	**join_nodes(t_token_ast **new, t_token_ast *token)
 	int		i;
 	char	**str;
 	
-	printf("\nEntra en el join_nodes\n");
 	if (*new == NULL)
 	{
-		*new = duplicate_token(token);
+		*new = duplicate_token_tr(token);
 		return (new);
 	}
 	len_new = calculate_strlen(*new);
@@ -130,7 +124,6 @@ static t_token_ast	*changed_token(t_list **token_list, int pos)
 	t_token_ast	*new_token;
 	t_list		*node;
 
-	printf("\nEntra en el changed_token\n");
 	new_token = NULL;
 	node = ft_lstpos(*token_list, pos);
 	if (node == NULL)
@@ -138,10 +131,8 @@ static t_token_ast	*changed_token(t_list **token_list, int pos)
 	token = (t_token_ast *)(node->content);
 	while (token->type != 1 && (token->type < 6 || token->type == 11))
 	{
-		printf("Pasa por el while\n");
 		if (token->type == 0)
 		{
-			printf("Entra en el if\n");
 			if (join_nodes(&new_token, token) == NULL)
 			{
 				delete_token_ast(new_token);
@@ -173,6 +164,8 @@ static int	special_token(t_list **token_list, int pos)
 		else
 			break ;
 	}
+	if (pos == size)
+		return (pos);
 	while (pos < size)
 	{
 		type = ((t_token_ast *)((ft_lstpos(*token_list, pos))->content))->type;
@@ -192,11 +185,12 @@ t_list	**replace_node(t_list **lst, t_list *new_node, int *pos)
 	t_list		*aux;
 
 	new_node->next = (ft_lstpos(*lst, *pos))->next;
-	delete_token_ast((t_token_ast *)((ft_lstpos(*lst, *pos))->content));
+	aux = (ft_lstpos(*lst, *pos));
 	if (*pos > 0)
 		(ft_lstpos(*lst, *pos - 1))->next = new_node;
 	else
 		*lst = new_node;
+	ft_lstdelone(aux, delete_token_ast);
 	(*pos)++;
 	pos_special = special_token(lst, *pos);
 	while (*pos < pos_special)
@@ -225,22 +219,17 @@ t_list	**command_union(t_list **token_list)
 	t_token_ast	*new_token;
 	t_type_tr	type;
 
-	printf("\nEntra en el union\n");
 	i = 0;
 	node = *token_list;
 	while (node != NULL)
 	{
-		printf("prueba el node %d\n", i);
 		token = (t_token_ast *)(node->content);
-		printf("Hace el token\n");
 		type = token->type;
-		printf("Hace el type\n");
 		if (type == 0)
 		{
 			new_token = changed_token(token_list, i);
 			if (new_token == NULL)
 				return (error_tr(token_list));
-			printf("Hace el changed_token\n");
 			new_node = ft_lstnew(new_token);
 			if (new_node == NULL)
 			{

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 11:37:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/23 17:46:14 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:36:56 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ static char	**create_str_command(t_list **lst, int start, int end)
 	char	*str_lst;
 	int		i;
 
-	printf("La longitud definida es len=%d\n", end - start + 1);
 	str = ft_calloc (end - start + 1, sizeof(char *));
 	if (!str)
 		return (NULL);
