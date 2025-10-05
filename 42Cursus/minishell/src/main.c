@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/27 12:50:54 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/05 14:24:17 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ int	g_exit_status;
 int	main(void)
 {
 	t_list	**lst;
+	t_ast	**ast;
 	char	*line;
 
+	//hay que definir un env minimo en caso que env sea NULL (prueba con env -i bash)
 	g_exit_status = 0;
 	//while (1)
 	//{
@@ -30,7 +32,10 @@ int	main(void)
 			exit(EXIT_FAILURE);
 		//else
 			//add_history(line);
-		if (check_parentheses_balance(line))
+		if (check_parentheses_balance(line)) //esto en realidad se deberia checkear en el syntax
+											 //para eso hay que modificar el parentheses_divider 
+											 //en el lexer para simpllemente crear los nodos de
+											 //parentesis abierto/cerrado
 		{
 			printf("Error\n");
 			free (line);
@@ -43,9 +48,10 @@ int	main(void)
 		else
 		{
 			lst = lexer(line);
-			free(line);
+			//free(line);
 			if (!lst)
 			{
+				free(line);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
@@ -56,18 +62,59 @@ int	main(void)
 			lst = transition_lex_par(lst);
 			if (!lst)
 			{
+				free(line);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
 			printf("\nA la salida de tansition:\n");
+			printf("\n");
 			print_lst_tr(*lst);
+			printf("\n");
 			if (command_union(lst) == NULL)
 			{
+				free(line);
+				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
-			printf("\nA la salida de union:\n");
+			printf("\nA la salida de union lst apunta a %p y es:\n", lst);
+			printf("\n");
 			print_lst_tr(*lst);
+			printf("\n");
+			lst = syntax_and_heredoc(lst, &line);
+			if (!lst)
+			{
+				free(line);
+				//rl_clear_history();
+				exit(EXIT_FAILURE);
+			}
+			printf("\nA la salida de syntax:\n");
+            printf("\n");
+            print_lst_tr(*lst);
+            printf("\n");
+			printf("El line modificado es:\n");
+			printf("%s", line);
+			printf("\n");
+			//add_history(line);
+			free(line);
+			ast = parser(lst);
+			if (!ast)
+			{
+				error_tr(lst);
+				//rl_clear_history();
+				exit(EXIT_FAILURE);
+			}
+			printf("\nA la salida del parser:\n");
+            printf("\n");
+            print_ast(*ast);
+            printf("\n");
+			printf("\n");
+			printf("\nY la lista lst apunta a %p y es:\n", lst);
+            print_lst_tr(*lst);
+            printf("\n");
+			error_ast(ast);
 			error_tr(lst);
+
+
 			//free(lst);
 		}
 	//}

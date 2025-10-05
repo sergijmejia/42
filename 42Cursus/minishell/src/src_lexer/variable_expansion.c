@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/15 12:53:47 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/02 12:01:52 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	replace_lstpos(t_list **token_list, t_list **new_list, int x)
 	last->next = ft_lstpos(*token_list, x + 1);
 	ft_lstdel_pos(token_list, delete_token, x);
 	if (x == 0)
-		token_list = new_list;
+		*token_list = *new_list;
 	else
 	{
 		first = ft_lstpos(*token_list, x - 1);
@@ -49,18 +49,22 @@ static t_list	**word(t_list **token_list, int x)
 			new_str = ft_itoa(g_exit_status);
 			if (new_str == NULL)
 				return (NULL);
+			new_lst = lexer(new_str);
+			free(new_str);
 		}
 		else
 		{
 			new_str = getenv(&str[1]);
 			if (new_str == NULL)
 			{
+				//<---- AQUI FALTA BUSCAR EN LOS TEMP ---->
+				//EN LUGAR DE BORRAR SE DEBERIA CAMBIAR POR UN STRING VACIO
+				//POR ESTO ES QUE NO ELIMINA TODOS LOS $ EN echo $VAR1 $VAR2 $VAR3
 				ft_lstdel_pos(token_list, delete_token, x);
 				return (token_list);
 			}
+			new_lst = lexer(new_str);
 		}
-		new_lst = lexer(new_str);
-		free(new_str);
 		if (new_lst == NULL)
 			return (NULL);
 		replace_lstpos(token_list, new_lst, x);
@@ -134,6 +138,12 @@ static t_list	**expandible_string(t_list **token_list, int x)
 				if (new_str == NULL)
 					return (NULL);
 			}
+			/*else if (str[i + 1] == '\'' || str[i + 1] == ''\"')
+			{
+				//<-----------IMPLEMENTAR FUNCION QUE CREE TOKEN_STRING_LITERAL O TOKEN_EXPANDIBLE_STRINGS
+				//<---------TIENE QUE VOLVER A LLAMAR A LA VARIABLE EXPANSION SI ES " POR SI TIENE UNA VARIABLE DENTRO
+				//<---------MIRAR EL CASO echo $VAR1$VAR2$VAR3
+			}*/
 			else
 			{
 				command = get_command(str, i);
@@ -167,7 +177,7 @@ t_list	**variable_expansion(t_list **token_list)
 	while (lst != NULL)
 	{
 		token = (t_token *)(lst->content);
-		if (token->type == TOKEN_WORD && token->finished == 0)
+		if (token->type == TOKEN_WORD && token->finished == 0) //<----TAMBIEN DEBE ENTRAR EN LOS NAME
 		{
 			if (word(token_list, i) == NULL)
 				return (error_list(token_list));

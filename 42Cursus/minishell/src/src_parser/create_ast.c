@@ -6,26 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:44:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/26 17:28:15 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/03 14:22:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell"
-
-/*Funcion que calcula la longitud de str*/
-static int	calculate_strlen(t_token_ast *token)
-{
-	int		len;
-	char	**str;
-
-	if (token == NULL)
-		return (-1);
-	str = token->value;
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
-}
+#include "minishell.h"
 
 /*Funcion que copia el str del token_ast al ast*/
 static char	**copy_str(t_token_ast *token_ast)
@@ -38,7 +23,7 @@ static char	**copy_str(t_token_ast *token_ast)
 	len = calculate_strlen(token_ast);
 	if (len == -1)
 		return (NULL);
-	str = (char **)(token->value);
+	str = (char **)(token_ast->value);
 	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
 	if (new_str == NULL)
 		return (NULL);
@@ -69,18 +54,19 @@ static int	copy_type(t_token_ast *token_ast)
 	else if (type == 11)
 		new_type = 10;
 	else
-		new_type == -1;
+		new_type = -1;
 	return (new_type);
-
 }
 
 /*Funcion que crea el ast equivalente a pos*/
 t_ast	**create_ast(t_list **token_list, int pos)
 {
 	t_ast		**ast_list;
+	t_ast		*ast_node;
 	t_token_ast	*token_ast;
 	t_list		*node;
 
+	printf("\nEntra en el create_ast\n");
 	ast_list = (t_ast **) malloc (sizeof(t_ast *));
 	if (ast_list == NULL)
 		return (NULL);
@@ -88,14 +74,19 @@ t_ast	**create_ast(t_list **token_list, int pos)
 	if (node == NULL)
 		return (error_ast(ast_list));
 	token_ast = (t_token_ast *)(node->content);
-	ast_list->value = copy_str(token_ast);
-	if ((ast_list->value) == NULL)
+	ast_node = (t_ast *) malloc (sizeof(t_ast));
+	if (ast_node == NULL)
 		return (error_ast(ast_list));
-	ast_list->type = copy_type(token_ast);
-	if ((ast_list->type) == -1)
+	*ast_list = ast_node;
+	ast_node->left_ast = NULL;
+	ast_node->right_ast = NULL;
+	ast_node->value = copy_str(token_ast);
+	ast_node->type = copy_type(token_ast);
+	if ((ast_node->value == NULL) || (((int)(ast_node->type)) == -1))
 		return (error_ast(ast_list));
-	ast_list->wildcard = token_ast->wildcard;
-	ast_list->left_ast = NULL;
-	ast_list->right_ast = NULL;
-	return (ast_create);
+	ast_node->wildcard = token_ast->wildcard;
+	write(1, "El ast creado es:\n", 18);
+	print_ast(*ast_list);
+	printf("\n");
+	return (ast_list);
 }

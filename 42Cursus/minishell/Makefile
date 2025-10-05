@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/09/27 13:05:21 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/10/02 11:49:49 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,11 @@ SRC_CF = $(SRC_DIR)/src_clean_functions
 
 MAIN =
 
-SRCS = $(wildcard $(SRC_DIR)/*.c) \
-       $(wildcard $(SRC_LEX)/*.c) \
-       $(wildcard $(SRC_TR)/*.c) \
-       $(wildcard $(SRC_CF)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c)	\
+       $(wildcard $(SRC_LEX)/*.c)	\
+       $(wildcard $(SRC_TR)/*.c)	\
+       $(wildcard $(SRC_CF)/*.c)	\
+	   $(wildcard $(SRC_PAR)/*.c)
 
 OBJS = $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRCS)))
 

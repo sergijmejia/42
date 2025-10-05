@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/27 12:21:53 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/05 14:25:24 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,6 @@
 # include <readline/history.h>
 
 extern int	g_exit_status;
-
-/*Funciones de testeo*/
-void	print_lst(t_list *lst);
-void	print_lst_tr(t_list *lst);
-
-/*Lexer*/
-t_list	**lexer(char *str);
-int		check_parentheses_balance(char *str);
-int		check_quote_balance (char *str);
-t_list	**parentheses_divider(t_list **token_list, char *str);
-t_list	**assignment_divider(t_list **token_list);
-t_list	**space_divider(t_list **token_list);
-t_list	**special_char_divider(t_list **token_list);
-t_list	**simple_special_char(t_list **token_list, int i);
-t_list	**double_special_char(t_list **token_list, int i);
-t_list	**find_redirection(t_list **token_list);
-t_list	**find_wildcard(t_list **token_list);
-t_list	**variable_expansion(t_list **token_list);
-t_list	**delete_quotes(t_list **token_list);
-
-/*Nueva funcion de listas -> a agregar a libft*/
-void	ft_lstadd_pos(t_list **lst, t_list *new, int i);
-void	ft_lstdel_pos(t_list **lst, void (*del)(void*), int x);
-void	ft_lstdel_last(t_list **lst, void (*del)(void*));
-
-/*Transicion Lexer/Parser*/
-t_list	**assignment_selection(t_list **token_list);
-t_list	**transition_lex_par(t_list **token_list);
-t_list	**command_union(t_list **token_list);
-
-/*Parser*/
-//t_token_ast	*duplicate_token_tr(t_token_ast *token);
 
 /*Estructura de la lista de variables asignadas*/
 typedef struct s_temp_lst
@@ -94,6 +62,32 @@ typedef struct s_token
 	int					finished;
 } t_token;
 
+/*Estructuras de Transicion entre Lexer y Parser*/
+/*Tipos de tokens en fase de transicion lexer/parser*/
+typedef enum e_type_tr
+{
+	COMMAND,
+	PIPE,
+	GT,
+	DOUBLE_GT,
+	LT,
+	DOUBLE_LT,
+	ASSIGNMENT,
+	AND,
+	OR,
+	L_PARENTHESIS,
+	R_PARENTHESIS,
+	NAME
+} t_type_tr;
+
+/*Estructura intermedia entre lexer y parser*/
+typedef struct s_token_ast
+{
+	enum e_type_tr	type;
+	char			**value;
+	int				wildcard;
+} t_token_ast;
+
 /*Estructuas Parser*/
 /*Tipos de tokens almacenados en el parser*/
 typedef enum e_type_parser
@@ -121,38 +115,62 @@ typedef struct s_ast
 	struct s_ast		*right_ast;
 } t_ast;
 
-/*Estructuras intermedias de transicion*/
-/*Tipos de tokens en fase de transicion lexer/parser*/
-typedef enum e_type_tr
-{
-	COMMAND,
-	PIPE,
-	GT,
-	DOUBLE_GT,
-	LT,
-	DOUBLE_LT,
-	ASSIGNMENT,
-	AND,
-	OR,
-	L_PARENTHESIS,
-	R_PARENTHESIS,
-	NAME
-} t_type_tr;
+/*Funciones de testeo*/
+void		print_lst(t_list *lst);
+void		print_lst_tr(t_list *lst);
+void		print_ast(t_ast *ast_list);
 
-/*Estructura intermedia entre lexer y parser*/
-typedef struct s_token_ast
-{
-	enum e_type_tr	type;
-	char			**value;
-	int				wildcard;
-} t_token_ast;
+/*Utils*/
+int			calculate_strlen(t_token_ast *token);
+t_token_ast	*duplicate_token_tr(t_token_ast *token);
+
+
+/*-----LEXER-----*/
+
+t_list		**lexer(char *str);
+int			check_parentheses_balance(char *str);
+int			check_quote_balance (char *str);
+t_list		**parentheses_divider(t_list **token_list, char *str);
+t_list		**assignment_divider(t_list **token_list);
+t_list		**space_divider(t_list **token_list);
+t_list		**special_char_divider(t_list **token_list);
+t_list		**simple_special_char(t_list **token_list, int i);
+t_list		**double_special_char(t_list **token_list, int i);
+t_list		**find_redirection(t_list **token_list);
+t_list		**find_wildcard(t_list **token_list);
+t_list		**variable_expansion(t_list **token_list);
+t_list		**delete_quotes(t_list **token_list);
+
+/*Nueva funcion de listas -> a agregar a libft*/
+void		ft_lstadd_pos(t_list **lst, t_list *new, int i);
+void		ft_lstdel_pos(t_list **lst, void (*del)(void*), int x);
+void		ft_lstdel_last(t_list **lst, void (*del)(void*));
+
+/*Transicion Lexer/Parser*/
+t_list		**assignment_selection(t_list **token_list);
+t_list		**transition_lex_par(t_list **token_list);
+t_list		**command_union(t_list **token_list);
+t_list		**syntax_and_heredoc(t_list **lst, char **line);
+int			heredoc(t_list **token_list, int pos, char **line);
+
+
+/*Parser*/
+//t_token_ast	*duplicate_token_tr(t_token_ast *token);
+t_ast		**parser(t_list **token_list);
+t_ast		**parser_specific(t_list **token_list, int pos);
+t_ast		**parser_parenthesis(t_list **token_list);
+t_ast		**create_ast(t_list **token_list, int pos);
+int			find_specific(t_list **token_list, int type);
 
 /*Funnciones de limpieza*/
-void	delete_token(void *content);
-t_list  **error_token(t_list **token_list, t_token *token);
-t_list  **error_list(t_list **token_list);
-char	**free_str(char **str);
-void	delete_token_ast(void *content);
-t_list	**error_tr(t_list **token_list);
+void		delete_token(void *content);
+t_list		**error_token(t_list **token_list, t_token *token);
+t_list		**error_list(t_list **token_list);
+char		**free_str(char **str);
+void		delete_token_ast(void *content);
+t_list		**error_tr(t_list **token_list);
+void		delete_ast(void *content);
+t_ast		**error_ast(t_ast **ast_list);
+t_list		**error_syntax(t_list **token_list, int pos);
 
 #endif

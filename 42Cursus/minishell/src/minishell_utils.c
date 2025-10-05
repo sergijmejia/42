@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_and_utils.c                                 :+:      :+:    :+:   */
+/*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/26 17:59:17 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/26 18:00:17 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/09/30 12:45:21 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/10/02 16:33:53 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*Funcion que calcula la cantidad de strings que hay en un string doble*/
-static int	calculate_strlen(t_token_ast *token)
+int	calculate_strlen(t_token_ast *token)
 {
 	int		len;
 	char	**str;
@@ -39,7 +39,7 @@ t_token_ast	*duplicate_token_tr(t_token_ast *token)
 	len = calculate_strlen(token);
 	if (len == -1)
 		return (NULL);
-	str = (char **)(token->value);
+	str = token->value;
 	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
 	if (new_str == NULL)
 		return (NULL);
