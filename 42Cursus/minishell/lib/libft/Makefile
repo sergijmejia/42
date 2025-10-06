@@ -92,7 +92,7 @@ HEADER	= libft.h
 
 OBJ	= $(SRC:.c=.o)
 
-CFLAGS	= -Wall -Werror -Wextra -I$(INC_DIR)
+CFLAGS	= -Wall -Werror -Wextra -fPIC -I$(INC_DIR) #fPIC (position independent code) es para que no se guarde siempre en la misma direccion de memoria. Esto hace el codigo mas seguro. Las versiones mas modernas de linux lo hacen por defecto
 CC	= cc
 
 .PHONY : all clean fclean re

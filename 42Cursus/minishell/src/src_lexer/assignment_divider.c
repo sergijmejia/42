@@ -183,13 +183,13 @@ static int	assignment_candidate(t_list **token_list, int *i, int pos)
 {
 	int		start;
 	int		end;
-	int		len;
+	//int		len;
 	char	*str_token;
 	t_token	*token;
 
 	token = (t_token *)(ft_lstpos(*token_list, *i)->content);
 	str_token = token->value;
-	len = (int) ft_strlen(str_token);
+	//len = (int) ft_strlen(str_token);
 	start = find_start_assignment(str_token, pos);
 	if (start != -1)
 	{

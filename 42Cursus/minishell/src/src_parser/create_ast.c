@@ -66,7 +66,7 @@ t_ast	**create_ast(t_list **token_list, int pos)
 	t_token_ast	*token_ast;
 	t_list		*node;
 
-	printf("\nEntra en el create_ast\n");
+	//printf("\nEntra en el create_ast\n");
 	ast_list = (t_ast **) malloc (sizeof(t_ast *));
 	if (ast_list == NULL)
 		return (NULL);
@@ -85,8 +85,8 @@ t_ast	**create_ast(t_list **token_list, int pos)
 	if ((ast_node->value == NULL) || (((int)(ast_node->type)) == -1))
 		return (error_ast(ast_list));
 	ast_node->wildcard = token_ast->wildcard;
-	write(1, "El ast creado es:\n", 18);
+	/*write(1, "El ast creado es:\n", 18);
 	print_ast(*ast_list);
-	printf("\n");
+	printf("\n");*/
 	return (ast_list);
 }

@@ -134,7 +134,6 @@ static char	**str_command(t_list **lst, int *pos)
 			break ;
 		(*pos)++;
 	}
-	printf("\nstart=%d   end=%d\n", start, *pos);
 	str = create_str_command(lst, start, *pos);
 	if(!str)
 		return (NULL);

@@ -102,14 +102,14 @@ t_ast	**parser(t_list **token_list)
 	int		type;
 	t_ast	**ast_list;
 
-	printf("\nEntra en el parser\n");
+	/*printf("\nEntra en el parser\n");
 	printf("La lista que entra es:\n");
 	print_lst_tr(*token_list);
-	printf("\n");
+	printf("\n");*/
 	if (token_list == NULL)
 		return (NULL);
 	size = ft_lstsize(*token_list);
-	printf("\nCalcula el size=%d\n", size);
+	//printf("\nCalcula el size=%d\n", size);
 	if (size == 0)
 	{
 		ast_list = (t_ast  **) malloc (sizeof(t_ast *));
@@ -118,19 +118,19 @@ t_ast	**parser(t_list **token_list)
 		*ast_list = NULL;
 		return (ast_list);
 	}
-	write(1, "\nComprueba que no es 0\n", 22);
+	//write(1, "\nComprueba que no es 0\n", 22);
 	pos = find_next_special(token_list);
-	printf("\nCalcula el siguiente special en pos=%d\n", pos);
+	//printf("\nCalcula el siguiente special en pos=%d\n", pos);
 	if (pos == size)
 		return (NULL);
 	type = ((t_token_ast *) ((ft_lstpos(*token_list, pos))->content))->type;
 	ast_list = create_ast_list(token_list, pos, type);
 	//error_list(token_list);
-	if (ast_list != NULL)
+	/*if (ast_list != NULL)
 	{
 		write(1, "\nsale del parser en donde ha creado:\n", 37);
 		print_ast(*ast_list);
 		printf("\n");
-	}
+	}*/
 	return (ast_list);
 }

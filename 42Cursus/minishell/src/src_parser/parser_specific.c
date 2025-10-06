@@ -54,9 +54,9 @@ static t_ast	**front(t_list **token_list, int pos)
 	if (front_list == NULL)
 		return (NULL);
 	ast_left = parser(front_list);
-	printf("\nEl front list es:\n");
+	/*printf("\nEl front list es:\n");
 	print_lst_tr(*front_list);
-	printf("\n");
+	printf("\n");*/
 	error_tr(front_list);//----------
 	return (ast_left);
 }
@@ -98,16 +98,16 @@ static t_ast	**back(t_list **token_list, int pos)
 	t_ast	**ast_right;
 	int		size;
 
-	printf("\nEntra en back\n");
+	//printf("\nEntra en back\n");
 	size = ft_lstsize(*token_list);
-	printf("Los valores son pos=%d y size=%d\n", pos, size);
+	//printf("Los valores son pos=%d y size=%d\n", pos, size);
 	back_list = divide_back(token_list, pos + 1, size);
 	if (back_list == NULL)
 		return (NULL);
 	ast_right = parser(back_list);
-	printf("\nEl back list es:\n");
+	/*printf("\nEl back list es:\n");
     print_lst_tr(*back_list);
-    printf("\n");
+    printf("\n");*/
 	error_tr(back_list);//----------
 	return (ast_right);
 }
@@ -125,24 +125,24 @@ t_ast	**parser_specific(t_list **token_list, int pos)
 	ast_left = front(token_list, pos);
 	if (ast_left == NULL)
 		return (error_ast(ast_list));
-	printf("\nTermina el left\n");
+	/*printf("\nTermina el left\n");
     printf("Hasta ahora ha creado:\n");
     printf("El nodo principal:\n");
 	print_ast(*ast_list);
 	printf("\nEl nodo de la izquierda:\n");
 	print_ast(*ast_left);
-	printf("\n");
+	printf("\n");*/
 	(*ast_list)->left_ast = *ast_left;
 	free(ast_left);
-	printf("\nDespues de juntarlos el arbol creado es:\n\n");
+	/*printf("\nDespues de juntarlos el arbol creado es:\n\n");
 	print_ast(*ast_list);
-	printf("\n");
+	printf("\n");*/
 	ast_right = back(token_list, pos);
-	write(1, "sale del back\n", 15);
+	//write(1, "sale del back\n", 15);
 	if (ast_right == NULL)
 		return (error_ast(ast_list));
 	(*ast_list)->right_ast = *ast_right;
 	free(ast_right);
-	write(1, "Termina el parser_specific\n", 27);
+	//write(1, "Termina el parser_specific\n", 27);
 	return (ast_list);
 }

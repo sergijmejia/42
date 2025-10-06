@@ -136,11 +136,11 @@ static t_list	**divide_special(t_list **token_list, int *i, char *special_char)
 	t_list	*lst;
 	t_list	*new_list_token;
 	t_token	*token;
-	int		len;
+	//int		len;
 	char	*str;
 	int		pos;
 
-	len = ft_lstsize(*token_list);
+	//len = ft_lstsize(*token_list);
 	lst = ft_lstpos(*token_list, *i);
 	if (lst == NULL)
 		return (token_list);

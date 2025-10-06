@@ -117,17 +117,21 @@ t_list	**error_syntax(t_list **token_list, int pos)
 	char		*str_error;
 	char		*aux;
 
-	aux = ft_strdup("minishell: syntax error near unexpected token ");
+	aux = ft_strdup("minishell: syntax error near unexpected token \'");
 	size = ft_lstsize(*token_list);
 	if (pos == size - 1)
-		str_error = ft_strjoin(aux, "'newline'");
+		str_error = ft_strjoin(aux, "newline\'\n");
 	else
 	{
 		token_tr = (t_token_ast *) ((ft_lstpos(*token_list, pos))->content);
 		str_error = ft_strjoin(aux, (token_tr->value)[0]);
+		free(aux);
+		aux = str_error;
+		str_error = ft_strjoin(aux, "\'\n");
 	}
 	len = (int) ft_strlen(str_error);
 	write(2, str_error, len);
+	//write(2, "\n", 1);
 	free(aux);
 	free(str_error);
 	return (error_tr(token_list));

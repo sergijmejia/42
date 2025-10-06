@@ -23,48 +23,48 @@ t_list	**lexer(char *str)
 	*lst = NULL;
 	if (parentheses_divider(lst, str) == NULL)
 		return (NULL);
-	printf("1- La lst es:\n");
+	/*printf("1- La lst es:\n");
 	print_lst(*lst);
-	printf("\n");
+	printf("\n");*/
 	if (assignment_divider(lst) == NULL)
 		return (NULL);
-	printf("2- La lst es:\n");
+	/*printf("2- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (space_divider(lst) == NULL)
 		return (NULL);
-	printf("3- La lst es:\n");
+	/*printf("3- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (special_char_divider(lst) == NULL)
 		return (NULL);
-	printf("4- La lst es:\n");
+	/*printf("4- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (find_redirection(lst) == NULL)
 		return (NULL);
-	printf("5- La lst es:\n");
+	/*printf("5- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (find_wildcard(lst) == NULL)
 		return (NULL);
-	printf("6- La lst es:\n");
+	/*printf("6- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (variable_expansion(lst) == NULL)
 		return (NULL);
-	printf("7- La lst es:\n");
+	/*printf("7- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (delete_quotes(lst) == NULL)
 		return (NULL);
-	printf("8- La lst es:\n");
+	/*printf("8- La lst es:\n");
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	if (assignment_selection(lst) == NULL)
 		return (NULL);
-	write(1, "9- La lst es:\n", 14);
+	/*write(1, "9- La lst es:\n", 14);
     print_lst(*lst);
-    printf("\n");
+    printf("\n");*/
 	return (lst);
 }

@@ -63,21 +63,28 @@ static int	syntax_rparenthesis(t_list **token_list, int pos)
 
 static int	syntax_name(t_list **token_list, int pos, char **line)
 {
-	t_token_ast	*token_tr;
 	t_type_tr	type;
 
 
+	printf("Entra en el syntax_name con pos=%d\n", pos);
 	if (pos == 0)
+	{
+		printf("Fallo en opcion 1\n");
 		return (1);
+	}
 	type = ((t_token_ast *) ((ft_lstpos(*token_list, pos - 1))->content))->type;
-	if ((type >= 1 && type <= 5) || type == 7 || type == 8)
+	if (type < 2 || type > 5)
+	{
+		printf("Fallo en opcion 2\n"); 
         return (1);
-	token_tr =(t_token_ast *) ((ft_lstpos(*token_list, pos))->content);
-	type = token_tr->type;
+	}
 	if (type == 5)
 	{
 		if (heredoc(token_list, pos, line))
+		{
+			printf("Fallo en opcion 3\n"); 
 			return (1);
+		}
 	}
 	return (0);
 }
