@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/02 12:01:52 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:16:39 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	replace_lstpos(t_list **token_list, t_list **new_list, int x)
 }
 
 /*Funcion que gestiona la expansion de variables en TOKEN_WORD*/
-static t_list	**word(t_list **token_list, int x)
+static t_list	**word(t_list **token_list, char **env, int x)
 {
 	int		len;
 	char	*str;
@@ -49,7 +49,7 @@ static t_list	**word(t_list **token_list, int x)
 			new_str = ft_itoa(g_exit_status);
 			if (new_str == NULL)
 				return (NULL);
-			new_lst = lexer(new_str);
+			new_lst = lexer(new_str, env);
 			free(new_str);
 		}
 		else
@@ -63,7 +63,7 @@ static t_list	**word(t_list **token_list, int x)
 				ft_lstdel_pos(token_list, delete_token, x);
 				return (token_list);
 			}
-			new_lst = lexer(new_str);
+			new_lst = lexer(new_str, env);
 		}
 		if (new_lst == NULL)
 			return (NULL);
@@ -117,7 +117,7 @@ static char	*get_command(char *str, int x)
 }
 
 /*Funcion que gestiona la expansion de varables en TOKEN_EXPANDIBLE_STRINGS*/
-static t_list	**expandible_string(t_list **token_list, int x)
+static t_list	**expandible_string(t_list **token_list, char **env, int x)
 {
 	int		i;
 	int		command_len;
@@ -135,8 +135,6 @@ static t_list	**expandible_string(t_list **token_list, int x)
 			{
 				command_len = 2;
 				new_str = ft_itoa(g_exit_status);
-				if (new_str == NULL)
-					return (NULL);
 			}
 			/*else if (str[i + 1] == '\'' || str[i + 1] == ''\"')
 			{
@@ -150,9 +148,11 @@ static t_list	**expandible_string(t_list **token_list, int x)
 				if (command == NULL)
 					return (NULL);
 				command_len = ft_strlen(command);
-				new_str = getenv(&command[1]);
+				new_str = ft_getenv(env, &command[1]);
 				free(command);
 			}
+			if (new_str == NULL)
+				return (NULL);
 			i = replace_string(&str, new_str, command_len, i);
 			free(new_str);
 			if (i == -1)
@@ -166,7 +166,7 @@ static t_list	**expandible_string(t_list **token_list, int x)
 }
 
 /*Funcion que gestiona la exansion de variables*/
-t_list	**variable_expansion(t_list **token_list)
+t_list	**variable_expansion(t_list **token_list, char **env)
 {
 	int		i;
 	t_token	*token;
@@ -179,12 +179,12 @@ t_list	**variable_expansion(t_list **token_list)
 		token = (t_token *)(lst->content);
 		if (token->type == TOKEN_WORD && token->finished == 0) //<----TAMBIEN DEBE ENTRAR EN LOS NAME
 		{
-			if (word(token_list, i) == NULL)
+			if (word(token_list, env, i) == NULL)
 				return (error_list(token_list));
 		}
 		else if (token->type == TOKEN_EXPANDIBLE_STRINGS && token->finished == 0)
 		{
-			if (expandible_string(token_list, i) == NULL)
+			if (expandible_string(token_list, env, i) == NULL)
 				return (error_list(token_list));
 		}
 		i++;

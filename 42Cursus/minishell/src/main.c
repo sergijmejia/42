@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/05 14:24:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:09:55 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,22 @@
 int	g_exit_status;
 
 /*Este es un programa para ir testeand tods los componentes*/
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	t_list	**lst;
 	t_ast	**ast;
 	char	*line;
+	char	**env;
 
+	if (argc != 1)
+	{
+		printf("Entra en el condicional\n");
+		printf("Error por: %s\n",argv[1]);
+		exit(EXIT_FAILURE);
+	}
 	//hay que definir un env minimo en caso que env sea NULL (prueba con env -i bash)
 	g_exit_status = 0;
+	env = dup_env(envp);
 	//while (1)
 	//{
 		//line = readline("minishell$ ");
@@ -47,7 +55,7 @@ int	main(void)
 		}
 		else
 		{
-			lst = lexer(line);
+			lst = lexer(line, env);
 			//free(line);
 			if (!lst)
 			{
@@ -113,6 +121,9 @@ int	main(void)
             printf("\n");
 			error_ast(ast);
 			error_tr(lst);
+			free_str(env);
+
+			//execute_ast(*ast, temp_var, &env) ast debe ser puntero simple (t_ast *), temp_var es la tabla de variables (char **), envp es el enviroment (char ***) <--- PUNTERO TRIPLE!!!!
 
 
 			//free(lst);

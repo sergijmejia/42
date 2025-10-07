@@ -6,14 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:22:49 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/29 16:05:05 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:13:33 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*Crea lexer. Pasa todos los argumentos de los string a una lista*/
-t_list	**lexer(char *str)
+t_list	**lexer(char *str, char **env)
 {
 	t_list	**lst;
 
@@ -21,7 +21,7 @@ t_list	**lexer(char *str)
 	if (!lst)
 		return (NULL);
 	*lst = NULL;
-	if (parentheses_divider(lst, str) == NULL)
+	if (parentheses_divider(lst, str, env) == NULL)
 		return (NULL);
 	/*printf("1- La lst es:\n");
 	print_lst(*lst);
@@ -51,7 +51,7 @@ t_list	**lexer(char *str)
 	/*printf("6- La lst es:\n");
     print_lst(*lst);
     printf("\n");*/
-	if (variable_expansion(lst) == NULL)
+	if (variable_expansion(lst, env) == NULL)
 		return (NULL);
 	/*printf("7- La lst es:\n");
     print_lst(*lst);

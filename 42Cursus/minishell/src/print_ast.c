@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 10:51:57 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/02 15:24:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:28:16 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ void	print_ast(t_ast *ast_list)
 		if (i != len)
 			ft_printf(", ");
 	}
-	ft_printf("    (%d)\n", ast_list->type);
+	ft_printf("    (%d) (%d)\n", ast_list->type, ast_list->wildcard);
 	return ;
 }

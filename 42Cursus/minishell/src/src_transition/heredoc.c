@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 11:41:44 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/05 14:41:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 12:50:16 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,44 +39,40 @@ static int	create_heredoc_file(char *here_doc)
 	return (0);
 }
 
-static int	heredoc_size(int fd)
+/*Funcion que crea el heredoc_str*/
+static char	**heredoc_size(int *fd)
 {
 	char	*str;
 	int		size;
+	char	**heredoc_str;
 
 	size = 0;
-	str = get_next_line(fd);
+	str = get_next_line(*fd);
 	while (str != NULL)
 	{
 		size++;
 		free(str);
-		str = get_next_line(fd);
+		str = get_next_line(*fd);
 	}
-	return (size);
-}
-
-/*Funcion que agrega la informacion de fd a line y a heredoc_str*/
-static char	**add_heredoc(int fd, char **line, char *heredoc)
-{
-	int		i;
-	int		size;
-	char	*aux;
-	char	*str;
-	char	**heredoc_str;
-
-	size = heredoc_size(fd);
-	close(fd);
-	fd = open(".tmp_minishell", O_RDONLY);
-	if (fd == -1)
-		return (NULL);
-	if (size == -1)
+	close(*fd);
+	*fd = open(".tmp_minishell", O_RDONLY);
+	if (*fd == -1)
 		return (NULL);
 	heredoc_str = (char **) malloc ((size + 2) * sizeof(char *));
 	if (heredoc_str == NULL)
 	{
-		close(fd);
+		close(*fd);
 		return (NULL);
 	}
+	return (heredoc_str);
+}
+
+static char	**fill_heredoc_str(char **heredoc_str, char **line, int fd)
+{
+	int		i;
+	char	*str;
+	char	*aux;
+
 	str = get_next_line(fd);
 	i = 0;
 	while (str != NULL)
@@ -96,8 +92,34 @@ static char	**add_heredoc(int fd, char **line, char *heredoc)
 		str = get_next_line(fd);
 		i++;
 	}
-	aux = ft_strjoin(*line, heredoc); //<----falta agregar el ultimo elemento a line (EOF) para el historial
-	heredoc_str[size + 1] = NULL;
+	heredoc_str[i] = NULL;
+	return (heredoc_str);
+}
+
+/*Funcion que agrega la informacion de fd a line y a heredoc_str*/
+static char	**add_heredoc(int fd, char **line, char *heredoc)
+{
+	char	*aux;
+	char	**heredoc_str;
+
+	heredoc_str = heredoc_size(&fd);
+	if (heredoc_str == NULL)
+		return (NULL);
+	if (fill_heredoc_str(heredoc_str, line, fd) == NULL)
+	{
+		close(fd);
+		return (NULL);
+	}
+	aux = ft_strjoin(*line, heredoc);
+	if (aux == NULL)
+	{
+		close(fd);
+		free_str(heredoc_str);
+		return (NULL);
+	}
+	free(*line);
+	*line = aux;
+	close(fd);
 	return (heredoc_str);
 }
 
@@ -126,12 +148,11 @@ int	heredoc(t_list **token_list, int pos, char **line)
 		return (1);
 	}
 	heredoc_str = add_heredoc(fd, line, heredoc);
-	close(fd);
 	free(heredoc);
 	unlink(".tmp_minishell");
 	if (heredoc_str == NULL)
 		return (1);
 	free_str(token_tr->value);
-	tolen_tr->value = heredoc_str;
+	token_tr->value = heredoc_str;
 	return (0);
 }

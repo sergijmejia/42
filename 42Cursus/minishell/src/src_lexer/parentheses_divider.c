@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 16:58:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/19 17:28:54 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:14:33 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static t_list	**start_list(t_list **token_list, char *str, int open)
 }
 
 /*Funcion que gestiona la creacion de la lista del contenido entre parentesis*/
-static t_list	**parentheses_list(t_list **token_list, char *str, int open)
+static t_list	**parentheses_list(t_list **token_list, char **env, char *str, int open)
 {
 	int		close;
 	char	*str_token;
@@ -133,7 +133,7 @@ static t_list	**parentheses_list(t_list **token_list, char *str, int open)
 	if (!str_token)
 		return (NULL);
 	ft_strlcpy(str_token, &str[open + 1], close - open);
-	new_token_list = lexer(str_token);
+	new_token_list = lexer(str_token, env);
 	if (!new_token_list)
 	{
 		free(str_token);
@@ -147,7 +147,7 @@ static t_list	**parentheses_list(t_list **token_list, char *str, int open)
 }
 
 /*Funcion que gestiona la creacion del TOKEN_WORD despues del parentesis*/
-static t_list	**end_list(t_list **token_list, char *str, int close, int len)
+static t_list	**end_list(t_list **token_list, char **env, char *str, int close, int len)
 {
 	char	*str_token;
 	t_list	**new_token_list;
@@ -163,7 +163,7 @@ static t_list	**end_list(t_list **token_list, char *str, int close, int len)
 		return (NULL);
 	}
 	*new_token_list = NULL;
-	new_token_list = parentheses_divider(new_token_list, str_token);
+	new_token_list = parentheses_divider(new_token_list, str_token, env);
 	if (!new_token_list)
 	{
 		free(str_token);
@@ -176,7 +176,7 @@ static t_list	**end_list(t_list **token_list, char *str, int close, int len)
 }
 
 /*Funcion que llama a lexer de forma recursiva para manejar los parentesis*/
-t_list	**parentheses_divider(t_list **token_list, char *str)
+t_list	**parentheses_divider(t_list **token_list, char *str, char **env)
 {
 	int		open;
 	int		close;
@@ -194,9 +194,9 @@ t_list	**parentheses_divider(t_list **token_list, char *str)
 		return (error_list(token_list));
 	if (start_list(token_list, str, open) == NULL)
 		return (error_list(token_list));
-	if (parentheses_list(token_list, str, open) == NULL)
+	if (parentheses_list(token_list, env, str, open) == NULL)
 		return (error_list(token_list));
-	if (end_list(token_list, str, close, len) == NULL)
+	if (end_list(token_list, env, str, close, len) == NULL)
 		return (error_list(token_list));
 	return (token_list);
 }

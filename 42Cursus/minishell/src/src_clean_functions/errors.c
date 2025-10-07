@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 17:01:11 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/05 14:19:13 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 12:58:24 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ t_list	**error_syntax(t_list **token_list, int pos)
 
 	aux = ft_strdup("minishell: syntax error near unexpected token \'");
 	size = ft_lstsize(*token_list);
-	if (pos == size - 1)
+	if (pos == size)
 		str_error = ft_strjoin(aux, "newline\'\n");
 	else
 	{

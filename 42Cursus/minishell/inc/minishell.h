@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/05 14:25:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:11:47 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,9 @@ typedef struct s_ast
 	struct s_ast		*right_ast;
 } t_ast;
 
+/*Funciones principales*/
+char		**dup_env(char **envp);
+
 /*Funciones de testeo*/
 void		print_lst(t_list *lst);
 void		print_lst_tr(t_list *lst);
@@ -127,10 +130,10 @@ t_token_ast	*duplicate_token_tr(t_token_ast *token);
 
 /*-----LEXER-----*/
 
-t_list		**lexer(char *str);
+t_list		**lexer(char *str, char **env);
 int			check_parentheses_balance(char *str);
 int			check_quote_balance (char *str);
-t_list		**parentheses_divider(t_list **token_list, char *str);
+t_list		**parentheses_divider(t_list **token_list, char *str, char **env);
 t_list		**assignment_divider(t_list **token_list);
 t_list		**space_divider(t_list **token_list);
 t_list		**special_char_divider(t_list **token_list);
@@ -138,13 +141,14 @@ t_list		**simple_special_char(t_list **token_list, int i);
 t_list		**double_special_char(t_list **token_list, int i);
 t_list		**find_redirection(t_list **token_list);
 t_list		**find_wildcard(t_list **token_list);
-t_list		**variable_expansion(t_list **token_list);
+t_list		**variable_expansion(t_list **token_list, char **env);
 t_list		**delete_quotes(t_list **token_list);
 
 /*Nueva funcion de listas -> a agregar a libft*/
 void		ft_lstadd_pos(t_list **lst, t_list *new, int i);
 void		ft_lstdel_pos(t_list **lst, void (*del)(void*), int x);
 void		ft_lstdel_last(t_list **lst, void (*del)(void*));
+char		*ft_getenv(char **env, const char *name);
 
 /*Transicion Lexer/Parser*/
 t_list		**assignment_selection(t_list **token_list);
