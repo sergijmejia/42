@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 08:52:10 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/17 13:58:11 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/10 09:11:40 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_list	**assignment_selection(t_list **token_list)
 	int		i;
 
 	possible_assignment = 1;
-	if (token_list == NULL)
+	if (token_list == NULL || *token_list == NULL)
 		return (token_list);
 	i = 0;
 	lst = ft_lstpos(*token_list, i);

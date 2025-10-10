@@ -13,6 +13,17 @@
 #include "minishell.h"
 
 /*Funcion que calcula la cantidad de strings que hay en un string doble*/
+int	doublestr_len(char **str)
+{
+	int	len;
+
+	len = 0;
+	while (str[len])
+		len++;
+	return (len);
+}
+
+/*Funcion que calcula la cantidad de strings de un string doblen en un token*/
 int	calculate_strlen(t_token_ast *token)
 {
 	int		len;
@@ -21,9 +32,7 @@ int	calculate_strlen(t_token_ast *token)
 	if (token == NULL)
 		return (-1);
 	str = token->value;
-	len = 0;
-	while (str[len])
-		len++;
+	len = doublestr_len(str);
 	return (len);
 }
 

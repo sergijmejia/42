@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 15:09:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:08:54 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,15 @@ int	main(int argc, char **argv, char **envp)
 	}
 	//hay que definir un env minimo en caso que env sea NULL (prueba con env -i bash)
 	g_exit_status = 0;
-	env = dup_env(envp);
+	printf("El env que recibimos es:\n\n");
+	print_str(envp);
+	//if (check_env(envp) == 1)
+	//if (envp == NULL)
+		env = dup_env(envp);
+	//else
+	//	env = dup_env(envp);
+	printf("El env que alacenamos es:\n\n");
+    print_str(env);
 	//while (1)
 	//{
 		//line = readline("minishell$ ");

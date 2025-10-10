@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 15:11:47 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/10 15:06:24 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_temp_lst
 {
 	char	*name;
 	char	*value;
-} t_temp_lst;
+}	t_temp_lst;
 
 /*Estructuras Lexer*/
 /*Tipos de tokens almacenados en el lexer*/
@@ -52,7 +52,7 @@ typedef enum e_type_lexer
 	TOKEN_BACKGROUND,
 	TOKEN_WILDCARD,
 	TOKEN_REDIRECTION_WORD
-} t_type_lexer;
+}	t_type_lexer;
 
 /*Estructura token usada en el lexer*/
 typedef struct s_token
@@ -60,7 +60,7 @@ typedef struct s_token
 	enum e_type_lexer	type;
 	char				*value;
 	int					finished;
-} t_token;
+}	t_token;
 
 /*Estructuras de Transicion entre Lexer y Parser*/
 /*Tipos de tokens en fase de transicion lexer/parser*/
@@ -78,7 +78,7 @@ typedef enum e_type_tr
 	L_PARENTHESIS,
 	R_PARENTHESIS,
 	NAME
-} t_type_tr;
+}	t_type_tr;
 
 /*Estructura intermedia entre lexer y parser*/
 typedef struct s_token_ast
@@ -86,7 +86,7 @@ typedef struct s_token_ast
 	enum e_type_tr	type;
 	char			**value;
 	int				wildcard;
-} t_token_ast;
+}	t_token_ast;
 
 /*Estructuas Parser*/
 /*Tipos de tokens almacenados en el parser*/
@@ -103,7 +103,7 @@ typedef enum e_type_parser
 	TOKEN_P_OR,
 	TOKEN_P_PARENTHESIS,
 	TOKEN_P_NAME
-} t_type_parser;
+}	t_type_parser;
 
 /*Estructura usada en el parser*/
 typedef struct s_ast
@@ -113,7 +113,7 @@ typedef struct s_ast
 	int					wildcard;
 	struct s_ast		*left_ast;
 	struct s_ast		*right_ast;
-} t_ast;
+}	t_ast;
 
 /*Funciones principales*/
 char		**dup_env(char **envp);
@@ -122,17 +122,18 @@ char		**dup_env(char **envp);
 void		print_lst(t_list *lst);
 void		print_lst_tr(t_list *lst);
 void		print_ast(t_ast *ast_list);
+void		print_str(char **str);
 
 /*Utils*/
+int			doublestr_len(char **str);
 int			calculate_strlen(t_token_ast *token);
 t_token_ast	*duplicate_token_tr(t_token_ast *token);
-
 
 /*-----LEXER-----*/
 
 t_list		**lexer(char *str, char **env);
 int			check_parentheses_balance(char *str);
-int			check_quote_balance (char *str);
+int			check_quote_balance(char *str);
 t_list		**parentheses_divider(t_list **token_list, char *str, char **env);
 t_list		**assignment_divider(t_list **token_list);
 t_list		**space_divider(t_list **token_list);
@@ -156,7 +157,6 @@ t_list		**transition_lex_par(t_list **token_list);
 t_list		**command_union(t_list **token_list);
 t_list		**syntax_and_heredoc(t_list **lst, char **line);
 int			heredoc(t_list **token_list, int pos, char **line);
-
 
 /*Parser*/
 //t_token_ast	*duplicate_token_tr(t_token_ast *token);
