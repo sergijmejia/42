@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   dup_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 09:16:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/10 15:03:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/11 10:06:08 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static char	**create_env(char **envp, char **env, int *pos_env, int *check)
 			pos_envp++;
 		else if (ft_strncmp(envp[pos_envp], "_=", 2) == 0)
 			pos_envp++;
-		else 
+		else
 		{
 			env[*pos_env] = copy_envp_line(envp, pos_envp, check);
 			if (env[*pos_env] == NULL)
@@ -141,6 +141,6 @@ char	**dup_env(char **envp)
 	if (create_env(envp, env, &pos_env, &check) == NULL)
 		return (NULL);
 	if (add_pwd_(env, pos_env, check) == NULL)
-		return(NULL);
+		return (NULL);
 	return (env);
 }

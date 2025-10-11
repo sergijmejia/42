@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 15:16:39 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/11 12:21:17 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,15 @@ static char	*get_command(char *str, int x)
 	i = x + 1;
 	len = 0;
 	while (ft_isalpha(str[i]) || ft_isdigit(str[i]) || str[i] == '_')
+	{
+		write(1, "bucle\n", 6);
+		i++;
 		len++;
+	}
 	command = malloc (len + 2);
 	if (!command)
 		return (NULL);
-	ft_strlcpy(&command[0], &str[i], len + 2);
+	ft_strlcpy(&command[0], &str[i], len + 2); //<-----VERIFICAR ESTO
 	return (command);
 }
 
@@ -144,13 +148,16 @@ static t_list	**expandible_string(t_list **token_list, char **env, int x)
 			}*/
 			else
 			{
+				write(1, "pasa 2", 6);
 				command = get_command(str, i);
 				if (command == NULL)
 					return (NULL);
+				write(1, &command[0], 4);
 				command_len = ft_strlen(command);
 				new_str = ft_getenv(env, &command[1]);
 				free(command);
 			}
+			write(1, "pasa 4", 6);
 			if (new_str == NULL)
 				return (NULL);
 			i = replace_string(&str, new_str, command_len, i);
@@ -184,6 +191,12 @@ t_list	**variable_expansion(t_list **token_list, char **env)
 		}
 		else if (token->type == TOKEN_EXPANDIBLE_STRINGS && token->finished == 0)
 		{
+			if (expandible_string(token_list, env, i) == NULL)
+				return (error_list(token_list));
+		}
+		else if (token->type == TOKEN_ASSIGNMENT_CANDIDATE && token->finished == 0)
+		{
+			write(1, "pasa 1", 6);
 			if (expandible_string(token_list, env, i) == NULL)
 				return (error_list(token_list));
 		}
