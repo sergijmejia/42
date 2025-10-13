@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
+/*Funcion que busca en env la variable name*/
 char	*ft_getenv(char **env, const char *name)
 {
 	int		i;
 	int		len_name;
-	int		len_env;
 	char	*str;
 
 	i = 0;
@@ -29,7 +29,6 @@ char	*ft_getenv(char **env, const char *name)
 	}
 	if (env[i] == NULL)
 		return (NULL);
-	len_env = (int) ft_strlen(env[i]);
 	str = ft_strdup(&env[i][len_name + 1]);
 	if (str == NULL)
 		return (NULL);

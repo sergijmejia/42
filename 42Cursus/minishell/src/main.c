@@ -17,6 +17,7 @@ int	g_exit_status;
 /*Este es un programa para ir testeand tods los componentes*/
 int	main(int argc, char **argv, char **envp)
 {
+	t_list	**tmp_var;
 	t_list	**lst;
 	t_ast	**ast;
 	char	*line;
@@ -24,21 +25,17 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 1)
 	{
-		printf("Entra en el condicional\n");
-		printf("Error por: %s\n",argv[1]);
+		ft_printf("Entra en el condicional\nError por: %s\n",argv[1]);
 		exit(EXIT_FAILURE);
 	}
-	//hay que definir un env minimo en caso que env sea NULL (prueba con env -i bash)
 	g_exit_status = 0;
-	printf("El env que recibimos es:\n\n");
-	print_str(envp);
-	//if (check_env(envp) == 1)
-	//if (envp == NULL)
-		env = dup_env(envp);
-	//else
-	//	env = dup_env(envp);
-	printf("El env que alacenamos es:\n\n");
-    print_str(env);
+	tmp_var = create_var_table();
+	if (tmp_var == NULL)
+	{
+		ft_printf("Error en la creacion de tabla\n");
+		exit(EXIT_FAILURE);
+	}
+	env = dup_env(envp);
 	//while (1)
 	//{
 		//line = readline("minishell$ ");
@@ -51,9 +48,9 @@ int	main(int argc, char **argv, char **envp)
 		if (check_parentheses_balance(line)) //esto en realidad se deberia checkear en el syntax
 											 //para eso hay que modificar el parentheses_divider 
 											 //en el lexer para simpllemente crear los nodos de
-											 //parentesis abierto/cerrado
+											 //parentesis abierto/cerrado 
 		{
-			printf("Error\n");
+			printf("Error: parentheses not balanced\n");
 			free (line);
 		}
 		else if (check_quote_balance(line))
@@ -63,7 +60,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 		{
-			lst = lexer(line, env);
+			lst = lexer(line, env, tmp_var);
 			//free(line);
 			if (!lst)
 			{
@@ -138,5 +135,10 @@ int	main(int argc, char **argv, char **envp)
 		}
 	//}
 	//rl_clear_history();
+	free(((t_temp_lst *)((*tmp_var)->content))->name);
+	free(((t_temp_lst *)((*tmp_var)->content))->value);
+	free((t_temp_lst *)((*tmp_var)->content));
+	free(*tmp_var);
+	free(tmp_var);
 	exit(EXIT_SUCCESS);
 }
