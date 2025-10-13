@@ -81,11 +81,12 @@ static t_list	*create_new_lst_token(t_list *lst, int pos)
 }
 
 /*Funcion que localiza la posicion de espacio, tabulacion o fin linea*/
-static int	ft_pos_special(char *str, char *special_char)
+static int	ft_pos_special(char *str, const char *special_char)
 {
 	int	pos;
 	int	len;
 
+	printf("entra str 1 es %c, str 2 es %c\n", str[0], str[1]);
 	pos = 0;
 	len = (int) ft_strlen(str);
 	while (str[pos])
@@ -94,8 +95,14 @@ static int	ft_pos_special(char *str, char *special_char)
             pos = next_quote(str, pos);
 		if (ft_strcontains(special_char, str[pos]))
 		{
-			if (str[pos] != '&')
+			/*printf("dentro pos = %d, str 1 es %c, str 2 es %c\n", pos, str[0], str[1]);
+			if (str[pos] == '$' && str[pos + 1] != '$')
+			{
+				printf("dentro2 str 1 es %c, str 2 es %c\n", str[0], str[1]);
 				break ;
+			}*/
+			if (str[pos] != '&')
+					break ;
 			else
 			{
 				if (str[pos + 1] == '&')
@@ -106,6 +113,7 @@ static int	ft_pos_special(char *str, char *special_char)
 	}
 	if (pos == len)
 		pos = -1;
+	printf("return %d, str 1 es %c, str 2 es %c\n", pos, str[0], str[1]);
 	return (pos);
 }
 
@@ -117,7 +125,13 @@ static t_list	**create_special(t_list **token_list, int i)
 
 	token = ft_lstpos(*token_list, i);
 	str = ((t_token *)(token->content))->value;
-	if ((str[0] == str[1]) && (str[0] != ')') && (str[0] != '('))
+	printf("El str 0 es %c y el str 1 es %c\n", str[0], str[1]);
+	if ((str[0] == '$') && (str[1] == '?'))
+	{
+		if (double_special_char(token_list, i) == NULL)
+			return (NULL);
+	}
+	else if ((str[0] == str[1]) && (str[0] != ')') && (str[0] != '('))
 	{
 		if (double_special_char(token_list, i) == NULL)
 			return (NULL);
@@ -140,16 +154,18 @@ static t_list	**divide_special(t_list **token_list, int *i, char *special_char)
 	char	*str;
 	int		pos;
 
-	//len = ft_lstsize(*token_list);
+	//len = ft_lstsize(*token_list);	
 	lst = ft_lstpos(*token_list, *i);
 	if (lst == NULL)
 		return (token_list);
 	token = (t_token *)(lst->content);
+	printf("Entra en el divide con %s\n", token->value);
 	pos = ft_pos_special(token->value, special_char);
 	if (pos == -1)
 		return (token_list);
 	else if (pos == 0)
 	{
+		printf("Entra en el if con %s\n", token->value);
 		if (create_special(token_list, *i) == NULL)
 			return (NULL);
 	}
@@ -186,6 +202,7 @@ t_list	**special_char_divider(t_list **token_list)
 	special_char[3] = '&';
 	special_char[4] = ')';
 	special_char[5] = '(';
+	//special_char[6] = '$';
 	special_char[6] = 0;
 	i = 0;
 	while (i < len)

@@ -95,6 +95,7 @@ t_list	**simple_special_char(t_list **token_list, int i)
 	t_token			*new_token;
 	t_list			*new;
 
+	printf("Entra en el single\n");
 	token = ft_lstpos(*token_list, i);
 	if (!token)
 		return (NULL);
@@ -148,6 +149,7 @@ t_list	**double_special_char(t_list **token_list, int i)
 	t_token 		*new_token;
 	t_list			*new;
 
+	printf("Entra en el double\n");
 	token = ft_lstpos(*token_list, i);
 	if (!token)
 		return (NULL);

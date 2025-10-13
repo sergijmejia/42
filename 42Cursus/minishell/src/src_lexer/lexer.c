@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 /*Crea lexer. Pasa todos los argumentos de los string a una lista*/
-t_list	**lexer(char *str, char **env)
+t_list	**lexer(char *str, char **env, t_list **tmp_var)
 {
 	t_list	**lst;
 
@@ -21,7 +21,7 @@ t_list	**lexer(char *str, char **env)
 	if (!lst)
 		return (NULL);
 	*lst = NULL;
-	if (parentheses_divider(lst, str, env) == NULL)
+	if (parentheses_divider(lst, str, env, tmp_var) == NULL)
 		return (NULL);
 	printf("1- La lst es:\n");
 	print_lst(*lst);
@@ -51,7 +51,7 @@ t_list	**lexer(char *str, char **env)
 	printf("6- La lst es:\n");
     print_lst(*lst);
     printf("\n");
-	if (variable_expansion(lst, env) == NULL)
+	if (variable_expansion(lst, env, tmp_var) == NULL)
 		return (NULL);
 	printf("7- La lst es:\n");
     print_lst(*lst);

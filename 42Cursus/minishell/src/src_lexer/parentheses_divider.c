@@ -122,7 +122,7 @@ static t_list	**start_list(t_list **token_list, char *str, int open)
 }
 
 /*Funcion que gestiona la creacion de la lista del contenido entre parentesis*/
-static t_list	**parentheses_list(t_list **token_list, char **env, char *str, int open)
+static t_list	**parentheses_list(t_list **token_list, char **env, char *str, int open, t_list **tmp_var)
 {
 	int		close;
 	char	*str_token;
@@ -133,7 +133,7 @@ static t_list	**parentheses_list(t_list **token_list, char **env, char *str, int
 	if (!str_token)
 		return (NULL);
 	ft_strlcpy(str_token, &str[open + 1], close - open);
-	new_token_list = lexer(str_token, env);
+	new_token_list = lexer(str_token, env, tmp_var);
 	if (!new_token_list)
 	{
 		free(str_token);
@@ -147,7 +147,7 @@ static t_list	**parentheses_list(t_list **token_list, char **env, char *str, int
 }
 
 /*Funcion que gestiona la creacion del TOKEN_WORD despues del parentesis*/
-static t_list	**end_list(t_list **token_list, char **env, char *str, int close, int len)
+static t_list	**end_list(t_list **token_list, char **env, char *str, int close, int len, t_list **tmp_var)
 {
 	char	*str_token;
 	t_list	**new_token_list;
@@ -163,7 +163,7 @@ static t_list	**end_list(t_list **token_list, char **env, char *str, int close, 
 		return (NULL);
 	}
 	*new_token_list = NULL;
-	new_token_list = parentheses_divider(new_token_list, str_token, env);
+	new_token_list = parentheses_divider(new_token_list, str_token, env, tmp_var);
 	if (!new_token_list)
 	{
 		free(str_token);
@@ -176,7 +176,7 @@ static t_list	**end_list(t_list **token_list, char **env, char *str, int close, 
 }
 
 /*Funcion que llama a lexer de forma recursiva para manejar los parentesis*/
-t_list	**parentheses_divider(t_list **token_list, char *str, char **env)
+t_list	**parentheses_divider(t_list **token_list, char *str, char **env, t_list **tmp_var)
 {
 	int		open;
 	int		close;
@@ -194,9 +194,9 @@ t_list	**parentheses_divider(t_list **token_list, char *str, char **env)
 		return (error_list(token_list));
 	if (start_list(token_list, str, open) == NULL)
 		return (error_list(token_list));
-	if (parentheses_list(token_list, env, str, open) == NULL)
+	if (parentheses_list(token_list, env, str, open, tmp_var) == NULL)
 		return (error_list(token_list));
-	if (end_list(token_list, env, str, close, len) == NULL)
+	if (end_list(token_list, env, str, close, len, tmp_var) == NULL)
 		return (error_list(token_list));
 	return (token_list);
 }
