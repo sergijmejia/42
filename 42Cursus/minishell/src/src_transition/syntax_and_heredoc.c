@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:10:02 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 13:08:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:53:44 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ static int	syntax_rparenthesis(t_list **token_list, int pos)
 		return (1);
 	type = ((t_token_ast *) ((ft_lstpos(*token_list, pos - 1))->content))->type;
 	if ((type >= 1 && type <= 5) || type == 7 || type == 8)
-		return (0);
-	else
 		return (1);
+	else
+		return (0);
 }
 
 static int	syntax_name(t_list **token_list, int pos, char **line)

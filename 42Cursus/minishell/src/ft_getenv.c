@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:22:14 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 15:05:39 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:33:42 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,15 @@ char	*ft_getenv(char **env, const char *name)
 		i++;
 	}
 	if (env[i] == NULL)
-		return (NULL);
+	{
+		//write(1, "en getenv entra en if\n", 22);
+		str = (char *) malloc (sizeof(char));
+		if (str == NULL)
+			return (NULL);
+		str[0] = '\0';
+		return (str);
+	}
+	//write(1, "en getenv no entra en if\n", 25);
 	str = ft_strdup(&env[i][len_name + 1]);
 	if (str == NULL)
 		return (NULL);

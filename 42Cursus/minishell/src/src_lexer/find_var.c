@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 12:39:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/15 12:56:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:17:39 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char *find_var(char *var, t_list **tmp_var) //cambiar por una funcion int? para 
     int         len;
     int         i;
     int         size;
-    //char        *name;
+    char        *name;
     t_temp_lst  *var_line;
 
     len = (int) ft_strlen(var);
@@ -27,8 +27,15 @@ char *find_var(char *var, t_list **tmp_var) //cambiar por una funcion int? para 
     {
         var_line = (t_temp_lst *) ((ft_lstpos(*tmp_var, i))->content);
         if (ft_strncmp(var, var_line->name, len + 1) == 0)
-            return (ft_strdup(var_line->value));
+		{
+			name = ft_strdup(var_line->value);
+            return (name);
+		}
         i++;
     }
-    return (NULL);
+	name = (char *) malloc (sizeof(char));
+	if (name == NULL)
+		return (NULL);
+	name[0] = '\0';
+    return (name);
 }

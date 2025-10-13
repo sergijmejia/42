@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:55:03 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 17:11:10 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:24:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	ft_pos_char(char *str)
 }
 
 /*Verifica el type*/
-static t_type_lexer check_type(t_list *lst)
+static t_type_lexer	check_type(t_list *lst)
 {
 	char	*str;
 	int		literal;
@@ -97,27 +97,54 @@ static t_type_lexer check_type(t_list *lst)
 		return (TOKEN_WORD);
 }
 
-/*Funcion que divide un TOKEN_WORD por espacios*/
-static t_list	**divide_space(t_list **token_list, int *i, char *trim_char)
+/*Funcion que crea el nodo que contiene el string previo al divisor*/
+static t_list	**create_before_space(t_list **token_list, int i, int pos)
 {
 	t_list	*first_token;
 	t_list	*new_list_token;
 	char	*str;
+
+	first_token = ft_lstpos(*token_list, i);
+	if (!first_token)
+		return (NULL);
+	new_list_token = create_new_lst_token(first_token, pos);
+	if (!new_list_token)
+		return (NULL);
+	str = ft_substr(((t_token *)(first_token->content))->value, 0, pos);
+	if (!str)
+	{
+		ft_lstclear(&new_list_token, delete_token);
+		return (NULL);
+	}
+	free(((t_token *)(first_token->content))->value);
+	((t_token *)(first_token->content))->value = str;
+	((t_token *)(first_token->content))->type = check_type(first_token);
+	ft_lstadd_pos(token_list, new_list_token, i + 1);
+	return (token_list);
+}
+
+/*Funcion que maneja el caso de un string vacio*/
+static t_list	**empty_str(t_list **token_list, int *i, char *str)
+{
+	ft_lstdel_pos(token_list, delete_token, *i);
+	(*i)--;
+	free(str);
+	return (token_list);
+}
+
+/*Funcion que divide un TOKEN_WORD por espacios*/
+static t_list	**divide_space(t_list **token_list, int *i, char *trim_char)
+{
+	t_list	*first_token;
+	char	*str;
 	int		pos;
 
 	first_token = ft_lstpos(*token_list, *i);
-	if (!first_token)
-		return (NULL);
 	str = ft_strtrim((((t_token *)(first_token->content))->value), trim_char);
 	if (!str)
 		return (NULL);
 	if (*str == '\0')
-	{
-		ft_lstdel_pos(token_list, delete_token, *i);
-		(*i)--;
-		free(str);
-		return (token_list);
-	}
+		return (empty_str(token_list, i, str));
 	free(((t_token *)(first_token->content))->value);
 	((t_token *)(first_token->content))->value = str;
 	pos = ft_pos_char(str);
@@ -128,19 +155,8 @@ static t_list	**divide_space(t_list **token_list, int *i, char *trim_char)
 	}
 	else
 	{
-		new_list_token = create_new_lst_token(first_token, pos);
-		if (!new_list_token)
+		if (create_before_space(token_list, *i, pos) == NULL)
 			return (NULL);
-		str = ft_substr(((t_token *)(first_token->content))->value, 0, pos);
-		if (!str)
-		{
-			ft_lstclear(&new_list_token, delete_token);
-			return (NULL);
-		}
-		free(((t_token *)(first_token->content))->value);
-		((t_token *)(first_token->content))->value = str;
-		((t_token *)(first_token->content))->type = check_type(first_token);
-		ft_lstadd_pos(token_list, new_list_token, *i + 1);
 	}
 	(*i)++;
 	return (divide_space(token_list, i, trim_char));

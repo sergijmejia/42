@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 13:27:55 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 14:08:01 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:06:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static t_list	*create_new_lst_token(t_list *lst, int pos)
 	t_list	*new_list_token;
 
 	token = (t_token *)(lst->content);
-	len_str = (int) ft_strlen(token->value); 
+	len_str = (int) ft_strlen(token->value);
 	str = ft_substr(token->value, pos, len_str);
 	if (!str)
 		return (NULL);
@@ -86,23 +86,16 @@ static int	ft_pos_special(char *str, const char *special_char)
 	int	pos;
 	int	len;
 
-	printf("entra str 1 es %c, str 2 es %c\n", str[0], str[1]);
 	pos = 0;
 	len = (int) ft_strlen(str);
 	while (str[pos])
 	{
 		if (str[pos] == '\'' || str[pos] == '\"')
-            pos = next_quote(str, pos);
+			pos = next_quote(str, pos);
 		if (ft_strcontains(special_char, str[pos]))
 		{
-			/*printf("dentro pos = %d, str 1 es %c, str 2 es %c\n", pos, str[0], str[1]);
-			if (str[pos] == '$' && str[pos + 1] != '$')
-			{
-				printf("dentro2 str 1 es %c, str 2 es %c\n", str[0], str[1]);
-				break ;
-			}*/
 			if (str[pos] != '&')
-					break ;
+				break ;
 			else
 			{
 				if (str[pos + 1] == '&')
@@ -113,7 +106,6 @@ static int	ft_pos_special(char *str, const char *special_char)
 	}
 	if (pos == len)
 		pos = -1;
-	printf("return %d, str 1 es %c, str 2 es %c\n", pos, str[0], str[1]);
 	return (pos);
 }
 
@@ -125,65 +117,86 @@ static t_list	**create_special(t_list **token_list, int i)
 
 	token = ft_lstpos(*token_list, i);
 	str = ((t_token *)(token->content))->value;
-	printf("El str 0 es %c y el str 1 es %c\n", str[0], str[1]);
 	if ((str[0] == '$') && (str[1] == '?'))
 	{
-		if (double_special_char(token_list, i) == NULL)
+		if (special_char(token_list, i, 2) == NULL)
 			return (NULL);
 	}
 	else if ((str[0] == str[1]) && (str[0] != ')') && (str[0] != '('))
 	{
-		if (double_special_char(token_list, i) == NULL)
+		if (special_char(token_list, i, 2) == NULL)
 			return (NULL);
 	}
 	else
 	{
-		if (simple_special_char(token_list, i) == NULL)
+		if (special_char(token_list, i, 1) == NULL)
 			return (NULL);
 	}
 	return (token_list);
 }
 
+/*Funcion que agrega un nodo que contiene str previo al caracter especial*/
+static t_list	**create_not_special(t_list **token_list, int pos, int i)
+{
+	char	*str;
+	t_list	*lst;
+	t_token	*token;
+	t_list	*new_list_token;
+
+	lst = ft_lstpos(*token_list, i);
+	token = (t_token *)(lst->content);
+	str = ft_substr(token->value, 0, pos);
+	if (!str)
+		return (NULL);
+	new_list_token = create_new_lst_token(lst, pos);
+	free(((t_token *)(lst->content))->value);
+	((t_token *)(lst->content))->value = str;
+	((t_token *)(lst->content))->type = check_type(lst);
+	if (!new_list_token)
+		return (NULL);
+	ft_lstadd_pos(token_list, new_list_token, i + 1);
+	return (token_list);
+}
+
 /*Funcion que divide los TOKEN_WORD de los caracteres especiales*/
-static t_list	**divide_special(t_list **token_list, int *i, char *special_char)
+static t_list	**divide_special(t_list **token_list, int *i, char *sp_char)
 {
 	t_list	*lst;
-	t_list	*new_list_token;
 	t_token	*token;
-	//int		len;
-	char	*str;
 	int		pos;
 
-	//len = ft_lstsize(*token_list);	
 	lst = ft_lstpos(*token_list, *i);
 	if (lst == NULL)
 		return (token_list);
 	token = (t_token *)(lst->content);
-	printf("Entra en el divide con %s\n", token->value);
-	pos = ft_pos_special(token->value, special_char);
+	pos = ft_pos_special(token->value, sp_char);
 	if (pos == -1)
 		return (token_list);
 	else if (pos == 0)
 	{
-		printf("Entra en el if con %s\n", token->value);
 		if (create_special(token_list, *i) == NULL)
 			return (NULL);
 	}
 	else
 	{
-		str = ft_substr(token->value, 0, pos);
-		if (!str)
+		if (create_not_special(token_list, pos, *i) == NULL)
 			return (NULL);
-		new_list_token = create_new_lst_token(lst, pos);
-		free(((t_token *)(lst->content))->value);
-		((t_token *)(lst->content))->value = str;
-		((t_token *)(lst->content))->type = check_type(lst);
-		if (!new_list_token)
-			return (NULL);
-		ft_lstadd_pos(token_list, new_list_token, *i + 1);
 	}
 	(*i)++;
-	return (divide_special(token_list, i, special_char));
+	return (divide_special(token_list, i, sp_char));
+}
+
+/*Funcion que define los special char*/
+static void	define_special(char *special_char)
+{
+	special_char[0] = '<';
+	special_char[1] = '>';
+	special_char[2] = '|';
+	special_char[3] = '&';
+	special_char[4] = ')';
+	special_char[5] = '(';
+	special_char[6] = 0;
+	return ;
 }
 
 /*Funcion para buscar los caracteres especiales en todos los TOKEN_WORD*/
@@ -196,14 +209,7 @@ t_list	**special_char_divider(t_list **token_list)
 	char	special_char[7];
 
 	len = ft_lstsize(*token_list);
-	special_char[0] = '<';
-	special_char[1] = '>';
-	special_char[2] = '|';
-	special_char[3] = '&';
-	special_char[4] = ')';
-	special_char[5] = '(';
-	//special_char[6] = '$';
-	special_char[6] = 0;
+	define_special(&special_char[0]);
 	i = 0;
 	while (i < len)
 	{
@@ -213,7 +219,7 @@ t_list	**special_char_divider(t_list **token_list)
 			return (error_list(token_list));
 		if (token->finished == 0)
 		{
-			if (token->type == TOKEN_WORD || token->type == TOKEN_STRING_LITERAL || token->type == TOKEN_EXPANDIBLE_STRINGS) 
+			if (token->type == 0 || token->type == 2 || token->type == 3)
 				if (divide_special(token_list, &i, &special_char[0]) == NULL)
 					return (error_list(token_list));
 		}

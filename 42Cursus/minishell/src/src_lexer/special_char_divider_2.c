@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 12:39:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/15 12:56:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:03:57 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,28 +85,14 @@ static t_type_lexer	select_double_type(char *str)
 		return (TOKEN_WORD);
 }
 
-/*Funcion que agrega nodo de caracter especial simple*/
-t_list	**simple_special_char(t_list **token_list, int i)
+/*Funcion que genera el nuevo nodo con n caracteres*/
+static t_list	*generate_new(t_list *token, int len, int n)
 {
-	char			*str;
-	int				len;
-	t_type_lexer	type;
-	t_list			*token;
-	t_token			*new_token;
-	t_list			*new;
+	t_list	*new;
+	t_token	*new_token;
+	char	*str;
 
-	printf("Entra en el single\n");
-	token = ft_lstpos(*token_list, i);
-	if (!token)
-		return (NULL);
-	len = (int) ft_strlen(((t_token *)(token->content))->value);
-	if (len == 1)
-	{
-		type = select_single_type(((t_token *)(token->content))->value);
-		((t_token *)(token->content))->type = type;
-		return (token_list);
-	}
-	str = ft_substr(((t_token *)(token->content))->value, 1, len);
+	str = ft_substr(((t_token *)(token->content))->value, n, len);
 	if (!str)
 		return (NULL);
 	new_token = (t_token *) malloc (sizeof (t_token));
@@ -116,78 +102,60 @@ t_list	**simple_special_char(t_list **token_list, int i)
 		return (NULL);
 	}
 	new_token->value = str;
-	str = ft_substr(((t_token *)(token->content))->value, 0, 1);
-	if (!str)
-	{
-		delete_token(new_token);
-		return (NULL);
-	}
 	new = ft_lstnew(new_token);
 	if (!new)
 	{
 		delete_token(new_token);
-		free(str);
 		return (NULL);
 	}
 	new_token->type = check_type(new);
 	new_token->finished = 0;
-	free(((t_token *)(token->content))->value);
-	((t_token *)(token->content))->value = str;
-	type = select_single_type(((t_token *)(token->content))->value);
+	return (new);
+}
+
+/*Funcion que asigna valores de un nodo con un string de n special*/
+static t_list	**unique_special(t_list **token_list, int i, int n)
+{
+	t_list			*token;
+	t_type_lexer	type;
+
+	token = ft_lstpos(*token_list, i);
+	if (!token)
+		return (NULL);
+	if (n == 1)
+		type = select_single_type(((t_token *)(token->content))->value);
+	else if (n == 2)
+		type = select_double_type(((t_token *)(token->content))->value);
+	else
+		return (NULL);
 	((t_token *)(token->content))->type = type;
-	ft_lstadd_pos(token_list, new, i + 1);
 	return (token_list);
 }
 
-/*Funcion que agrega nodo de caracter especial doble*/
-t_list	**double_special_char(t_list **token_list, int i)
+/*Funcion que agrega nodo de caracter especial simple*/
+t_list	**special_char(t_list **token_list, int i, int n)
 {
 	char			*str;
 	int				len;
 	t_type_lexer	type;
 	t_list			*token;
-	t_token 		*new_token;
 	t_list			*new;
 
-	printf("Entra en el double\n");
 	token = ft_lstpos(*token_list, i);
 	if (!token)
 		return (NULL);
 	len = (int) ft_strlen(((t_token *)(token->content))->value);
-	if (len == 2)
-	{
-		type = select_double_type(((t_token *)(token->content))->value);
-		((t_token *)(token->content))->type = type;
-		return (token_list);
-	}
-	str = ft_substr(((t_token *)(token->content))->value, 2, len);
+	if (len == n)
+		return (unique_special(token_list, i, n));
+	new = generate_new(token, len, n);
+	if (new == NULL)
+		return (NULL);
+	str = ft_substr(((t_token *)(token->content))->value, 0, 1);
 	if (!str)
 		return (NULL);
-	new_token = (t_token *) malloc (sizeof (t_token));
-	if (!new_token)
-	{
-		free(str);
-		return (NULL);
-	}
-	new_token->value = str;
-	str = ft_substr(((t_token *)(token->content))->value, 0, 2);
-	if (!str)
-	{
-		delete_token(new_token);
-		return (NULL);
-	}
-	new = ft_lstnew(new_token);
-	if (!new)
-	{
-		delete_token(new_token);
-		free(str);
-		return (NULL);
-	}
-	new_token->type = check_type(new);
-	new_token->finished = 0;
 	free(((t_token *)(token->content))->value);
 	((t_token *)(token->content))->value = str;
-	type = select_double_type(((t_token *)(token->content))->value);
+	type = select_single_type(((t_token *)(token->content))->value);
 	((t_token *)(token->content))->type = type;
 	ft_lstadd_pos(token_list, new, i + 1);
 	return (token_list);

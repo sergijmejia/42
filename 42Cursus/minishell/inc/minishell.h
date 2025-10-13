@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/10 15:06:24 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:00:28 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,8 @@ t_list **parentheses_divider(t_list **token_list, char *str, char **env, t_list 
 t_list **assignment_divider(t_list **token_list);
 t_list **space_divider(t_list **token_list);
 t_list **special_char_divider(t_list **token_list);
-t_list **simple_special_char(t_list **token_list, int i);
-t_list **double_special_char(t_list **token_list, int i);
+t_list **special_char(t_list **token_list, int i, int n);
+//t_list **double_special_char(t_list **token_list, int i);
 t_list **find_redirection(t_list **token_list);
 t_list **find_wildcard(t_list **token_list);
 t_list **variable_expansion(t_list **token_list, char **env, t_list **tmp_var);
