@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:36:48 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/13 16:18:15 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:56:51 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ static char	*get_command(char *str, int x)
 	len = 0;
 	while (ft_isalpha(str[i]) || ft_isdigit(str[i]) || str[i] == '_')
 	{
-		write(1, "bucle\n", 6);
-		write(1, &str[i], 1);
 		i++;
 		len++;
 	}
@@ -58,132 +56,144 @@ static char	*get_command(char *str, int x)
 		return (NULL);
 	ft_strlcpy(&command[0], &str[x], len + 2);
 	len = ft_strlen(command);
-	write(1, "el command es: ", 15);
-	write(1, command, len + 1);
-	write(1, "\n", 1);
 	return (command);
 }
 
-/*Funcion que gestiona cuando el segundo caracter != de $*/
-static char *second_exp_var(char *str, int i, char **env, t_list **tmp_var, int *command_len)
+/*Funcion que gestiona cuando el segundo caracter != de $ y de ?*/
+static char	*second_exp_var_2(char *str, int i, int *command_len, t_aux *aux)
 {
 	char	*command;
 	char	*new_str;
-	
+
+	command = get_command(str, i);
+	if (command == NULL)
+		return (NULL);
+	*command_len = ft_strlen(command);
+	new_str = find_var((&command[1]), aux->tmp_var);
+	if (new_str == NULL)
+	{
+		free(command);
+		return (NULL);
+	}
+	if (new_str[0] == '\0')
+	{
+		free(new_str);
+		new_str = ft_getenv(aux->env, &command[1]);
+	}
+	free(command);
+	return (new_str);
+}
+
+/*Funcion que gestiona cuando el segundo caracter != de $*/
+static char	*second_exp_var(char *str, int i, int *command_len, t_aux *aux)
+{
+	char	*new_str;
+	char	**env;
+	t_list	**tmp_var;
+
+	env = aux->env;
+	tmp_var = aux->tmp_var;
 	if (str[i + 1] == '?')
 	{
 		*command_len = 2;
 		new_str = ft_itoa(g_exit_status);
 	}
 	else
-	{
-		command = get_command(str, i);
-		if (command == NULL)
-			return (NULL);
-		*command_len = ft_strlen(command);
-		new_str = find_var((&command[1]), tmp_var);
-		if (new_str == NULL)
-		{
-			free(command);
-			return (NULL);
-		}
-		if (new_str[0] == '\0')
-		{
-			free(new_str);
-			new_str = ft_getenv(env, &command[1]);
-		}
-		free(command);
-	}
+		new_str = second_exp_var_2(str, i, command_len, aux);
 	return (new_str);
 }
 
-/*Funcion que gestiona la expansion de varables en TOKEN_EXPANDIBLE_STRINGS*/
-static t_list	**expandible_string(t_list **token_list, char **env, int x, t_list **tmp_var)
+/*Funcion que gestiona el bucle de while(str[i])*/
+static t_list	**expandible_string_loop(t_aux *aux, int *i, char **str)
 {
-	int		i;
-	int		command_len;
-	char	*str;
-	//char	*command;
+	t_list	**lst;
 	char	*new_str;
+	int		command_len;
 
-	i = 0;
-	str = ((t_token *)((ft_lstpos(*token_list, x))->content))->value;
-	while (str[i])
+	lst = aux->token_list;
+	if ((*str)[*i] == '$' && (*str)[*i + 1] != '\0')
 	{
-		if (str[i] == '$' && str[i + 1] != '\0')
+		if ((*str)[*i + 1] != '$')
 		{
-			if (str[i + 1] != '$')
-			{
-				/*if (str[i + 1] == '?')
-				{
-					command_len = 2;
-					new_str = ft_itoa(g_exit_status);
-				}
-				else
-				{
-					command = get_command(str, i);
-					if (command == NULL)
-						return (NULL);
-					command_len = ft_strlen(command);
-					new_str = find_var((&command[1]), tmp_var);
-					if (new_str == NULL)
-					{
-						free(command);
-						return (NULL);
-					}
-					if (new_str[0] == '\0')
-					{
-						free(new_str);
-						new_str = ft_getenv(env, &command[1]);
-					}
-					free(command);
-				}*/
-				new_str = second_exp_var(str, i, env, tmp_var, &command_len);
-				if (new_str == NULL)
-					return (NULL);
-				i = replace_string(&str, new_str, command_len, i);
-				free(new_str);
-				if (i == -1)
-					return (NULL);
-				((t_token *)((ft_lstpos(*token_list, x))->content))->value = str;
-			}
-			else
-				i++;
+			new_str = second_exp_var(*str, *i, &command_len, aux);
+			if (new_str == NULL)
+				return (NULL);
+			*i = replace_string(str, new_str, command_len, *i);
+			free(new_str);
+			if (*i == -1)
+				return (NULL);
+			((t_token *)((ft_lstpos(*lst, aux->x))->content))->value = *str;
 		}
 		else
-			i++;
+			(*i)++;
 	}
-	return (token_list);
+	else
+		(*i)++;
+	return (aux->token_list);
+}
+
+/*Funcion que gestiona la expansion de varables en TOKEN_EXPANDIBLE_STRINGS*/
+static t_list	**exp_string(t_list **lst, char **env, int x, t_list **tmp_var)
+{
+	int		i;
+	char	*str;
+	t_aux	*aux;
+
+	i = 0;
+	aux = (t_aux *) malloc (sizeof(t_aux));
+	aux->token_list = lst;
+	aux->tmp_var = tmp_var;
+	aux->env = env;
+	aux->x = x;
+	str = ((t_token *)((ft_lstpos(*lst, x))->content))->value;
+	while (str[i])
+	{
+		if (expandible_string_loop(aux, &i, &str) == NULL)
+		{
+			free(aux);
+			return (NULL);
+		}
+	}
+	free(aux);
+	return (lst);
+}
+
+/*Funcion que gestiona el loop de variable_expansion*/
+t_list	**var_expansion_loop(t_list **lst, char **env, int i, t_list **tmp_var)
+{
+	t_token	*token;
+
+	token = (t_token *)((ft_lstpos(*lst, i))->content);
+	if (token->type == TOKEN_WORD && token->finished == 0)
+	{
+		if (exp_string(lst, env, i, tmp_var) == NULL)
+			return (NULL);
+	}
+	else if (token->type == TOKEN_EXPANDIBLE_STRINGS && token->finished == 0)
+	{
+		if (exp_string(lst, env, i, tmp_var) == NULL)
+			return (NULL);
+	}
+	else if (token->type == TOKEN_ASSIGNMENT_CANDIDATE && token->finished == 0)
+	{
+		if (exp_string(lst, env, i, tmp_var) == NULL)
+			return (NULL);
+	}
+	return (lst);
 }
 
 /*Funcion que gestiona la exansion de variables*/
 t_list	**variable_expansion(t_list **token_list, char **env, t_list **tmp_var)
 {
 	int		i;
-	t_token	*token;
 	t_list	*lst;
 
 	i = 0;
 	lst = ft_lstpos(*token_list, i);
 	while (lst != NULL)
 	{
-		token = (t_token *)(lst->content);
-		if (token->type == TOKEN_WORD && token->finished == 0)
-		{
-			if(expandible_string(token_list, env, i, tmp_var) == NULL)
-				return (error_list(token_list));
-		}
-		else if (token->type == TOKEN_EXPANDIBLE_STRINGS && token->finished == 0)
-		{
-			if (expandible_string(token_list, env, i, tmp_var) == NULL)
-				return (error_list(token_list));
-		}
-		else if (token->type == TOKEN_ASSIGNMENT_CANDIDATE && token->finished == 0)
-		{
-			write(1, "pasa 1", 6);
-			if (expandible_string(token_list, env, i, tmp_var) == NULL)
-				return (error_list(token_list));
-		}
+		if (var_expansion_loop(token_list, env, i, tmp_var) == NULL)
+			return (error_list(token_list));
 		i++;
 		lst = ft_lstpos(*token_list, i);
 	}

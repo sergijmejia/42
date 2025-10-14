@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 09:16:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/11 10:06:08 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 09:47:14 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,30 @@ static int	check_env(char **envp)
 	return (missing);
 }
 
+/*Funcion que deuelve el siguiente SHLVL*/
+static char	*next_shlvl(char **envp, int pos_envp)
+{
+	int		num;
+	char	*new_shlvl;
+	char	*env;
+	char	*aux;
+
+	num = ft_atoi(&envp[pos_envp][6]) + 1;
+	new_shlvl = ft_itoa(num);
+	if (new_shlvl == NULL)
+		return (NULL);
+	aux = ft_strdup("SHLVL=");
+	if (aux == NULL)
+	{
+		free(new_shlvl);
+		return (NULL);
+	}
+	env = ft_strjoin(aux, new_shlvl);
+	free(new_shlvl);
+	free(aux);
+	return (env);
+}
+
 /*Funcion que pasa los datos de cualquier linea de envp a env exepto PWD, _*/
 static char	*copy_envp_line(char **envp, int pos_envp, int *check)
 {
@@ -58,7 +82,8 @@ static char	*copy_envp_line(char **envp, int pos_envp, int *check)
 			pos_lvl++;
 		}
 		if (pos_lvl == len_lvl)
-			env = ft_strdup(envp[pos_envp]);
+			env = next_shlvl(envp, pos_envp);
+			//env = ft_strdup(envp[pos_envp]);
 		*check = 1;
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:56:15 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/11 11:51:29 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 13:10:17 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,6 @@ static int	count_new_len(char *str)
 	{
 		if (quote_char(*str, &c, &inside) == 0)
 			len++;
-		/*if (*str == '\'' || *str == '\"')
-		{
-			if (inside == 0)
-			{
-				c = *str;
-				inside = 1;
-			}
-			else
-			{
-				if (*str == c)
-					inside = 0;
-				else
-					len++;
-			}
-		}
-		else
-			len++;*/
 		str++;
 	}
 	return (len);
@@ -91,37 +74,14 @@ static char	*quote_str(char *str, int len)
 	count_str = 0;
 	count_new_str = 0;
 	while (str[count_str])
-    {
+	{
 		if (quote_char(str[count_str], &c, &inside) == 0)
 		{
 			new_str[count_new_str] = str[count_str];
 			count_new_str++;
 		}
-        /*if (str[count_str] == '\'' || str[count_str] == '\"')
-        {
-            if (inside == 0)
-            {
-                c = str[count_str];
-                inside = 1;
-            }
-            else
-            {
-                if (str[count_str] == c)
-                    inside = 0;
-                else
-                {
-                    new_str[count_new_str] = str[count_str];
-                    count_new_str++;
-                }
-            }
-        }
-        else
-        {
-            new_str[count_new_str] = str[count_str];
-            count_new_str++;
-        }*/
-        count_str++;
-    }
+		count_str++;
+	}
 	return (new_str);
 }
 
@@ -150,10 +110,11 @@ static t_list	**quote_list(t_list **token_list, int pos)
 TOKEN_EXPANDIBLE_STRINGS (3), TOKEN_REDIRECTION_WORD (17)*/
 t_list	**delete_quotes(t_list **token_list)
 {
-	int		i;
-	int		len;
-	t_list	*token_list_aux;
-	t_token	*token;
+	int				i;
+	int				len;
+	t_list			*token_list_aux;
+	t_token			*token;
+	t_type_lexer	type;
 
 	i = 0;
 	len = ft_lstsize(*token_list);
@@ -163,7 +124,8 @@ t_list	**delete_quotes(t_list **token_list)
 		token = (t_token *)(token_list_aux->content);
 		if (!token_list_aux)
 			return (error_list(token_list));
-		if (token->type == 0 || token->type == 2 || token->type == 3 || token->type == 9 || token->type == 17)
+		type = token->type;
+		if (type == 0 || type == 2 || type == 3 || type == 9 || type == 17)
 		{
 			if (quote_list(token_list, i) == NULL)
 				return (error_list(token_list));

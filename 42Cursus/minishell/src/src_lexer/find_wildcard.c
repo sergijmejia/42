@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 13:27:05 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/15 13:38:59 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 09:06:48 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	wildcard(char *str)
 		if (*str == '*')
 			return (1);
 		str++;
-	} 
+	}
 	return (0);
 }
 
@@ -47,5 +47,5 @@ t_list	**find_wildcard(t_list **token_list)
 		}
 		i++;
 	}
-	return (token_list); 
+	return (token_list);
 }

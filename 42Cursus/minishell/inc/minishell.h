@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/13 13:00:28 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 10:26:37 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ typedef struct s_token
 	char *value;
 	int finished;
 } t_token;
+
+/*Estructura auxiliar para poder manejar la cantidad de argumentos en la norma*/
+typedef struct s_aux
+{
+	t_list **token_list;
+	t_list **tmp_var;
+	char **env;
+	int x;
+} t_aux;
 
 /*Estructuras de Transicion entre Lexer y Parser*/
 /*Tipos de tokens en fase de transicion lexer/parser*/

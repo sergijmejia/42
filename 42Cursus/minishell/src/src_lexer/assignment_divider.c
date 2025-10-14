@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 14:07:41 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/18 16:42:17 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:13:27 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ static int	next_quote(char *str, char c)
 	}
 	return (0);
 }
-
-/*static t_list *ft_malloc(int x)
-{
-    if (x == 0)
-        return (NULL);
-    return (NULL);
-}*/
 
 /*Funcion que crea un nuevo nodo*/
 static t_list	*create_node(char *str, int start, int end, int type)
@@ -65,7 +58,7 @@ static t_list	*create_node(char *str, int start, int end, int type)
 
 /*Funcion que verifica que el caracter c es correcto para el nombre*/
 /*Si x = 0 estamos evaluando la primera letra. x = 1 cualquier otra letra*/
-static int	correct_name_char(char	c, int x)
+static int	correct_name_char(char c, int x)
 {
 	if (x == 0)
 	{
@@ -130,75 +123,139 @@ static int	find_end_assignment(char *str, int pos)
 	return (pos);
 }
 
-/*Funcion que agrega los nuevos nodos*/
-static t_list	**add_nodes(t_list **token_list, int *i, int start, int end)
+/*Funcion que genera el puntero doble para n *t_list*/
+static t_list	**define_list_nulls(int n)
+{
+	t_list	**new_nodes;
+	int		i;
+
+	new_nodes = (t_list **) malloc (n * sizeof(t_list *));
+	if (new_nodes == NULL)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		new_nodes[i] = NULL;
+		i++;
+	}
+	return (new_nodes);
+}
+
+/*Funcion que gestiona la definicion del nodo inicial si start > 0*/
+static t_list	**start_node(t_list **new_nodes, char *str, int start)
+{
+	new_nodes[0] = create_node(str, 0, start - 1, 0);
+	if (new_nodes[0] == NULL)
+	{
+		free(new_nodes[1]);
+		free(new_nodes[2]);
+		free(new_nodes);
+		return (NULL);
+	}
+	return (new_nodes);
+}
+
+/*Funcion que gestiona la definicion de nodo assignment*/
+static t_list	**assignment_node(t_list **new, char *str, int start, int end)
+{
+	new[1] = create_node(str, start, end, 9);
+	if (new[1] == NULL)
+	{
+		free(new[0]);
+		free(new[2]);
+		free(new);
+		return (NULL);
+	}
+	return (new);
+}
+
+/*Funcion que gestiona la definicion del nodo final si len -1 >= end + 1*/
+static t_list	**final_node(t_list **new_nodes, char *str, int end, int len)
+{
+	new_nodes[2] = create_node(str, end + 1, len - 1, 0);
+	if (new_nodes[2] == NULL)
+	{
+		free(new_nodes[0]);
+		free(new_nodes[1]);
+		free(new_nodes);
+		return (NULL);
+	}
+	return (new_nodes);
+}
+
+/*Funcion que genera los nuevos nodos*/
+static t_list	**generate_nodes(t_list **lst, int i, int start, int end)
 {
 	int		len;
 	char	*str;
-	t_list	*lst_token_word_start;
-	t_list	*lst_token_word_end;
-	t_list	*lst_token_assignment;
+	t_list	**new_nodes;
 
-	str = ((t_token *)(ft_lstpos(*token_list, *i)->content))->value;
+	str = ((t_token *)(ft_lstpos(*lst, i)->content))->value;
+	new_nodes = define_list_nulls(3);
+	if (new_nodes == NULL)
+		return (NULL);
 	if (start > 0)
 	{
-		lst_token_word_start = create_node(str, 0, start - 1, 0);
-		if (lst_token_word_start == NULL)
+		if (start_node(new_nodes, str, start) == NULL)
 			return (NULL);
 	}
-	lst_token_assignment = create_node(str, start, end, 9);
-	if (lst_token_assignment == NULL)
-	{
-		ft_lstdelone(lst_token_word_start, delete_token);
+	if (assignment_node(new_nodes, str, start, end) == NULL)
 		return (NULL);
-	}
 	len = ft_strlen(str);
 	if (len -1 >= end + 1)
 	{
-		lst_token_word_end = create_node(str, end + 1, len - 1, 0);
-		if (lst_token_word_end == NULL)
-		{
-			ft_lstdelone(lst_token_word_start, delete_token);
-			ft_lstdelone(lst_token_assignment, delete_token);
+		if (final_node(new_nodes, str, end, len) == NULL)
 			return (NULL);
-		}
 	}
-	ft_lstdel_pos(token_list, delete_token, *i);
-	if (start > 0)
+	return (new_nodes);
+}
+
+/*Funcion que agrega los nuevos nodos*/
+static t_list	**add_nodes(t_list **lst, t_list **new, int *i, int pos[2])
+{
+	int		len;
+	char	*str;
+
+	str = ((t_token *)(ft_lstpos(*lst, *i)->content))->value;
+	len = ft_strlen(str);
+	ft_lstdel_pos(lst, delete_token, *i);
+	if (pos[0] > 0)
 	{
-		ft_lstadd_pos(token_list, lst_token_word_start, *i);
+		ft_lstadd_pos(lst, new[0], *i);
 		(*i)++;
 	}
-	ft_lstadd_pos(token_list, lst_token_assignment, *i);
-	if (len -1 >= end + 1)
+	ft_lstadd_pos(lst, new[1], *i);
+	if (len - 1 >= pos[1] + 1)
 	{
 		(*i)++;
-		ft_lstadd_pos(token_list, lst_token_word_end, *i);
+		ft_lstadd_pos(lst, new[2], *i);
 	}
-	return (token_list);
+	free(new);
+	return (lst);
 }
 
 /*Funcionn que crea un TOKEN_ASSIGNMENT_CANDIDATE*/
-static int	assignment_candidate(t_list **token_list, int *i, int pos)
+static int	assignment_candidate(t_list **lst, int *i, int pos)
 {
-	int		start;
-	int		end;
-	//int		len;
+	int		start_end[2];
 	char	*str_token;
 	t_token	*token;
+	t_list	**new_nodes;
 
-	token = (t_token *)(ft_lstpos(*token_list, *i)->content);
+	token = (t_token *)(ft_lstpos(*lst, *i)->content);
 	str_token = token->value;
-	//len = (int) ft_strlen(str_token);
-	start = find_start_assignment(str_token, pos);
-	if (start != -1)
+	start_end[0] = find_start_assignment(str_token, pos);
+	if (start_end[0] != -1)
 	{
-		end = find_end_assignment(str_token, pos + 1) - 1;
-		if (end != -1)
+		start_end[1] = find_end_assignment(str_token, pos + 1) - 1;
+		if (start_end[1] != -1)
 		{
-			if (add_nodes(token_list, i, start, end) == NULL)
+			new_nodes = generate_nodes(lst, *i, start_end[0], start_end[1]);
+			if (new_nodes == NULL)
 				return (-1);
-			else 
+			if (add_nodes(lst, new_nodes, i, start_end) == NULL)
+				return (-1);
+			else
 				return (1);
 		}
 	}
@@ -218,59 +275,6 @@ static int	find_next_equal(char *str, int pos)
 	}
 	return (-1);
 }
-
-/*Funcio que encuentra todos los TOKEN_ASSIGNMENT_CANDIDATE
-t_list	**assignment_divider(t_list **token_list, char *str)
-{
-	int		i;
-	int		assignment;
-	char	*str_token;
-	t_list	*lst_token_word;
-
-	lst_token_word = create_node(str, 0, ft_strlen(str) - 1, 0);
-	if (lst_token_word == NULL)
-		return (error_list(token_list));
-	ft_lstadd_back(token_list, lst_token_word);
-	str_token = ((t_token *)(lst_token_word->content))->value;
-	i = find_next_equal(str_token, 0);
-	while (i > 0)
-	{
-		assignment = assignment_candidate(token_list, i);
-		if (assignment == -1)
-			return (error_list(token_list));
-		else if (assignment == 0)
-			i = find_next_equal(str_token, i + 1);
-		else
-		{
-			str_token = ((t_token *)(ft_lstlast(*token_list)->content))->value;
-			i = find_next_equal(str_token, 0);
-		}
-	}
-	return (token_list);
-}*/
-
-//tengo que reparar esta parte. Lo que tiene que pasar es que reciba la lista en lugar del string.
-//debe mirar en cada token a ver si es TOKEN_WORD
-//en caso de ser TOKEN_WORD buscar los posible assignment 
-//
-//Lo que esta hecho hasta ahora es un apano que deberia ser corregido
-//Lo que esta arriba comantado es como estaba originalmente. Funciona pero no se puede introducir el parentheses_divider
-
-/*Funcion que introduce new en token list en la pos i
-static int	replace_list(t_list **token_list, t_list **new_token_list, int *i)
-{
-	t_list	*lst_del;
-	t_list	*lst_aux;
-
-	lst_del = ft_lstpos(*token_list, *i);
-	if (*i = 0)
-	{
-		lst_aux = ft_lstpos(*token_list, 1);
-		(ft_lstlast(new_token_list))->next = lst_aux;
-		token_list = new_token_list;
-
-	}
-}*/
 
 /*Funcio que encuentra todos los TOKEN_ASSIGNMENT_CANDIDATE*/
 static t_list	**divide_assignment(t_list **token_list, int *i)
