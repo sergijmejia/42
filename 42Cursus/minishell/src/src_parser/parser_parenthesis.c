@@ -6,38 +6,49 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 09:49:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/03 16:48:14 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/17 16:11:35 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*Funcion que gestiona el bucle de info_parenthesis*/
+static t_list	*into_parenthesis_loop(t_list **token_list, int i)
+{
+	t_token_ast	*token;
+	t_token_ast	*new_token;
+	t_list		*new_node;
+
+	token = (t_token_ast *)((ft_lstpos(*token_list, i))->content);
+	new_token = duplicate_token_tr(token);
+	if (new_token == NULL)
+		return (NULL);
+	new_node = ft_lstnew(new_token);
+	if (new_node == NULL)
+	{
+		delete_token_ast(new_token);
+		return (NULL);
+	}
+	return (new_node);
+}
 
 /*Funcion que divide token list hasta pos tomando el lado izquierdo*/
 static t_list	**into_parenthesis(t_list **token_list, int size)
 {
 	t_list		**new_list;
 	t_list		*new_node;
-	t_token_ast	*token;
-	t_token_ast	*new_token;
 	int			i;
 
-	new_list = (t_list	**) malloc (sizeof(t_list *));
+	new_list = (t_list **) malloc (sizeof(t_list *));
 	if (new_list == NULL)
 		return (NULL);
 	*new_list = NULL;
 	i = 1;
 	while (i < size - 1)
 	{
-		token = (t_token_ast *)((ft_lstpos(*token_list, i))->content);
-		new_token = duplicate_token_tr(token);
-		if (new_token == NULL)
-			return (error_tr(new_list));
-		new_node = ft_lstnew(new_token);
+		new_node = into_parenthesis_loop(token_list, i);
 		if (new_node == NULL)
-		{
-			delete_token_ast(new_token);
 			return (error_tr(new_list));
-		}
 		ft_lstadd_back(new_list, new_node);
 		i++;
 	}

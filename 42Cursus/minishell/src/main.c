@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/14 09:49:20 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/17 10:39:50 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,13 @@ int	main(int argc, char **argv, char **envp)
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
-			printf("\nA la salida de tansition:\n");
-			printf("\n");
-			print_lst_tr(*lst);
-			printf("\n");
 			if (command_union(lst) == NULL)
 			{
 				free(line);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
-			printf("\nA la salida de union lst apunta a %p y es:\n", lst);
+			printf("\nA la salida de tansition:\n");
 			printf("\n");
 			print_lst_tr(*lst);
 			printf("\n");
@@ -124,6 +120,11 @@ int	main(int argc, char **argv, char **envp)
 			printf("\nY la lista lst apunta a %p y es:\n", lst);
             print_lst_tr(*lst);
             printf("\n");
+
+
+
+
+
 			error_ast(ast);
 			error_tr(lst);
 			free_str(env);

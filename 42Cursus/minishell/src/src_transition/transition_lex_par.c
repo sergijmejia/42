@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 11:37:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/25 16:36:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/17 14:34:38 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static t_token	*duplicate_token(t_token *token)
 }
 
 /*Funcion que crea un nuevo token de transicion*/
-static  t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
+static t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
 {
 	t_token_ast	*new_token;
 	t_type_tr	tr_type;
@@ -84,7 +84,7 @@ static t_list	*special_node(t_list **token_list, int pos, t_type_lexer type)
 	{
 		free_str(str);
 		delete_token_ast(new_token);
-		return(NULL);
+		return (NULL);
 	}
 	return (new_node);
 }
@@ -130,12 +130,12 @@ static char	**str_command(t_list **lst, int *pos)
 	while (*pos < len)
 	{
 		type = ((t_token *)((ft_lstpos(*lst, *pos))->content))->type;
-		if (!((type >= 0 && type <=3) ||  type == 16))
+		if (!((type >= 0 && type <= 3) || type == 16))
 			break ;
 		(*pos)++;
 	}
 	str = create_str_command(lst, start, *pos);
-	if(!str)
+	if (!str)
 		return (NULL);
 	return (str);
 }
@@ -152,7 +152,7 @@ static int	check_wildcard(t_list **lst, int pos)
 	while (pos < len)
 	{
 		type = ((t_token *)((ft_lstpos(*lst, pos))->content))->type;
-		if (!((type >= 0 && type <=3) ||  type == 16))
+		if (!((type >= 0 && type <= 3) || type == 16))
 			break ;
 		if (type == 16)
 		{
@@ -185,8 +185,25 @@ static t_list	*command_node(t_list **token_list, int *pos)
 	{
 		free_str(str);
 		delete_token_ast(new_token);
-		return(NULL);
+		return (NULL);
 	}
+	return (new_node);
+}
+
+/*Funcion que gestiona el loop de make_transition*/
+static t_list	*make_transition_loop(t_list **token_list, int *pos)
+{
+	t_type_lexer	type;
+	t_list			*new_node;
+
+	type = ((t_token *)((ft_lstpos(*token_list, *pos))->content))->type;
+	if (type >= 4)
+	{
+		new_node = special_node(token_list, *pos, type);
+		(*pos)++;
+	}
+	else
+		new_node = command_node(token_list, pos);
 	return (new_node);
 }
 
@@ -195,7 +212,6 @@ static t_list	**make_transition(t_list **token_list)
 {
 	t_list			**new_lst;
 	t_list			*new_node;
-	t_type_lexer	type;
 	int				pos;
 	int				len;
 
@@ -207,14 +223,7 @@ static t_list	**make_transition(t_list **token_list)
 	*new_lst = NULL;
 	while (pos < len)
 	{
-		type = ((t_token *)((ft_lstpos(*token_list, pos))->content))->type;
-		if (type >= 4)
-		{
-			new_node = special_node(token_list, pos, type);
-			pos++;
-		}
-		else
-			new_node = command_node(token_list, &pos);
+		new_node = make_transition_loop(token_list, &pos);
 		if (!new_node)
 			return (error_tr(new_lst));
 		ft_lstadd_back(new_lst, new_node);
@@ -228,14 +237,14 @@ static t_list	**make_transition(t_list **token_list)
 /*Funcion que crea la lista hasta '('*/
 static t_list	**lst_until_open(t_list **token_list, int open)
 {
-	int	i;
+	int		i;
 	t_list	**new_lst;
 	t_list	*new_node;
 	t_token	*new_token;
 	t_token	*token;
 
 	i = 0;
-	new_lst = (t_list **) malloc (sizeof(t_list*));
+	new_lst = (t_list **) malloc (sizeof(t_list *));
 	if (!new_lst)
 		return (NULL);
 	*new_lst = NULL;
@@ -277,7 +286,7 @@ static t_list	**lst_inside_parentheses(t_list **lst, int open, int close)
 	t_token	*new_token;
 	t_token	*token;
 
-	new_lst = (t_list **) malloc (sizeof(t_list*));
+	new_lst = (t_list **) malloc (sizeof(t_list *));
 	if (!new_lst)
 		return (NULL);
 	*new_lst = NULL;
@@ -293,7 +302,7 @@ static t_list	**lst_inside_parentheses(t_list **lst, int open, int close)
 		ft_lstadd_back(new_lst, new_node);
 		open++;
 	}
-	return (new_lst);	
+	return (new_lst);
 }
 
 /*Funcion que encuentra la pos del ')' correspondiente*/
@@ -349,7 +358,7 @@ static t_list	**lst_until_end(t_list **token_list, int close)
 	t_token	*token;
 	int		len;
 
-	new_lst = (t_list **) malloc (sizeof(t_list*));
+	new_lst = (t_list **) malloc (sizeof(t_list *));
 	if (!new_lst)
 		return (NULL);
 	*new_lst = NULL;
@@ -413,7 +422,7 @@ static int	find_open_parenthesis(t_list **open_list)
 }
 
 /*Funcion que encuentra el ')' correspondiente de la lista*/
-static int	find_close_parenthesis(t_list **close_list, int	pos)
+static int	find_close_parenthesis(t_list **close_list, int pos)
 {
 	t_token			*token;
 	t_type_lexer	type;
@@ -428,7 +437,7 @@ static int	find_close_parenthesis(t_list **close_list, int	pos)
 		type = token->type;
 		if (type == TOKEN_RPAREN)
 			count++;
-		else if(type == TOKEN_LPAREN)
+		else if (type == TOKEN_LPAREN)
 		{
 			count--;
 			if (count == 0)
@@ -437,6 +446,33 @@ static int	find_close_parenthesis(t_list **close_list, int	pos)
 		pos++;
 	}
 	return (-1);
+}
+
+/*Funcion que asigna el contenido a new_lst*/
+static t_list	**fill_new_lst(t_list **token_list, int open, int close)
+{
+	t_list	**new_lst;
+
+	new_lst = (t_list **) malloc (sizeof(t_list *));
+	if (!new_lst)
+		return (NULL);
+	*new_lst = NULL;
+	if (start_list(token_list, new_lst, open) == NULL)
+	{
+		error_tr(new_lst);
+		return (NULL);
+	}
+	if (parentheses_list(token_list, new_lst, open) == NULL)
+	{
+		error_tr(new_lst);
+		return (NULL);
+	}
+	if (end_list(token_list, new_lst, close) == NULL)
+	{
+		error_tr(new_lst);
+		return (NULL);
+	}
+	return (new_lst);
 }
 
 /*Funcion que llama a transicion lexer/parser de forma recursiva
@@ -456,30 +492,11 @@ t_list	**transition_lex_par(t_list **token_list)
 	close = find_close_parenthesis(token_list, open + 1);
 	if (close == -1)
 		return (error_list(token_list));
-	new_lst = (t_list **) malloc (sizeof(t_list *));
-	if (!new_lst)
+	new_lst = fill_new_lst(token_list, open, close);
+	if (new_lst == NULL)
 		return (error_list(token_list));
-	*new_lst = NULL;
-	if (start_list(token_list, new_lst, open) == NULL)
-	{
-		error_tr(new_lst);
-		//free(new_lst);
-		return (error_list(token_list));
-	}
-	if (parentheses_list(token_list, new_lst, open) == NULL)
-	{
-		error_tr(new_lst);
-		//free(new_lst);
-		return (error_list(token_list));
-	}
-	if (end_list(token_list, new_lst, close) == NULL)
-	{
-		error_tr(new_lst);
-		//free(new_lst);
-		return (error_list(token_list));
-	}
 	ft_lstclear(token_list, delete_token);
 	*token_list = *new_lst;
 	free(new_lst);
-    return (token_list);
+	return (token_list);
 }

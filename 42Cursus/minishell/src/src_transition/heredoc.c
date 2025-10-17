@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 11:41:44 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/07 12:50:16 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/17 15:34:36 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static char	**heredoc_size(int *fd)
 	return (heredoc_str);
 }
 
+/*Funcio que ingresa, linea por linea, los strings en el archivo temporal*/
 static char	**fill_heredoc_str(char **heredoc_str, char **line, int fd)
 {
 	int		i;
@@ -123,6 +124,26 @@ static char	**add_heredoc(int fd, char **line, char *heredoc)
 	return (heredoc_str);
 }
 
+/*Funcion que crea y abre el archivo temporal*/
+static int	create_open_heredoc(char *heredoc)
+{
+	int	fd;
+
+	if (create_heredoc_file(heredoc))
+	{
+		free(heredoc);
+		return (-1);
+	}
+	fd = open(".tmp_minishell", O_RDONLY);
+	if (fd == -1)
+	{
+		unlink(".tmp_minishell");
+		free(heredoc);
+		return (-1);
+	}
+	return (fd);
+}
+
 /*Funcion que gestiona el heredoc*/
 int	heredoc(t_list **token_list, int pos, char **line)
 {
@@ -131,22 +152,13 @@ int	heredoc(t_list **token_list, int pos, char **line)
 	char		**heredoc_str;
 	int			fd;
 
-	token_tr = (t_token_ast *) ((ft_lstpos(*token_list, pos))->content);
+	token_tr = (t_token_ast *)((ft_lstpos(*token_list, pos))->content);
 	heredoc = ft_strdup((token_tr->value)[0]);
 	if (heredoc == NULL)
 		return (1);
-	if (create_heredoc_file(heredoc))
-	{
-		free(heredoc);
-		return (1);
-	}
-	fd = open(".tmp_minishell", O_RDONLY);
+	fd = create_open_heredoc(heredoc);
 	if (fd == -1)
-	{
-		unlink(".tmp_minishell");
-		free(heredoc);
 		return (1);
-	}
 	heredoc_str = add_heredoc(fd, line, heredoc);
 	free(heredoc);
 	unlink(".tmp_minishell");
