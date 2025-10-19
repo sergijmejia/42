@@ -187,5 +187,7 @@ t_list **error_tr(t_list **token_list);
 void delete_ast(void *content);
 t_ast **error_ast(t_ast **ast_list);
 t_list **error_syntax(t_list **token_list, int pos);
+t_list	**clean_token(t_list **token_list, t_token *token);
+t_list	**clean_list(t_list **token_list);
 
 #endif

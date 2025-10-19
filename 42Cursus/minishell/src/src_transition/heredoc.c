@@ -18,21 +18,23 @@ static int	create_heredoc_file(char *here_doc)
 {
 	int		fd;
 	char	*str;
-	size_t	len;
+	int		len;
+	int		len_here_doc;
 
 	fd = open(".tmp_minishell", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 		return (1);
 	ft_printf("> ");
 	str = get_next_line(0);
-	len = ft_strlen(str);
-	while (ft_strncmp(str, here_doc, len - 1))
+	len = (int) ft_strlen(str);
+	len_here_doc = (int)ft_strlen(here_doc);
+	while (((len - 1) != len_here_doc) || (ft_strncmp(str, here_doc, len - 1)))
 	{
 		ft_putstr_fd(str, fd);
 		free(str);
 		ft_printf("> ");
 		str = get_next_line(0);
-		len = ft_strlen(str);
+		len = (int) ft_strlen(str);
 	}
 	free(str);
 	close(fd);

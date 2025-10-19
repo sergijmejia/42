@@ -88,11 +88,7 @@ static char	*second_exp_var_2(char *str, int i, int *command_len, t_aux *aux)
 static char	*second_exp_var(char *str, int i, int *command_len, t_aux *aux)
 {
 	char	*new_str;
-	char	**env;
-	t_list	**tmp_var;
 
-	env = aux->env;
-	tmp_var = aux->tmp_var;
 	if (str[i + 1] == '?')
 	{
 		*command_len = 2;

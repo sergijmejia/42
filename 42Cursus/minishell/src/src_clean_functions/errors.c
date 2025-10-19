@@ -74,20 +74,36 @@ void	astdel(t_ast *ast_list)
 	ast_list = NULL;
 }
 
+/*Funcion que gestiona la liberacion de memoria de un token*/
+t_list	**clean_token(t_list **token_list, t_token *token)
+{
+	delete_token(token);
+	return (clean_list(token_list));
+}
+
 /*Funcion que gestiona el fallo de un token*/
 t_list	**error_token(t_list **token_list, t_token *token)
 {
-	delete_token(token);
-	return (error_list(token_list));
+	write(2, "Error\n", 6);
+	g_exit_status = 1;
+	return (clean_token(token_list, token));
 }
 
-/*Funcion que gestiona el fallo en la ampliacion o modificacion de la lista*/
-t_list	**error_list(t_list **token_list)
+/*Funcion que gestiona la liberacion de memoria de la lista*/
+t_list	**clean_list(t_list **token_list)
 {
 	ft_lstclear(token_list, delete_token);
 	free(token_list);
 	token_list = NULL;
 	return (NULL);
+}
+
+/*Funcion que gestiona el fallo en la ampliacion o modificacion de la lista*/
+t_list	**error_list(t_list **token_list)
+{
+	write(2, "Error\n", 6);
+	g_exit_status = 1;
+	return (clean_list(token_list));
 }
 
 /*Funcion que gestiona el fallo en la modificacion de una lista de transicion*/

@@ -79,13 +79,17 @@ int	main(int argc, char **argv, char **envp)
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
+			printf("\nA la salida de tansition:\n");
+            printf("\n");
+			print_lst_tr(*lst);
+            printf("\n");
 			if (command_union(lst) == NULL)
 			{
 				free(line);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
-			printf("\nA la salida de tansition:\n");
+			printf("\nA la salida de union:\n");
 			printf("\n");
 			print_lst_tr(*lst);
 			printf("\n");
@@ -136,10 +140,10 @@ int	main(int argc, char **argv, char **envp)
 		}
 	//}
 	//rl_clear_history();
-	free(((t_temp_lst *)((*tmp_var)->content))->name);
-	free(((t_temp_lst *)((*tmp_var)->content))->value);
-	free((t_temp_lst *)((*tmp_var)->content));
-	free(*tmp_var);
+	//free(((t_temp_lst *)((*tmp_var)->content))->name);
+	//free(((t_temp_lst *)((*tmp_var)->content))->value);
+	//free((t_temp_lst *)((*tmp_var)->content));
+	//free(*tmp_var);
 	free(tmp_var);
 	exit(EXIT_SUCCESS);
 }

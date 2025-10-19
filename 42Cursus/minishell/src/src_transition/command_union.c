@@ -42,6 +42,7 @@ static char	**str_nodes(t_token_ast *n, t_token_ast *t, int len_n, int len_t)
 }
 
 /*Funcion que agrega el str del token en pos a new_token*/
+/*Si el str de token es vacio lo descarta*/
 static t_token_ast	**join_nodes(t_token_ast **new, t_token_ast *token)
 {
 	int		len_new;
@@ -55,6 +56,8 @@ static t_token_ast	**join_nodes(t_token_ast **new, t_token_ast *token)
 	}
 	len_new = calculate_strlen(*new);
 	len_token = calculate_strlen(token);
+	if ((len_token == 1) && (ft_strlen((token->value)[0]) == 0))
+		return (new);
 	if (len_new == -1 || len_token == -1)
 		return (NULL);
 	str = str_nodes(*new, token, len_new, len_token);

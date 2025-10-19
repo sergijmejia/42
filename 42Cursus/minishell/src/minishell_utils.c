@@ -12,6 +12,57 @@
 
 #include "minishell.h"
 
+/*Funcion que duplica el value del token_ast*/
+static char	**duplicate_token_tr_str(t_token_ast *token)
+{
+	char	**str;
+	char	**new_str;
+	int		i;
+	int		len;
+
+	len = calculate_strlen(token);
+	if (len == -1)
+		return (NULL);
+	str = token->value;
+	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
+	if (new_str == NULL)
+		return (NULL);
+	new_str[len] = NULL;
+	i = 0;
+	while (i < len)
+	{
+		new_str[i] = strdup(str[i]);
+		if (new_str[i] == NULL)
+		{
+			free_str(new_str);
+			return (NULL);
+		}
+		i++;
+	}
+	return (new_str);
+}
+
+/*Funcion que duplica un token_ast*/
+t_token_ast	*duplicate_token_tr(t_token_ast *token)
+{
+	t_token_ast	*new_token;
+	char		**new_str;
+
+	new_str = duplicate_token_tr_str(token);
+	if (new_str == NULL)
+		return (NULL);
+	new_token = (t_token_ast *) malloc (sizeof(t_token_ast));
+	if (!new_token)
+	{
+		free_str(new_str);
+		return (NULL);
+	}
+	new_token->value = new_str;
+	new_token->type = token->type;
+	new_token->wildcard = token->wildcard;
+	return (new_token);
+}
+
 /*Funcion que calcula la cantidad de strings que hay en un string doble*/
 int	doublestr_len(char **str)
 {
@@ -34,44 +85,4 @@ int	calculate_strlen(t_token_ast *token)
 	str = token->value;
 	len = doublestr_len(str);
 	return (len);
-}
-
-/*Funcion que duplica un token_ast*/
-t_token_ast	*duplicate_token_tr(t_token_ast *token)
-{
-	t_token_ast	*new_token;
-	char		**str;
-	char		**new_str;
-	int			len;
-	int			i;
-
-	len = calculate_strlen(token);
-	if (len == -1)
-		return (NULL);
-	str = token->value;
-	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
-	if (new_str == NULL)
-		return (NULL);
-	new_str[len] = NULL;
-	i = 0;
-	while (i < len)
-	{
-		new_str[i] = strdup(str[i]);
-		if (new_str[i] == NULL)
-		{
-			free_str(new_str);
-			return (NULL);
-		}
-		i++;
-	}
-	new_token = (t_token_ast *) malloc (sizeof(t_token_ast));
-	if (!new_token)
-	{
-		free_str(new_str);
-		return (NULL);
-	}
-	new_token->value = new_str;
-	new_token->type = token->type;
-	new_token->wildcard = token->wildcard;
-	return (new_token);
 }

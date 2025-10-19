@@ -22,8 +22,8 @@ t_list  **create_var_table(void)
 	if (!var_lst)
 		return (NULL);
     *var_lst = NULL;
-
-//Esta parte es para testear
+   
+//--------------Esta parte es para testear
     test_node = (t_list *) malloc (sizeof(t_list));
     test_node->next=NULL;
     test_tmp = (t_temp_lst *) malloc (sizeof(t_temp_lst));

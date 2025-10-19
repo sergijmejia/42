@@ -25,7 +25,7 @@ static int	find_right_parenthesis(t_list **token_list, int pos)
 	while (pos < size)
 	{
 		node = ft_lstpos(*token_list, pos);
-		token = (t_token_ast *) (node->content);
+		token = (t_token_ast *)(node->content);
 		if (token->type == 9)
 			count++;
 		else if (token->type == 10)
@@ -40,7 +40,6 @@ static int	find_right_parenthesis(t_list **token_list, int pos)
 /*Funcion que encuentra el nodo AND*/
 int	find_specific(t_list **token_list, int type)
 {
-	t_list		*node;
 	t_token_ast	*token;
 	int			pos;
 	int			size;
@@ -49,8 +48,7 @@ int	find_specific(t_list **token_list, int type)
 	size = ft_lstsize(*token_list);
 	while (pos < size)
 	{
-		node = ft_lstpos(*token_list, pos);
-		token = (t_token_ast *) (node->content);
+		token = (t_token_ast *)((ft_lstpos(*token_list, pos))->content);
 		if ((int)(token->type) == type)
 			return (pos);
 		else if (token->type == 9)

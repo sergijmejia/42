@@ -12,13 +12,31 @@
 
 #include "minishell.h"
 
+/*Funcion que gestiona el loop de divide_front*/
+static t_list	*divide_front_loop(t_list **token_list, int i)
+{
+	t_token_ast	*token;
+	t_token_ast	*new_token;
+	t_list		*new_node;
+
+	token = (t_token_ast *)((ft_lstpos(*token_list, i))->content);
+	new_token = duplicate_token_tr(token);
+	if (new_token == NULL)
+		return (NULL);
+	new_node = ft_lstnew(new_token);
+	if (new_node == NULL)
+	{
+		delete_token_ast(new_token);
+		return (NULL);
+	}
+	return (new_node);
+}
+
 /*Funcion que divide token list hasta pos tomando el lado izquierdo*/
 static t_list	**divide_front(t_list **token_list, int pos)
 {
 	t_list		**new_list;
 	t_list		*new_node;
-	t_token_ast	*token;
-	t_token_ast	*new_token;
 	int			i;
 
 	new_list = (t_list **) malloc (sizeof(t_list *));
@@ -28,16 +46,9 @@ static t_list	**divide_front(t_list **token_list, int pos)
 	i = 0;
 	while (i < pos)
 	{
-		token = (t_token_ast *)((ft_lstpos(*token_list, i))->content);
-		new_token = duplicate_token_tr(token);
-		if (new_token == NULL)
-			return (error_tr(new_list));
-		new_node = ft_lstnew(new_token);
+		new_node = divide_front_loop(token_list, i);
 		if (new_node == NULL)
-		{
-			delete_token_ast(new_token);
 			return (error_tr(new_list));
-		}
 		ft_lstadd_back(new_list, new_node);
 		i++;
 	}
