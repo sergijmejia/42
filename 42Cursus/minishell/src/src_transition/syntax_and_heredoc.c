@@ -37,8 +37,22 @@ static int	syntax_redirection(t_list **token_list, int pos)
 	return (0);
 }
 
-/*Funcion que verifica la sintaxis de asignaciones y parentesis izquierdo*/
-static int	syntax_assignment_lparenthesis(t_list **token_list, int pos)
+/*Funcion que verifica la sintaxis de asignaciones*/
+static int	syntax_assignment(t_list **token_list, int pos)
+{
+	t_type_tr	type;
+
+	if (pos == 0)
+		return (0);
+	type = ((t_token_ast *)((ft_lstpos(*token_list, pos - 1))->content))->type;
+	if (type == 1 || type == 6 || type == 7 || type == 8)
+		return (0);
+	else
+		return (1);
+}
+
+/*Funcion que verifica la sintaxis de parentesis izquierdo*/
+static int	syntax_lparenthesis(t_list **token_list, int pos)
 {
 	t_type_tr	type;
 
@@ -110,8 +124,10 @@ static int	syntax_and_heredoc_loop(t_list **lst, char **line, int i)
 		syntax = syntax_pipe_and_or(lst, i);
 	else if (type >= 2 && type <= 5)
 		syntax = syntax_redirection(lst, i);
-	else if (type == 6 || type == 9)
-		syntax = syntax_assignment_lparenthesis(lst, i);
+	else if (type == 6)
+		syntax = syntax_assignment(lst, i);
+	else if (type == 9)
+		syntax = syntax_lparenthesis(lst, i);
 	else if (type == 10)
 		syntax = syntax_rparenthesis(lst, i);
 	else if (type == 11)

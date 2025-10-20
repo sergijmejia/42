@@ -294,8 +294,12 @@ static t_list	**divide_assignment(t_list **token_list, int *i)
 		assignment = assignment_candidate(token_list, i, pos);
 		if (assignment == -1)
 			return (error_list(token_list));
-		else if (assignment == 0)
-			pos = find_next_equal(str, pos + 1);
+		else if (assignment == 1)
+		{
+			lst = ft_lstpos(*token_list, *i);
+			str = ((t_token *)(lst->content))->value;
+			pos = find_next_equal(str, 0);
+		}
 		else
 			break ;
 	}

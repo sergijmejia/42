@@ -103,14 +103,13 @@ static char	**create_str_command(t_list **lst, int start, int end)
 	while (start < end)
 	{
 		str_lst = ((t_token *)((ft_lstpos(*lst, start))->content))->value;
-		str[i] = ft_strdup(str_lst);
-		if (!str[i])
+		if (!(ft_strlen(str_lst) == 0))
 		{
-			free_str(str);
-			free(str);
-			return (NULL);
+			str[i] = ft_strdup(str_lst);
+			if (!str[i])
+				return (free_str(str));
+			i++;
 		}
-		i++;
 		start++;
 	}
 	str[i] = NULL;
