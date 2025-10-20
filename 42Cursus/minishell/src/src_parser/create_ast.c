@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 13:44:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/03 14:22:42 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:24:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	**copy_str(t_token_ast *token_ast)
 	if (len == -1)
 		return (NULL);
 	str = (char **)(token_ast->value);
-	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
+	new_str = (char **) malloc ((len + 1) * sizeof(char *));
 	if (new_str == NULL)
 		return (NULL);
 	new_str[len] = NULL;

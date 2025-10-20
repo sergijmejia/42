@@ -6,13 +6,14 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 12:32:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/02 16:50:46 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:23:32 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Funcion que encuentra la posicion de las redirecciones siguiendo el orden de jerarquia*/
+/*Funcion que encuentra la posicion de las redirecciones siguiendo el orden 
+de jerarquia*/
 static int	find_specific_redirection(t_list **token_list)
 {
 	int	pos;
@@ -32,7 +33,8 @@ static int	find_specific_redirection(t_list **token_list)
 	return (-1);
 }
 
-/*Funcion que encuentra la posicion del siguiente special siguiendo orden de jerarquia*/
+/*Funcion que encuentra la posicion del siguiente special siguiendo orden 
+de jerarquia*/
 static int	find_next_special(t_list **token_list)
 {
 	int	pos;
@@ -73,7 +75,6 @@ static t_ast	**create_ast_list(t_list **token_list, int pos, int type)
 	else if (type == 9)
 		new_ast = parser_parenthesis(token_list);
 	return (new_ast);
-
 }
 
 /*Funcion que genera el ast que sera utilizado por el executor*/

@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_lst.c                                        :+:      :+:    :+:   */
+/*   check_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 12:14:32 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/20 15:07:45 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/10/20 15:26:27 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/10/20 15:26:59 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Imprime por pantalla la lista lst*/
-void	print_lst(t_list *lst)
+/*Funcion que verifica que un enviroment contiene PWD, SHLVL, _*/
+int	check_env(char **envp)
 {
-	t_token	*token;
+	int		missing;
+	int		i;
 
-	if (lst == NULL)
-		return ;
-	token = (t_token *)(lst->content);
-	ft_printf("%s", (char *)(token->value));
-	ft_printf("(%d)", token->type);
-	if (token->finished == 1)
-		ft_printf(" --finished");
-	ft_printf("\n");
-	if (lst->next != NULL)
+	missing = 3;
+	if (envp == NULL)
+		return (3);
+	i = 0;
+	while (envp[i] != NULL)
 	{
-		print_lst(lst->next);
-		return ;
+		if (ft_strncmp(envp[i], "PWD=", 4) == 0)
+			missing--;
+		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)
+			missing--;
+		if (ft_strncmp(envp[i], "_=", 2) == 0)
+			missing--;
+		if (missing == 0)
+			return (0);
+		i++;
 	}
+	return (missing);
 }

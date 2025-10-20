@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/17 10:39:50 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:01:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("\n");
 			print_lst(*lst);
 			printf("\n");
-			lst = transition_lex_par(lst);
+			/*lst = transition_lex_par(lst);
 			if (!lst)
 			{
 				free(line);
@@ -93,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("\n");
 			print_lst_tr(*lst);
 			printf("\n");
-			lst = syntax_and_heredoc(lst, &line);
+			lst = syntax_and_heredoc(lst, &line, env, tmp_var);
 			if (!lst)
 			{
 				free(line);
@@ -103,7 +103,17 @@ int	main(int argc, char **argv, char **envp)
 			printf("\nA la salida de syntax:\n");
             printf("\n");
             print_lst_tr(*lst);
-            printf("\n");
+            printf("\n");*/
+			lst = transition(lst, env, tmp_var, &line);
+			if (!lst)
+			{
+				free(line);
+				exit(EXIT_FAILURE);
+			}
+			printf("\nA la salida de transition:\n");
+			printf("\n");
+			print_lst_tr(*lst);
+			printf("\n");
 			printf("El line modificado es:\n");
 			printf("%s", line);
 			printf("\n");
@@ -120,13 +130,6 @@ int	main(int argc, char **argv, char **envp)
             printf("\n");
             print_ast(*ast);
             printf("\n");
-			printf("\n");
-			printf("\nY la lista lst apunta a %p y es:\n", lst);
-            print_lst_tr(*lst);
-            printf("\n");
-
-
-
 
 
 			error_ast(ast);

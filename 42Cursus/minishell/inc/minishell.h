@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/14 10:26:37 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:16:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ typedef struct s_ast
 
 /*Funciones principales*/
 char **dup_env(char **envp);
+int	check_env(char **envp);
 t_list **create_var_table(void);
 
 /*Funciones de testeo*/
@@ -163,11 +164,13 @@ void ft_lstdel_last(t_list **lst, void (*del)(void *));
 char *ft_getenv(char **env, const char *name);
 
 /*Transicion Lexer/Parser*/
+t_list **transition(t_list **lst, char **env, t_list **tmp_var, char **line);
 t_list **assignment_selection(t_list **token_list);
 t_list **transition_lex_par(t_list **token_list);
 t_list **command_union(t_list **token_list);
-t_list **syntax_and_heredoc(t_list **lst, char **line);
-int heredoc(t_list **token_list, int pos, char **line);
+//t_list **syntax_and_heredoc(t_list **lst, char **line, char **env, t_list **tmp_var);
+t_list **syntax_and_heredoc(t_aux *aux, char **line);
+int heredoc(t_aux *aux, int pos, char **line);
 
 /*Parser*/
 // t_token_ast	*duplicate_token_tr(t_token_ast *token);

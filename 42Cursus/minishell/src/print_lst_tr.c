@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 11:48:18 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/17 17:15:47 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 15:08:41 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_lst_tr(t_list *lst)
 
 	if (lst == NULL)
 		return ;
-	token = (t_token_ast *) (lst->content);
+	token = (t_token_ast *)(lst->content);
 	str = (char **)(token->value);
 	len = 0;
 	while (str[len])
@@ -37,8 +37,5 @@ void	print_lst_tr(t_list *lst)
 	}
 	ft_printf("    (%d)\n", token->type);
 	if (lst->next != NULL)
-	{
 		print_lst_tr(lst->next);
-		return ;
-	}
 }

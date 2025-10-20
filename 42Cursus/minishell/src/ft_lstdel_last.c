@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 11:45:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/09/03 12:30:49 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 15:09:14 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_lstdel_last(t_list **lst, void (*del)(void*))
 {
 	t_list	*second_last;
 	t_list	*last;
-	int	len;
+	int		len;
 
 	if (!lst || !del)
 		return ;

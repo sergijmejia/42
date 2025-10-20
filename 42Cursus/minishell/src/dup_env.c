@@ -6,36 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 09:16:22 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/14 09:47:14 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 15:27:13 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*Funcion que verifica que un enviroment contiene PWD, SHLVL, _*/
-static int	check_env(char **envp)
-{
-	int		missing;
-	int		i;
-
-	missing = 3;
-	if (envp == NULL)
-		return (3);
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], "PWD=", 4) == 0)
-			missing--;
-		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)
-			missing--;
-		if (ft_strncmp(envp[i], "_=", 2) == 0)
-			missing--;
-		if (missing == 0)
-			return (0);
-		i++;
-	}
-	return (missing);
-}
 
 /*Funcion que deuelve el siguiente SHLVL*/
 static char	*next_shlvl(char **envp, int pos_envp)
@@ -46,6 +21,8 @@ static char	*next_shlvl(char **envp, int pos_envp)
 	char	*aux;
 
 	num = ft_atoi(&envp[pos_envp][6]) + 1;
+	if (num < 0)
+		num = 0;
 	new_shlvl = ft_itoa(num);
 	if (new_shlvl == NULL)
 		return (NULL);
@@ -83,7 +60,6 @@ static char	*copy_envp_line(char **envp, int pos_envp, int *check)
 		}
 		if (pos_lvl == len_lvl)
 			env = next_shlvl(envp, pos_envp);
-			//env = ft_strdup(envp[pos_envp]);
 		*check = 1;
 	}
 	else

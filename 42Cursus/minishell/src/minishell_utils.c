@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:45:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/02 16:33:53 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 15:06:30 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	**duplicate_token_tr_str(t_token_ast *token)
 	if (len == -1)
 		return (NULL);
 	str = token->value;
-	new_str = (char	**) malloc ((len + 1) * sizeof(char *));
+	new_str = (char **) malloc ((len + 1) * sizeof(char *));
 	if (new_str == NULL)
 		return (NULL);
 	new_str[len] = NULL;

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:10:02 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/17 13:49:04 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/20 16:26:58 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,12 @@ static int	syntax_rparenthesis(t_list **token_list, int pos)
 }
 
 /*Funcion que verifica la sintaxis de name*/
-static int	syntax_name(t_list **token_list, int pos, char **line)
+static int	syntax_name(t_aux *aux, int pos, char **line)
 {
 	t_type_tr	type;
+	t_list		**token_list;
 
+	token_list = aux->token_list;
 	if (pos == 0)
 		return (1);
 	type = ((t_token_ast *)((ft_lstpos(*token_list, pos - 1))->content))->type;
@@ -91,7 +93,7 @@ static int	syntax_name(t_list **token_list, int pos, char **line)
 		return (1);
 	if (type == 5)
 	{
-		if (heredoc(token_list, pos, line))
+		if (heredoc(aux, pos, line))
 			return (1);
 	}
 	return (0);
@@ -105,7 +107,6 @@ static int	syntax_newline(t_list **token_list, int pos)
 	if (pos == 0)
 		return (0);
 	type = ((t_token_ast *)((ft_lstpos(*token_list, pos - 1))->content))->type;
-	printf("\nEl type es: %d\n", type);
 	if ((type >= 1 && type <= 5) || (type >= 7 && type <= 9))
 		return (1);
 	else
@@ -113,11 +114,13 @@ static int	syntax_newline(t_list **token_list, int pos)
 }
 
 /*Funcion que gestiona el loop del syntax_and_heredoc*/
-static int	syntax_and_heredoc_loop(t_list **lst, char **line, int i)
+static int	syntax_and_heredoc_loop(t_aux *aux, char **line, int i)
 {
 	int			syntax;
 	t_type_tr	type;
+	t_list		**lst;
 
+	lst = aux->token_list;
 	syntax = 0;
 	type = ((t_token_ast *)((ft_lstpos(*lst, i))->content))->type;
 	if (type == 1 || type == 7 || type == 8)
@@ -131,22 +134,25 @@ static int	syntax_and_heredoc_loop(t_list **lst, char **line, int i)
 	else if (type == 10)
 		syntax = syntax_rparenthesis(lst, i);
 	else if (type == 11)
-		syntax = syntax_name(lst, i, line);
+		syntax = syntax_name(aux, i, line);
 	return (syntax);
 }
 
 /*Funcion que gestiona el heredoc y los errores de sintaxis*/
-t_list	**syntax_and_heredoc(t_list **lst, char **line)
+//t_list	**syntax_and_heredoc(t_list **lst, char **line, char **env, t_list **tmp_var)
+t_list	**syntax_and_heredoc(t_aux *aux, char **line)
 {
 	int			i;
 	int			size;
 	int			syntax;
+	t_list		**lst;
 
 	i = 0;
+	lst = aux->token_list;
 	size = ft_lstsize(*lst);
 	while (i < size)
 	{
-		syntax = syntax_and_heredoc_loop(lst, line, i);
+		syntax = syntax_and_heredoc_loop(aux, line, i);
 		if (syntax == 1)
 			return (error_syntax(lst, i));
 		i++;
