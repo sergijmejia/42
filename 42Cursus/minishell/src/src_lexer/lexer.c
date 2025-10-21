@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:22:49 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/13 09:37:18 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/21 10:47:08 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_list	**lexer(char *str, char **env, t_list **tmp_var)
 	if (!lst)
 		return (NULL);
 	*lst = NULL;
-	if (parentheses_divider(lst, str, env, tmp_var) == NULL)
+	if (paren_divider(lst, str, env, tmp_var) == NULL)
 		return (NULL);
 	if (assignment_divider(lst) == NULL)
 		return (NULL);
@@ -33,7 +33,7 @@ t_list	**lexer(char *str, char **env, t_list **tmp_var)
 		return (NULL);
 	if (find_wildcard(lst) == NULL)
 		return (NULL);
-	if (variable_expansion(lst, env, tmp_var) == NULL)
+	if (var_expansion(lst, env, tmp_var) == NULL)
 		return (NULL);
 	if (delete_quotes(lst) == NULL)
 		return (NULL);

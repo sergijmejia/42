@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:10:02 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/20 16:26:58 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/21 17:39:09 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	syntax_assignment(t_list **token_list, int pos)
 	if (pos == 0)
 		return (0);
 	type = ((t_token_ast *)((ft_lstpos(*token_list, pos - 1))->content))->type;
-	if (type == 1 || type == 6 || type == 7 || type == 8)
+	if (type == 1 || type == 6 || type == 7 || type == 8 || type == 9)
 		return (0);
 	else
 		return (1);
@@ -139,7 +139,6 @@ static int	syntax_and_heredoc_loop(t_aux *aux, char **line, int i)
 }
 
 /*Funcion que gestiona el heredoc y los errores de sintaxis*/
-//t_list	**syntax_and_heredoc(t_list **lst, char **line, char **env, t_list **tmp_var)
 t_list	**syntax_and_heredoc(t_aux *aux, char **line)
 {
 	int			i;

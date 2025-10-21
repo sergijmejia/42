@@ -6,90 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 16:58:35 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/13 10:15:43 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/21 13:59:00 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*Funcion que encuentra la siguiente comilla*/
-static int	next_quote(char *str, int pos)
-{
-	char	c;
-
-	c = str[pos];
-	pos++;
-	while (str[pos] && str[pos] != c)
-		pos++;
-	return (pos);
-}
-
-/*Funcion que encuentra el primer parentesis*/
-static int	find_next_parenthesis(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			i = next_quote(str, i);
-		if (str[i] == '(')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-/*Funcion que encuentra la posicion del parentesis que cierra open*/
-static int	find_close_parenthesis(char *str, int open)
-{
-	int	count;
-
-	count = 0;
-	while (str[open])
-	{
-		if (str[open] == '\'' || str[open] == '\"')
-			open = next_quote(str, open);
-		if (str[open] == '(')
-			count++;
-		if (str[open] == ')')
-			count--;
-		if (count == 0)
-			return (open);
-		open++;
-	}
-	return (-1);
-}
-
-/*Funcion que crea un unico nodo en caso de no encontrar parentesis*/
-static t_list	**create_unique_node(t_list **token_list, char *str)
-{
-	char	*str_token;
-	t_token	*new_token;
-	t_list	*new_node;
-
-	str_token = ft_strdup(str);
-	if (!str_token)
-		return (NULL);
-	new_token = (t_token *) malloc (sizeof (t_token));
-	if (!new_token)
-	{
-		free(str_token);
-		return (NULL);
-	}
-	new_token->value = str_token;
-	new_token->type = TOKEN_WORD;
-	new_token->finished = 0;
-	new_node = ft_lstnew(new_token);
-	if (!new_node)
-	{
-		delete_token(new_token);
-		return (NULL);
-	}
-	ft_lstadd_back(token_list, new_node);
-	return (token_list);
-}
 
 /*Funcion que gestiona la creacion del TOKEN_WORD hasta el parentesis*/
 static t_list	**start_list(t_list **token_list, char *str, int open)
@@ -130,7 +51,7 @@ static t_list	**par_list(t_list **lst, char **env, char *str, t_list **tmp)
 	t_list	**new_token_list;
 
 	open = find_next_parenthesis(str);
-	close = find_close_parenthesis(str, open);
+	close = close_parenthesis(str, open);
 	str_token = (char *) malloc (sizeof(char) * (close - open));
 	if (!str_token)
 		return (NULL);
@@ -156,7 +77,7 @@ static t_list	**create_new(char *str, char **env, t_list **tmp_var)
 	if (!new_token_list)
 		return (NULL);
 	*new_token_list = NULL;
-	new_token_list = parentheses_divider(new_token_list, str, env, tmp_var);
+	new_token_list = paren_divider(new_token_list, str, env, tmp_var);
 	if (!new_token_list)
 		return (NULL);
 	return (new_token_list);
@@ -172,7 +93,7 @@ static t_list	**end_list(t_list **lst, char **env, char *str, t_list **tmp)
 	int		len;
 
 	open = find_next_parenthesis(str);
-	close = find_close_parenthesis(str, open);
+	close = close_parenthesis(str, open);
 	len = (int) ft_strlen(str);
 	str_token = (char *) malloc (sizeof(char) * (len - close + 1));
 	if (!str_token)
@@ -191,7 +112,7 @@ static t_list	**end_list(t_list **lst, char **env, char *str, t_list **tmp)
 }
 
 /*Funcion que llama a lexer de forma recursiva para manejar los parentesis*/
-t_list	**parentheses_divider(t_list **lst, char *str, char **env, t_list **tmp)
+t_list	**paren_divider(t_list **lst, char *str, char **env, t_list **tmp)
 {
 	int		open;
 	int		close;
@@ -202,7 +123,7 @@ t_list	**parentheses_divider(t_list **lst, char *str, char **env, t_list **tmp)
 		create_unique_node(lst, str);
 		return (lst);
 	}
-	close = find_close_parenthesis(str, open);
+	close = close_parenthesis(str, open);
 	if (close == -1)
 		return (error_list(lst));
 	if (start_list(lst, str, open) == NULL)

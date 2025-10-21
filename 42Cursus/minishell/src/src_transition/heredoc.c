@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 11:41:44 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/20 16:25:21 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/21 17:22:18 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,120 +146,68 @@ static int	create_open_heredoc(char *heredoc)
 	return (fd);
 }
 
-/*Funcion que encuentra la siguiente comilla*/
-static int	next_quote(char *str, int pos)
+/*Funcion que gestiona cuando la variabl no es $?*/
+static char	*saved_string(char *command, char **env, t_list **tmp_var)
 {
-	char	c;
+	char	*new_str;
 
-	c = str[pos];
-	pos++;
-	while (str[pos] && str[pos] != c)
-		pos++;
-	return (pos);
+	new_str = find_var((&command[1]), tmp_var);
+	if (new_str == NULL)
+	{
+		free(command);
+		return (NULL);
+	}
+	if (new_str[0] == '\0')
+	{
+		free(new_str);
+		new_str = ft_getenv(env, &command[1]);
+	}
+	return (new_str);
 }
 
-/*Funcion que devueve el comando*/
-static char	*get_command(char *str, int x)
+/*Funcion que gestiona una la sexpansion de una variable en el heredoc*/
+static int	var_exp_heredoc(char **str, int pos, char **env, t_list **tmp_var)
 {
-	int		i;
-	int		len;
+	int		command_len;
+	char	*new_str;
 	char	*command;
 
-	i = x + 1;
-	len = 0;
-	while (ft_isalpha(str[i]) || ft_isdigit(str[i]) || str[i] == '_')
+	if ((*str)[pos + 1] == '?')
 	{
-		i++;
-		len++;
+		command_len = 2;
+		new_str = ft_itoa(g_exit_status);
 	}
-	command = (char *) malloc ((len + 2) * sizeof(char));
-	if (!command)
-		return (NULL);
-	ft_strlcpy(&command[0], &str[x], len + 2);
-	len = ft_strlen(command);
-	return (command);
-}
-
-/*Funcion que remplaza el la $VAR en posicion i por el new_str*/
-static int	replace_string(char **str, char *new_str, int command_len, int pos)
-{
-	int		len;
-	int		div;
-	int		len_str;
-	int		new_len;
-	char	*replace_str;
-
-	new_len = (int)(ft_strlen(new_str));
-	len = (int)(new_len + ft_strlen(*str) - command_len);
-	replace_str = malloc(len + 1);
-	if (!replace_str)
+	else
+	{
+		command = get_command(*str, pos);
+		if (command == NULL)
+			return (-1);
+		command_len = ft_strlen(command);
+		new_str = saved_string(command, env, tmp_var);
+		free(command);
+	}
+	if (new_str == NULL)
 		return (-1);
-	replace_str[len] = '\0';
-	div = pos + command_len;
-	len_str = (int)(ft_strlen(*str)) - pos - command_len;
-	ft_strlcpy(&replace_str[0], *str, pos + 1);
-	ft_strlcpy(&replace_str[pos], new_str, new_len + 1);
-	ft_strlcpy(&replace_str[pos + new_len], &((*str)[div]), len_str + 1);
-	write(1, replace_str, len);
-	write(1, "\n", 1);
-	free(*str);
-	*str = replace_str;
-	return (pos + new_len);
+	pos = replace_string(str, new_str, command_len, pos);
+	free(new_str);
+	return (pos);
 }
 
 /*Funcion que expande las variables en una str*/
 static char	*simple_var_expansion(char *str, char **env, t_list **tmp_var)
 {
-	char	*new_str;
-	char	*command;
-	int		command_len;
 	int		i;
 
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
-		{
-			i = next_quote(str, i);
-			i++;
-		}
-		else if ((str)[i] == '$' && (str)[i + 1] != '\0')
+		if ((str)[i] == '$' && (str)[i + 1] != '\n')
 		{
 			if ((str)[i + 1] != '$')
 			{
-				if (str[i + 1] == '?')
-				{
-					command_len = 2;
-					new_str = ft_itoa(g_exit_status);
-				}
-				else
-				{
-					command = get_command(str, i);
-					if (command == NULL)
-						return (NULL);
-					command_len = ft_strlen(command);
-					new_str = find_var((&command[1]), tmp_var);
-					if (new_str == NULL)
-					{
-						free(command);
-						return (NULL);
-					}
-					if (new_str[0] == '\0')
-					{
-						free(new_str);
-						new_str = ft_getenv(env, &command[1]);
-					}
-					free(command);
-				}
-				if (new_str == NULL)
-					return (NULL);
-				i = replace_string(&str, new_str, command_len, i);
-				free(new_str);
+				i = var_exp_heredoc(&str, i, env, tmp_var);
 				if (i == -1)
-				{
-					free(new_str);
 					return (NULL);
-				}
 			}
 			else
 				i++;

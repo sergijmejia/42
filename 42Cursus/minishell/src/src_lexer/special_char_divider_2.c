@@ -5,94 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/10 12:39:46 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/13 13:03:57 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/10/21 11:04:21 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/10/21 11:05:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Funcion que encuentra la siguiente comilla*/
-static int	next_quote(char *str, int pos)
+/*Funcion que crear un nuevo token para agregarla a lst original*/
+static t_list	*create_new_lst_token(t_list *lst, int pos)
 {
-	char	c;
-
-	c = str[pos];
-	pos++;
-	while (str[pos] && str[pos] != c)
-		pos++;
-	return (pos);
-}
-
-/*Verifica el type*/
-static t_type_lexer	check_type(t_list *lst)
-{
+	int		len_str;
 	char	*str;
-	int		literal;
-	int		i;
-
-	literal = 0;
-	i = 0;
-	str = ((t_token *)(lst->content))->value;
-	while (str[i])
-	{
-		if (str[i] == '\'')
-		{
-			i = next_quote(str, i);
-			literal = 1;
-		}
-		if (str[i] == '\"')
-			return (TOKEN_EXPANDIBLE_STRINGS);
-		i++;
-	}
-	if (literal == 1)
-		return (TOKEN_STRING_LITERAL);
-	else
-		return (TOKEN_WORD);
-}
-
-/*Funcion que selecciona el type en el nuevo token para simple*/
-static t_type_lexer	select_single_type(char *str)
-{
-	if (*str == '>')
-		return (TOKEN_GT);
-	else if (*str == '<')
-		return (TOKEN_LT);
-	else if (*str == '|')
-		return (TOKEN_PIPE);
-	else if (*str == '&')
-		return (TOKEN_BACKGROUND);
-	else if (*str == ')')
-		return (TOKEN_LPAREN);
-	else if (*str == '(')
-		return (TOKEN_RPAREN);
-	else
-		return (TOKEN_WORD);
-}
-
-/*Funcion que selecciona el tupe en el nuevo token para doble*/
-static t_type_lexer	select_double_type(char *str)
-{
-	if (*str == '>')
-		return (TOKEN_DOUBLE_GT);
-	else if (*str == '<')
-		return (TOKEN_DOUBLE_LT);
-	else if (*str == '&')
-		return (TOKEN_AND);
-	else if (*str == '|')
-		return (TOKEN_OR);
-	else
-		return (TOKEN_WORD);
-}
-
-/*Funcion que genera el nuevo nodo con n caracteres*/
-static t_list	*generate_new(t_list *token, int len, int n)
-{
-	t_list	*new;
+	t_token	*token;
 	t_token	*new_token;
-	char	*str;
+	t_list	*new_list_token;
 
-	str = ft_substr(((t_token *)(token->content))->value, n, len);
+	token = (t_token *)(lst->content);
+	len_str = (int) ft_strlen(token->value);
+	str = ft_substr(token->value, pos, len_str);
 	if (!str)
 		return (NULL);
 	new_token = (t_token *) malloc (sizeof (t_token));
@@ -102,61 +33,116 @@ static t_list	*generate_new(t_list *token, int len, int n)
 		return (NULL);
 	}
 	new_token->value = str;
-	new = ft_lstnew(new_token);
-	if (!new)
-	{
-		delete_token(new_token);
-		return (NULL);
-	}
-	new_token->type = check_type(new);
 	new_token->finished = 0;
-	return (new);
+	new_list_token = ft_lstnew(new_token);
+	if (!new_list_token)
+		delete_token(new_token);
+	new_token->type = check_type(new_list_token);
+	return (new_list_token);
 }
 
-/*Funcion que asigna valores de un nodo con un string de n special*/
-static t_list	**unique_special(t_list **token_list, int i, int n)
+/*Funcion que localiza la posicion de espacio, tabulacion o fin linea*/
+static int	ft_pos_special(char *str, const char *special_char)
 {
-	t_list			*token;
-	t_type_lexer	type;
+	int	pos;
+	int	len;
+
+	pos = 0;
+	len = (int) ft_strlen(str);
+	while (str[pos])
+	{
+		if (str[pos] == '\'' || str[pos] == '\"')
+			pos = next_quote(str, pos);
+		if (ft_strcontains(special_char, str[pos]))
+		{
+			if (str[pos] != '&')
+				break ;
+			else
+			{
+				if (str[pos + 1] == '&')
+					break ;
+			}
+		}
+		pos++;
+	}
+	if (pos == len)
+		pos = -1;
+	return (pos);
+}
+
+/*Funcion que agrega un nodo de caracter especial al la lista*/
+static t_list	**create_special(t_list **token_list, int i)
+{
+	char	*str;
+	t_list	*token;
 
 	token = ft_lstpos(*token_list, i);
-	if (!token)
-		return (NULL);
-	if (n == 1)
-		type = select_single_type(((t_token *)(token->content))->value);
-	else if (n == 2)
-		type = select_double_type(((t_token *)(token->content))->value);
+	str = ((t_token *)(token->content))->value;
+	if ((str[0] == '$') && (str[1] == '?'))
+	{
+		if (special_char(token_list, i, 2) == NULL)
+			return (NULL);
+	}
+	else if ((str[0] == str[1]) && (str[0] != ')') && (str[0] != '('))
+	{
+		if (special_char(token_list, i, 2) == NULL)
+			return (NULL);
+	}
 	else
-		return (NULL);
-	((t_token *)(token->content))->type = type;
+	{
+		if (special_char(token_list, i, 1) == NULL)
+			return (NULL);
+	}
 	return (token_list);
 }
 
-/*Funcion que agrega nodo de caracter especial simple*/
-t_list	**special_char(t_list **token_list, int i, int n)
+/*Funcion que agrega un nodo que contiene str previo al caracter especial*/
+static t_list	**create_not_special(t_list **token_list, int pos, int i)
 {
-	char			*str;
-	int				len;
-	t_type_lexer	type;
-	t_list			*token;
-	t_list			*new;
+	char	*str;
+	t_list	*lst;
+	t_token	*token;
+	t_list	*new_list_token;
 
-	token = ft_lstpos(*token_list, i);
-	if (!token)
-		return (NULL);
-	len = (int) ft_strlen(((t_token *)(token->content))->value);
-	if (len == n)
-		return (unique_special(token_list, i, n));
-	new = generate_new(token, len, n);
-	if (new == NULL)
-		return (NULL);
-	str = ft_substr(((t_token *)(token->content))->value, 0, 1);
+	lst = ft_lstpos(*token_list, i);
+	token = (t_token *)(lst->content);
+	str = ft_substr(token->value, 0, pos);
 	if (!str)
 		return (NULL);
-	free(((t_token *)(token->content))->value);
-	((t_token *)(token->content))->value = str;
-	type = select_single_type(((t_token *)(token->content))->value);
-	((t_token *)(token->content))->type = type;
-	ft_lstadd_pos(token_list, new, i + 1);
+	new_list_token = create_new_lst_token(lst, pos);
+	free(((t_token *)(lst->content))->value);
+	((t_token *)(lst->content))->value = str;
+	((t_token *)(lst->content))->type = check_type(lst);
+	if (!new_list_token)
+		return (NULL);
+	ft_lstadd_pos(token_list, new_list_token, i + 1);
 	return (token_list);
+}
+
+/*Funcion que divide los TOKEN_WORD de los caracteres especiales*/
+t_list	**divide_special(t_list **token_list, int *i, char *sp_char)
+{
+	t_list	*lst;
+	t_token	*token;
+	int		pos;
+
+	lst = ft_lstpos(*token_list, *i);
+	if (lst == NULL)
+		return (token_list);
+	token = (t_token *)(lst->content);
+	pos = ft_pos_special(token->value, sp_char);
+	if (pos == -1)
+		return (token_list);
+	else if (pos == 0)
+	{
+		if (create_special(token_list, *i) == NULL)
+			return (NULL);
+	}
+	else
+	{
+		if (create_not_special(token_list, pos, *i) == NULL)
+			return (NULL);
+	}
+	(*i)++;
+	return (divide_special(token_list, i, sp_char));
 }
