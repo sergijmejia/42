@@ -27,14 +27,23 @@ t_list	**find_redirection(t_list **token_list)
 		if (token == NULL)
 			return (error_list(token_list));
 		type = token->type;
-		if ((type >= 5 && type <= 8) && i != size - 1)
-		{
-			token = (t_token *)((ft_lstpos(*token_list, i + 1))->content);
-			if (token == NULL)
-				return (error_list(token_list));
-			type = token->type;
-			if (type == 0 || type == 2 || type == 3 || type == 9)
-				token->type = TOKEN_REDIRECTION_WORD;
+        if (i != size - 1)
+        {
+            token = (t_token *)((ft_lstpos(*token_list, i + 1))->content);
+                if (token == NULL)
+	    			return (error_list(token_list));
+    		if (type >= 5 && type <= 7)
+    		{	    		
+	    		type = token->type;
+	    		if (type == 0 || type == 2 || type == 3 || type == 9)
+	    			token->type = TOKEN_REDIRECTION_WORD;
+            }
+            else if (type == 8)
+            {
+                type = token->type;
+                if (type == 0 || type == 2 || type == 3 || type == 9)
+                    token->type = TOKEN_REDIRECTION_HEREDOC;
+            }
 		}
 		i++;
 	}

@@ -219,14 +219,22 @@ static char	*simple_var_expansion(char *str, char **env, t_list **tmp_var)
 }
 
 /*Funcion que expande variables en heredoc*/
-static char	**heredoc_var_expansion(char **str, t_aux *aux)
+static char	**heredoc_var_expansion(char **str, t_aux *aux, int pos)
 {
 	int		i;
+    int     quote;
 	char	**env;
 	t_list	**tmp_var;
+    t_list	**lst;
 
 	env = aux->env;
 	tmp_var = aux->tmp_var;
+    lst = aux->token_list;
+    quote = ((t_token_ast *)((ft_lstpos(*lst, pos))->content))->quote;
+    if (quote == 1)
+    {
+        return (str);
+    }
 	i = 0;
 	while (str[i])
 	{
@@ -260,7 +268,7 @@ int	heredoc(t_aux *aux, int pos, char **line)
 	unlink(".tmp_minishell");
 	if (heredoc_str == NULL)
 		return (1);
-	if (heredoc_var_expansion(heredoc_str, aux) == NULL)
+	if (heredoc_var_expansion(heredoc_str, aux, pos) == NULL)
 		return (1);
 	free_str(token_tr->value);
 	token_tr->value = heredoc_str;

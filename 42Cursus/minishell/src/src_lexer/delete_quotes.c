@@ -86,7 +86,7 @@ static char	*quote_str(char *str, int len)
 }
 
 /*Funcion que crea el nuevo str que estaba contenido entre las comillas*/
-static t_list	**quote_list(t_list **token_list, int pos)
+static t_list	**quote_list(t_list **token_list, int pos, int type) //tengo que diferenciar entre quote ' y quote "
 {
 	t_list	*lst;
 	char	*str;
@@ -99,6 +99,13 @@ static t_list	**quote_list(t_list **token_list, int pos)
 	str = ((t_token *)(lst->content))->value;
 	len = count_new_len(str);
 	new_str = quote_str(str, len);
+    if (type == 18)
+    {
+        if (((int) ft_strlen(str)) == len)
+            ((t_token *)((ft_lstpos(*token_list, pos))->content))->quote = 0;
+        else
+            ((t_token *)((ft_lstpos(*token_list, pos))->content))->quote = 1;
+    }
 	free(str);
 	if (new_str == NULL)
 		return (NULL);
@@ -125,9 +132,9 @@ t_list	**delete_quotes(t_list **token_list)
 		if (!token_list_aux)
 			return (error_list(token_list));
 		type = token->type;
-		if (type == 0 || type == 2 || type == 3 || type == 9 || type == 17)
+		if (type == 0 || type == 2 || type == 3 || type == 9 || type >= 17)
 		{
-			if (quote_list(token_list, i) == NULL)
+			if (quote_list(token_list, i, type) == NULL)
 				return (error_list(token_list));
 			token->finished = 1;
 		}

@@ -51,7 +51,8 @@ typedef enum e_type_lexer
 	TOKEN_LPAREN,
 	TOKEN_BACKGROUND,
 	TOKEN_WILDCARD,
-	TOKEN_REDIRECTION_WORD
+	TOKEN_REDIRECTION_WORD,
+    TOKEN_REDIRECTION_HEREDOC
 }	t_type_lexer;
 
 /*Estructura token usada en el lexer*/
@@ -60,6 +61,7 @@ typedef struct s_token
 	enum e_type_lexer	type;
 	char				*value;
 	int					finished;
+    int                 quote;
 }	t_token;
 
 /*Estructura auxiliar para poder manejar la cantidad de argumentos en la norma*/
@@ -95,6 +97,7 @@ typedef struct s_token_ast
 	enum e_type_tr	type;
 	char			**value;
 	int				wildcard;
+    int             quote;
 }	t_token_ast;
 
 /*Estructuas Parser*/

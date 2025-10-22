@@ -34,7 +34,7 @@ static t_token	*duplicate_token(t_token *token)
 }
 
 /*Funcion que crea un nuevo token de transicion*/
-static t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
+static t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w, int quote)
 {
 	t_token_ast	*new_token;
 	t_type_tr	tr_type;
@@ -45,8 +45,12 @@ static t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
 	new_token->value = str;
 	if (type == 0)
 		tr_type = 0;
-	else if (type == 17)
+	else if (type == 17 || type == 18)
+    {
 		tr_type = 11;
+        if (type == 18)
+            new_token->quote = quote;
+    }
 	else
 	{
 		if (type >= 4 && type <= 8)
@@ -60,7 +64,7 @@ static t_token_ast	*create_new_tr_token(char **str, t_type_lexer type, int w)
 }
 
 /*Funcion que crea el nodo de transcion para los caracteres especiales*/
-static t_list	*special_node(t_list **token_list, int pos, t_type_lexer type)
+static t_list	*special_node(t_list **token_list, int pos, t_type_lexer type, int quote)
 {
 	t_list		*new_node;
 	t_token_ast	*new_token;
@@ -73,7 +77,7 @@ static t_list	*special_node(t_list **token_list, int pos, t_type_lexer type)
 		return (NULL);
 	str[0] = ft_strdup(str_token);
 	str[1] = NULL;
-	new_token = create_new_tr_token(str, type, 0);
+	new_token = create_new_tr_token(str, type, 0, quote);
 	if (!new_token)
 	{
 		free_str(str);
@@ -164,7 +168,7 @@ static int	check_wildcard(t_list **lst, int pos)
 }
 
 /*Funcion que crea el nodo de transicion para los comandos*/
-static t_list	*command_node(t_list **token_list, int *pos)
+static t_list	*command_node(t_list **token_list, int *pos, int quote)
 {
 	char		**str;
 	int			wildcard;
@@ -173,7 +177,7 @@ static t_list	*command_node(t_list **token_list, int *pos)
 
 	wildcard = check_wildcard(token_list, *pos);
 	str = str_command(token_list, pos);
-	new_token = create_new_tr_token(str, 0, wildcard);
+	new_token = create_new_tr_token(str, 0, wildcard, quote);
 	if (!new_token)
 	{
 		free_str(str);
@@ -193,16 +197,18 @@ static t_list	*command_node(t_list **token_list, int *pos)
 static t_list	*make_transition_loop(t_list **token_list, int *pos)
 {
 	t_type_lexer	type;
+    int             quote;
 	t_list			*new_node;
 
 	type = ((t_token *)((ft_lstpos(*token_list, *pos))->content))->type;
+    quote = ((t_token *)((ft_lstpos(*token_list, *pos))->content))->quote;
 	if (type >= 4)
 	{
-		new_node = special_node(token_list, *pos, type);
+		new_node = special_node(token_list, *pos, type, quote);
 		(*pos)++;
 	}
 	else
-		new_node = command_node(token_list, pos);
+		new_node = command_node(token_list, pos, quote);
 	return (new_node);
 }
 
@@ -383,12 +389,14 @@ static t_list	**end_list(t_list **token_list, t_list **new_list, int close)
 	t_list			**lst_aux;
 	t_list			*new_node;
 	t_type_lexer	type;
+    int             quote;
 
 	lst_aux = lst_until_end(token_list, close + 1);
 	if (!lst_aux)
 		return (NULL);
 	type = ((t_token *)((ft_lstpos(*token_list, close))->content))->type;
-	new_node = special_node(token_list, close, type);
+    quote = ((t_token *)((ft_lstpos(*token_list, close))->content))->quote;
+	new_node = special_node(token_list, close, type, quote);
 	if (!new_node)
 		return (error_list(lst_aux));
 	ft_lstadd_back(new_list, new_node);
