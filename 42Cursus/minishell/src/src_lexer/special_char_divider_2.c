@@ -34,6 +34,7 @@ static t_list	*create_new_lst_token(t_list *lst, int pos)
 	}
 	new_token->value = str;
 	new_token->finished = 0;
+	new_token->quote = 0;
 	new_list_token = ft_lstnew(new_token);
 	if (!new_list_token)
 		delete_token(new_token);

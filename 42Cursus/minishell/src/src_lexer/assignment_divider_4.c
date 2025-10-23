@@ -35,6 +35,7 @@ t_list	*create_node(char *str, int start, int end, int type)
 	if (type == 9)
 		token->type = TOKEN_ASSIGNMENT_CANDIDATE;
 	token->finished = 0;
+	token->quote = 0;
 	new_node = ft_lstnew(token);
 	if (!new_node)
 		delete_token(token);

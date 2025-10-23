@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_parenthesis.c                               :+:      :+:    :+:   */
+/*   parser_specific_3.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 09:49:50 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/23 16:07:59 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/10/23 13:34:18 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/10/23 16:10:49 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Funcion que gestiona el bucle de info_parenthesis*/
-static t_list	*into_parenthesis_loop(t_list **token_list, int i)
+/*Funcion que gestiona el loop de divide_front*/
+static t_list	*divide_front_loop(t_list **token_list, int i)
 {
 	t_token_ast	*token;
 	t_token_ast	*new_token;
@@ -33,7 +33,7 @@ static t_list	*into_parenthesis_loop(t_list **token_list, int i)
 }
 
 /*Funcion que divide token list hasta pos tomando el lado izquierdo*/
-static t_list	**into_parenthesis(t_list **token_list, int size)
+static t_list	**divide_front(t_list **token_list, int pos)
 {
 	t_list		**new_list;
 	t_list		*new_node;
@@ -43,38 +43,28 @@ static t_list	**into_parenthesis(t_list **token_list, int size)
 	if (new_list == NULL)
 		return (NULL);
 	*new_list = NULL;
-	i = 1;
-	while (i < size - 1)
+	i = 0;
+	while (i < pos)
 	{
-		new_node = into_parenthesis_loop(token_list, i);
+		new_node = divide_front_loop(token_list, i);
 		if (new_node == NULL)
-			return (error_tr(new_list));
+			return (clean_tr(new_list));
 		ft_lstadd_back(new_list, new_node);
 		i++;
 	}
 	return (new_list);
 }
 
-/*Funcion que gestiona un nodo en pos*/
-t_ast	**parser_parenthesis(t_list **token_list)
+/*Funcion que gestiona la parte izquierda de &&*/
+t_ast	**front(t_list **token_list, int pos)
 {
-	t_ast	**ast_list;
-	t_ast	**ast_par;
-	t_list	**inside_list;
-	int		size;
+	t_list	**front_list;
+	t_ast	**ast_left;
 
-	ast_list = create_ast(token_list, 0);
-	if (ast_list == NULL)
+	front_list = divide_front(token_list, pos);
+	if (front_list == NULL)
 		return (NULL);
-	size = ft_lstsize(*token_list);
-	inside_list = into_parenthesis(token_list, size);
-	if (inside_list == NULL)
-		return (error_ast(ast_list));
-	ast_par = parser(inside_list);
-	clean_tr(inside_list);
-	if (ast_par == NULL)
-		return (error_ast(ast_list));
-	(*ast_list)->left_ast = *ast_par;
-	free(ast_par);
-	return (ast_list);
+	ast_left = parser(front_list);
+	clean_tr(front_list);
+	return (ast_left);
 }

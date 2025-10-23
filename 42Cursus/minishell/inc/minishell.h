@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/21 16:03:05 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/23 14:25:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef enum e_type_lexer
 	TOKEN_BACKGROUND,
 	TOKEN_WILDCARD,
 	TOKEN_REDIRECTION_WORD,
-    TOKEN_REDIRECTION_HEREDOC
+	TOKEN_REDIRECTION_HEREDOC
 }	t_type_lexer;
 
 /*Estructura token usada en el lexer*/
@@ -61,7 +61,7 @@ typedef struct s_token
 	enum e_type_lexer	type;
 	char				*value;
 	int					finished;
-    int                 quote;
+	int					quote;
 }	t_token;
 
 /*Estructura auxiliar para poder manejar la cantidad de argumentos en la norma*/
@@ -97,7 +97,7 @@ typedef struct s_token_ast
 	enum e_type_tr	type;
 	char			**value;
 	int				wildcard;
-    int             quote;
+	int				quote;
 }	t_token_ast;
 
 /*Estructuas Parser*/
@@ -146,6 +146,7 @@ int				doublestr_len(char **str);
 int				calculate_strlen(t_token_ast *token);
 int				replace_string(char **str, char *new_str, int c_len, int pos);
 char			*get_command(char *str, int x);
+t_token			*duplicate_token(t_token *token);
 
 /*-----LEXER-----*/
 
@@ -183,29 +184,47 @@ char			*ft_getenv(char **env, const char *name);
 t_list			**transition(t_list **lst, char **e, t_list **t, char **l);
 t_list			**assignment_selection(t_list **token_list);
 t_list			**transition_lex_par(t_list **token_list);
+t_list			*special_node(t_list **lst, int pos, t_type_lexer type, int q);
+t_list			**fill_new_lst(t_list **token_list, int open, int close);
 t_list			**command_union(t_list **token_list);
+t_token_ast		*changed_token(t_list **token_list, int pos);
 t_list			**syntax_and_heredoc(t_aux *aux, char **line);
+int				syntax_mandatory(t_aux *aux, int pos, char **line);
+int				syntax_bonus(t_list **lst, int pos, int type);
+t_list			**make_transition(t_list **token_list);
+t_list			**start_list_tr(t_list **lst, t_list **new_list, int open);
+t_list			**parentheses_list_tr(t_list **lst, t_list **new, int open);
+t_list			**end_list_tr(t_list **lst, t_list **new_list, int close);
+t_token_ast		*create_new_tr_token(char **str, t_type_lexer t, int w, int q);
+t_list			*command_node(t_list **token_list, int *pos, int quote);
 int				heredoc(t_aux *aux, int pos, char **line);
+char			**heredoc_var_expansion(char **str, t_aux *aux, int pos);
+char			**heredoc_size(int *fd);
 
 /*-----PARSER-----*/
 
 t_ast			**parser(t_list **token_list);
 t_ast			**parser_specific(t_list **token_list, int pos);
+t_ast			**back(t_list **token_list, int pos);
+t_ast			**front(t_list **token_list, int pos);
 t_ast			**parser_parenthesis(t_list **token_list);
 t_ast			**create_ast(t_list **token_list, int pos);
 int				find_specific(t_list **token_list, int type);
 
 /*Funnciones de limpieza*/
 void			delete_token(void *content);
-t_list			**error_token(t_list **token_list, t_token *token);
-t_list			**error_list(t_list **token_list);
 char			**free_str(char **str);
 void			delete_token_ast(void *content);
-t_list			**error_tr(t_list **token_list);
 void			delete_ast(void *content);
-t_ast			**error_ast(t_ast **ast_list);
-t_list			**error_syntax(t_list **token_list, int pos);
+void			astdel(t_ast *ast_list);
 t_list			**clean_token(t_list **token_list, t_token *token);
 t_list			**clean_list(t_list **token_list);
+t_list			**clean_tr(t_list **token_list);
+t_ast			**clean_ast(t_ast **ast_list);
+t_list			**error_token(t_list **token_list, t_token *token);
+t_list			**error_list(t_list **token_list);
+t_list			**error_tr(t_list **token_list);
+t_ast			**error_ast(t_ast **ast_list);
+t_list			**error_syntax(t_list **token_list, int pos);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/20 16:01:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:55:02 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,53 +61,25 @@ int	main(int argc, char **argv, char **envp)
 		else
 		{
 			lst = lexer(line, env, tmp_var);
-			//free(line);
 			if (!lst)
 			{
 				free(line);
+				free_str(env);
+				free(*tmp_var);
+				free(tmp_var);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
 			printf("\nA la salida de lexer:\n");
 			printf("\n");
 			print_lst(*lst);
-			printf("\n");
-			/*lst = transition_lex_par(lst);
-			if (!lst)
-			{
-				free(line);
-				//rl_clear_history();
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida de tansition:\n");
-            printf("\n");
-			print_lst_tr(*lst);
-            printf("\n");
-			if (command_union(lst) == NULL)
-			{
-				free(line);
-				//rl_clear_history();
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida de union:\n");
-			printf("\n");
-			print_lst_tr(*lst);
-			printf("\n");
-			lst = syntax_and_heredoc(lst, &line, env, tmp_var);
-			if (!lst)
-			{
-				free(line);
-				//rl_clear_history();
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida de syntax:\n");
-            printf("\n");
-            print_lst_tr(*lst);
-            printf("\n");*/
 			lst = transition(lst, env, tmp_var, &line);
 			if (!lst)
 			{
 				free(line);
+				free_str(env);
+				free(*tmp_var);
+				free(tmp_var);
 				exit(EXIT_FAILURE);
 			}
 			printf("\nA la salida de transition:\n");
@@ -122,7 +94,10 @@ int	main(int argc, char **argv, char **envp)
 			ast = parser(lst);
 			if (!ast)
 			{
-				error_tr(lst);
+				clean_tr(lst);
+				free_str(env);
+				free(*tmp_var);
+				free(tmp_var);
 				//rl_clear_history();
 				exit(EXIT_FAILURE);
 			}
@@ -132,21 +107,13 @@ int	main(int argc, char **argv, char **envp)
             printf("\n");
 
 
-			error_ast(ast);
-			error_tr(lst);
+			clean_ast(ast);
+			clean_tr(lst);
 			free_str(env);
-
-			//execute_ast(*ast, temp_var, &env) ast debe ser puntero simple (t_ast *), temp_var es la tabla de variables (char **), envp es el enviroment (char ***) <--- PUNTERO TRIPLE!!!!
-
-
-			//free(lst);
 		}
+		//rl_clear_history();
 	//}
-	//rl_clear_history();
-	//free(((t_temp_lst *)((*tmp_var)->content))->name);
-	//free(((t_temp_lst *)((*tmp_var)->content))->value);
-	//free((t_temp_lst *)((*tmp_var)->content));
-	//free(*tmp_var);
+	free(*tmp_var);
 	free(tmp_var);
 	exit(EXIT_SUCCESS);
 }

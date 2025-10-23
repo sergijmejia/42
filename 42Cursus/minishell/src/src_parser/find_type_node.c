@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 09:34:01 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/02 13:00:29 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:05:24 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	find_specific(t_list **token_list, int type)
 			pos = find_right_parenthesis(token_list, pos + 1);
 			if (pos == size)
 			{
-				error_tr(token_list);
+				clean_tr(token_list);
 				return (size);
 			}
 		}

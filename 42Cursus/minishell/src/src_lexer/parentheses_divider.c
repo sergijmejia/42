@@ -20,18 +20,18 @@ static t_list	**start_list(t_list **token_list, char *str, int open)
 	t_list	*new_node;
 
 	str_token = (char *) malloc (sizeof(char) * (open + 2));
-	if (!str_token)
-		return (NULL);
 	new_token = (t_token *) malloc (sizeof (t_token));
-	if (!new_token)
+	if (str_token == NULL || new_token == NULL)
 	{
 		free(str_token);
+		free(new_token);
 		return (NULL);
 	}
 	ft_strlcpy(str_token, str, open + 2);
 	new_token->value = str_token;
 	new_token->type = TOKEN_WORD;
 	new_token->finished = 0;
+	new_token->quote = 0;
 	new_node = ft_lstnew(new_token);
 	if (!new_node)
 	{

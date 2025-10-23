@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 11:53:44 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/21 13:47:59 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/23 13:18:37 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,31 @@ static t_list	**expandible_string_loop(t_aux *aux, int *i, char **str)
 	return (aux->token_list);
 }
 
+static int	quote_manager(char *str, int *double_quote, int i)
+{
+	if (str[i] == '\"')
+	{
+		if (*double_quote == 0)
+			*double_quote = 1;
+		else
+			*double_quote = 0;
+		i++;
+	}
+	else if ((str[i] == '\'') && (*double_quote == 0))
+	{
+		i = next_quote(str, i);
+		i++;
+	}
+	return (i);
+}
+
 /*Funcion que gestiona la expansion de varables en TOKEN_EXPANDIBLE_STRINGS*/
 t_list	**exp_string(t_list **lst, char **env, int x, t_list **tmp_var)
 {
 	int		i;
 	char	*str;
 	t_aux	*aux;
+	int		double_quote;
 
 	i = 0;
 	aux = (t_aux *) malloc (sizeof(t_aux));
@@ -95,9 +114,12 @@ t_list	**exp_string(t_list **lst, char **env, int x, t_list **tmp_var)
 	aux->env = env;
 	aux->x = x;
 	str = ((t_token *)((ft_lstpos(*lst, x))->content))->value;
+	double_quote = 0;
 	while (str[i])
 	{
-		if (expandible_string_loop(aux, &i, &str) == NULL)
+		if (str[i] == '\"' || str[i] == '\'')
+			i = quote_manager(str, &double_quote, i);
+		else if (expandible_string_loop(aux, &i, &str) == NULL)
 		{
 			free(aux);
 			return (NULL);

@@ -30,6 +30,7 @@ t_list	**transition(t_list **lst, char **env, t_list **tmp_var, char **line)
 	aux->env = env;
 	aux->x = 0;
 	lst = syntax_and_heredoc(aux, line);
+	free(aux);
 	if (!lst)
 		return (NULL);
 	return (lst);

@@ -33,6 +33,11 @@ t_list	**var_expansion_loop(t_list **lst, char **env, int i, t_list **tmp_var)
 		if (exp_string(lst, env, i, tmp_var) == NULL)
 			return (NULL);
 	}
+	else if (token->type == TOKEN_REDIRECTION_WORD)
+	{
+		if (exp_string(lst, env, i, tmp_var) == NULL)
+			return (NULL);
+	}
 	return (lst);
 }
 

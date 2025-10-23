@@ -69,6 +69,7 @@ t_list	**create_unique_node(t_list **token_list, char *str)
 	new_token->value = str_token;
 	new_token->type = TOKEN_WORD;
 	new_token->finished = 0;
+	new_token->quote = 0;
 	new_node = ft_lstnew(new_token);
 	if (!new_node)
 	{

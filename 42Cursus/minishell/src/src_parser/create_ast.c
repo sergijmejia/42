@@ -74,9 +74,9 @@ t_ast	**create_ast(t_list **token_list, int pos)
 		return (error_ast(ast_list));
 	token_ast = (t_token_ast *)(node->content);
 	ast_node = (t_ast *) malloc (sizeof(t_ast));
+	*ast_list = ast_node;
 	if (ast_node == NULL)
 		return (error_ast(ast_list));
-	*ast_list = ast_node;
 	ast_node->left_ast = NULL;
 	ast_node->right_ast = NULL;
 	ast_node->value = copy_str(token_ast);
