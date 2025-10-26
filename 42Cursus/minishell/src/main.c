@@ -3,117 +3,163 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
+/*   By: rafaguti <rafaguti@student.42barcelon>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 12:48:00 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/23 15:55:02 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/10/18 12:00:00 by rafaguti          #+#    #+#             */
+/*   Updated: 2025/10/26 18:46:21 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_exec.h" // t_temp_lst_exec
+#include "minishell.h"      // parser
+#include "libft.h"
+#include "exec.h"           // prototipo de exec_ast
+#include "env.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
 
-int	g_exit_status;
+extern int g_exit_status;
 
-/*Este es un programa para ir testeand tods los componentes*/
-int	main(int argc, char **argv, char **envp)
+/* Libera un elemento de la tabla tmp_lst*/
+static void free_tmp_var_p(void *content)
 {
-	t_list	**tmp_var;
+	t_temp_lst	*tmp_lst;
+
+	tmp_lst = (t_temp_lst *)content;
+	free(tmp_lst->name);
+	free(tmp_lst->value);
+	free(tmp_lst);
+}
+
+static int	main_loop(char **env, t_list **p_tmp, t_temp_lst_exec **tmp)
+{
+	char	*aux_line;
+	char	*line;
 	t_list	**lst;
 	t_ast	**ast;
-	char	*line;
-	char	**env;
 
-	if (argc != 1)
+	aux_line = readline("minishell$ ");
+	if (!aux_line) 
+		return (0);
+	line = ft_strjoin(aux_line, "\n");
+	free(aux_line);
+	if (!line)
+		return (0);
+	if (check_parentheses_balance(line) || check_quote_balance(line))
 	{
-		ft_printf("Entra en el condicional\nError por: %s\n",argv[1]);
-		exit(EXIT_FAILURE);
+		free(line);
+		return (1);
 	}
-	g_exit_status = 0;
-	tmp_var = create_var_table();
-	if (tmp_var == NULL)
+	lst = lexer(line, env, p_tmp);
+	if (!lst)
 	{
-		ft_printf("Error en la creacion de tabla\n");
-		exit(EXIT_FAILURE);
+		free(line);
+		return (1);
 	}
-	env = dup_env(envp);
-	//while (1)
-	//{
-		//line = readline("minishell$ ");
-		ft_printf("minishell$ ");
-		line = get_next_line(0);
-		if (!line)
-			exit(EXIT_FAILURE);
-		//else
-			//add_history(line);
-		if (check_parentheses_balance(line)) //esto en realidad se deberia checkear en el syntax
-											 //para eso hay que modificar el parentheses_divider 
-											 //en el lexer para simpllemente crear los nodos de
-											 //parentesis abierto/cerrado 
-		{
-			printf("Error: parentheses not balanced\n");
-			free (line);
-		}
-		else if (check_quote_balance(line))
-		{
-			printf("Error\n");
-			free (line);
-		}
-		else
-		{
-			lst = lexer(line, env, tmp_var);
-			if (!lst)
-			{
-				free(line);
-				free_str(env);
-				free(*tmp_var);
-				free(tmp_var);
-				//rl_clear_history();
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida de lexer:\n");
-			printf("\n");
-			print_lst(*lst);
-			lst = transition(lst, env, tmp_var, &line);
-			if (!lst)
-			{
-				free(line);
-				free_str(env);
-				free(*tmp_var);
-				free(tmp_var);
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida de transition:\n");
-			printf("\n");
-			print_lst_tr(*lst);
-			printf("\n");
-			printf("El line modificado es:\n");
-			printf("%s", line);
-			printf("\n");
-			//add_history(line);
-			free(line);
-			ast = parser(lst);
-			if (!ast)
-			{
-				clean_tr(lst);
-				free_str(env);
-				free(*tmp_var);
-				free(tmp_var);
-				//rl_clear_history();
-				exit(EXIT_FAILURE);
-			}
-			printf("\nA la salida del parser:\n");
-            printf("\n");
-            print_ast(*ast);
-            printf("\n");
+	lst = transition(lst, env, p_tmp, &line);
+	if (!lst)
+	{
+		free(line);
+		return (1);
+	}
+	add_history(line);
+	free(line);
+	ast = parser(lst);
+	if (!ast)
+	{
+		clean_tr(lst);
+		return (1);
+	}
+	exec_ast(*ast, tmp, &env, p_tmp);
+	clean_ast(ast);
+	clean_tr(lst);
+	return (1);
+}
 
+/**
+ * @brief Signal handler for Ctrl-C (SIGINT).
+ *
+ * This handler is triggered when the user presses Ctrl-C.
+ * It clears the current input line, moves to a new line, 
+ * redisplays the prompt, and sets the global exit status to 1.
+ *
+ * @param signum The signal number (unused).
+ */
+void sigint_handler(int signum)
+{
+    (void)signum;
 
-			clean_ast(ast);
-			clean_tr(lst);
-			free_str(env);
-		}
-		//rl_clear_history();
-	//}
-	free(*tmp_var);
-	free(tmp_var);
-	exit(EXIT_SUCCESS);
+    rl_on_new_line();        
+    rl_replace_line("", 0);
+    write(1, "\n", 1);
+    rl_redisplay();
+    g_exit_status = 1;
+}
+
+/* Convierte la lista del parser (t_list **tmp_var) a tu lista enlazada del executor */
+t_temp_lst_exec *convert_tmp_var(t_list **parser_tmp_var)
+{
+    t_temp_lst_exec *head = NULL;
+    t_temp_lst_exec *node;
+    t_list *cur = *parser_tmp_var;
+
+    while (cur)
+    {
+        node = malloc(sizeof(t_temp_lst_exec));
+        if (!node)
+            exit(EXIT_FAILURE);
+        node->name = ft_strdup(((t_temp_lst *)cur->content)->name);
+        node->value = ft_strdup(((t_temp_lst *)cur->content)->value);
+        node->next = head;
+        head = node;
+        cur = cur->next;
+    }
+    return head;
+}
+
+/* Libera la lista enlazada del executor */
+void free_tmp_var(t_temp_lst_exec *lst)
+{
+    t_temp_lst_exec *tmp;
+
+    while (lst)
+    {
+        tmp = lst->next;
+        free(lst->name);
+        free(lst->value);
+        free(lst);
+        lst = tmp;
+    }
+}
+
+int main(int argc, char **argv, char **envp)
+{
+    t_list          **parser_tmp_var;
+    t_temp_lst_exec	*tmp_var;
+    char            **env;
+
+    (void)argc;
+    (void)argv;
+    g_exit_status = 0;
+    parser_tmp_var = create_var_table();
+	tmp_var = NULL;
+    if (!parser_tmp_var)
+        exit(EXIT_FAILURE);
+    env = dup_env(envp);
+    if (!env)
+        exit(EXIT_FAILURE);
+    unset_assignment("OLDPWD", &env);
+    signal(SIGINT, sigint_handler);
+    signal(SIGQUIT, SIG_IGN);
+    tmp_var = convert_tmp_var(parser_tmp_var);
+    while (main_loop(env, parser_tmp_var, &tmp_var)) ;
+    free_tmp_var(tmp_var);
+    ft_lstclear(parser_tmp_var, free_tmp_var_p);
+    free_str(env);
+    return 0;
 }

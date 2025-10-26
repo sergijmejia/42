@@ -12,6 +12,44 @@
 
 #include "minishell.h"
 
+/*Funcion que cuenta la cantidad de nl que hay en line*/
+static int	count_nl(char *line)
+{
+	int	nl;
+	int	i;
+
+	i = 0;
+	nl = 0;
+	while (line[i])
+	{
+		if (line[i] == '\n')
+			nl++;
+		i++;
+	}
+	return (nl);
+}
+
+/*Funcion que elmina el ultimo nl*/
+static char	*reduce_nl(char *line)
+{
+	int		len;
+	int		i;
+	char	*new_line;
+	
+	len = (int) ft_strlen(line);
+	new_line = (char *) malloc (len * sizeof(char));
+	if (new_line == NULL)
+		return (NULL);
+	i = 0;
+	while (i < (len - 1))
+	{
+		new_line[i] = line[i];
+		i++;
+	}
+	new_line[len - 1] = '\0';
+	return (new_line);
+}
+
 /*Funcion que verifica la sintaxis de newline*/
 static int	syntax_newline(t_list **token_list, int pos)
 {
@@ -27,7 +65,7 @@ static int	syntax_newline(t_list **token_list, int pos)
 }
 
 /*Funcion que gestiona el loop del syntax_and_heredoc*/
-static int	syntax_and_heredoc_loop(t_aux *aux, char **line, int i)
+static int	snh_loop(t_aux *aux, char **line, int i)
 {
 	int			syntax;
 	t_type_tr	type;
@@ -46,22 +84,29 @@ static int	syntax_and_heredoc_loop(t_aux *aux, char **line, int i)
 /*Funcion que gestiona el heredoc y los errores de sintaxis*/
 t_list	**syntax_and_heredoc(t_aux *aux, char **line)
 {
-	int			i;
-	int			size;
-	int			syntax;
+	int			count_size_syntax[3];
+	char		*aux_line;
 	t_list		**lst;
 
-	i = 0;
+	count_size_syntax[0] = 0;
 	lst = aux->token_list;
-	size = ft_lstsize(*lst);
-	while (i < size)
+	count_size_syntax[1] = ft_lstsize(*lst);
+	while (count_size_syntax[0] < count_size_syntax[1])
 	{
-		syntax = syntax_and_heredoc_loop(aux, line, i);
-		if (syntax == 1)
-			return (error_syntax(lst, i));
-		i++;
+		count_size_syntax[2] = snh_loop(aux, line, count_size_syntax[0]);
+		if (count_size_syntax[2] == 1)
+			return (error_syntax(lst, count_size_syntax[0]));
+		count_size_syntax[0]++;
 	}
-	if (syntax_newline(lst, size))
-		return (error_syntax(lst, size));
+	if (syntax_newline(lst, count_size_syntax[1]))
+		return (error_syntax(lst, count_size_syntax[1]));
+	if (count_nl(*line) == 1)
+	{
+		aux_line = reduce_nl(*line);
+		if (aux_line== NULL)
+			return (error_tr(lst));
+		free (*line);
+		*line = aux_line;
+	}
 	return (lst);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
 /*Funcion que busca en env la variable name*/
 char	*ft_getenv(char **env, const char *name)

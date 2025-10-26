@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdel_last.c                                   :+:      :+:    :+:   */
+/*   ft_lstdel_pos.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/30 11:45:23 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/20 15:09:14 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/08/05 15:09:37 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/09/15 11:21:31 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-/*Funcion que elimina e ultimo elemento de una lista*/
-void	ft_lstdel_last(t_list **lst, void (*del)(void*))
+/*Fucion que elimina de la lista lst el nodo old, en la posicion x*/
+void	ft_lstdel_pos(t_list **lst, void (*del)(void*), int x)
 {
-	t_list	*second_last;
-	t_list	*last;
-	int		len;
+	int		size;
+	t_list	*old;
 
-	if (!lst || !del)
+	size = (int) ft_lstsize(*lst);
+	if ((x < 0) || (x >= size))
 		return ;
-	len = ft_lstsize(*lst);
-	if (len > 1)
-		second_last = ft_lstsecondlast(*lst);
-	last = ft_lstlast(*lst);
-	ft_lstdelone(last, del);
-	if (len > 1)
-		second_last->next = NULL;
-	else
-		*lst = NULL;
+	old = ft_lstpos(*lst, x);
+	if (x == 0)
+		*lst = old->next;
+	if (x > 0)
+		ft_lstpos(*lst, x - 1)->next = old->next;
+	ft_lstdelone(old, del);
 	return ;
 }

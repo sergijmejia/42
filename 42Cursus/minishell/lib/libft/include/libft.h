@@ -75,6 +75,10 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*ft_lstpos(t_list *lst, int x);
 t_list	*ft_lstsecondlast(t_list *lst);
+void    ft_lstadd_pos(t_list **lst, t_list *new, int i);
+void    ft_lstdel_pos(t_list **lst, void (*del)(void *), int x);
+void    ft_lstdel_last(t_list **lst, void (*del)(void *));
+char    *ft_getenv(char **env, const char *name);
 
 void	ft_strtoupper(void *str);
 int		ft_strcontains(const char *str, char c);
@@ -123,9 +127,5 @@ char	*ft_unsig_int(char *s, va_list args);
 char	*ft_hexa_num_lower(char *s, va_list args);
 char	*ft_hexa_num_upper(char *s, va_list args);
 int		ft_create_character_arg(const char *s, va_list args, char **arg);
-
-/*push_swap*/
-
-//int		push_swap(t_list **a);
 
 #endif

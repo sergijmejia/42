@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
 /*Funcion que agrega a la lista lst, el nodo new, en la posicion i*/
 void	ft_lstadd_pos(t_list **lst, t_list *new, int i)

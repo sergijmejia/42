@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../lib/libft/libft.h"
+# include "../lib/libft/include/libft.h"
 # include <aio.h>
 # include <sys/wait.h>
 # include <errno.h>
@@ -181,6 +181,7 @@ void			ft_lstdel_last(t_list **lst, void (*del)(void *));
 char			*ft_getenv(char **env, const char *name);
 
 /*-----TRANSICION LEXER/PARSER-----*/
+
 t_list			**transition(t_list **lst, char **e, t_list **t, char **l);
 t_list			**assignment_selection(t_list **token_list);
 t_list			**transition_lex_par(t_list **token_list);
@@ -211,7 +212,8 @@ t_ast			**parser_parenthesis(t_list **token_list);
 t_ast			**create_ast(t_list **token_list, int pos);
 int				find_specific(t_list **token_list, int type);
 
-/*Funnciones de limpieza*/
+/*-----FUNCIONES DE LIMPIEZA Y LIBERACION DE MEMORIA-----*/
+
 void			delete_token(void *content);
 char			**free_str(char **str);
 void			delete_token_ast(void *content);

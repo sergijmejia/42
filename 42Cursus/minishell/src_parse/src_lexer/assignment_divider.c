@@ -41,11 +41,18 @@ static t_list	**divide_assignment(t_list **token_list, int *i)
 	pos = find_next_equal(str, 0);
 	while (pos > 0)
 	{
-		assignment = assignment_candidate(token_list, i, pos);
+        //printf("El str es %s\n", ((t_token *)(ft_lstpos(*token_list, *i)->content))->value);	
+        assignment = assignment_candidate(token_list, i, pos);
 		if (assignment == -1)
-			return (error_list(token_list));
+			return (clean_list(token_list));
 		else if (assignment == 1)
 		{
+/*
+        // DEBUG: imprimir token_list en cada iteracion   
+        printf("\nEn esta iteracion i=%d y token_list es:\n", *i);
+        print_lst(*token_list);
+        printf("\n");
+*/
 			lst = ft_lstpos(*token_list, *i);
 			str = ((t_token *)(lst->content))->value;
 			pos = find_next_equal(str, 0);

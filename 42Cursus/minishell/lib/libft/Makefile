@@ -3,116 +3,88 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: smejia-a <smejia-a@student.42barcelona.com>+#+  +:+       +#+         #
+#    By: rafaguti <rafaguti>                        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/16 18:16:51 by smejia-a          #+#    #+#              #
-#    Updated: 2025/01/04 15:01:35 by smejia-a         ###   ########.fr        #
+#    Created: 2025/10/18 00:59:49 by rafaguti          #+#    #+#              #
+#    Updated: 2025/10/18 01:10:52 by rafaguti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= libft.a
-OBJ_DIR	= ./obj
-INC_DIR	= .
-SRC_DIR	= ./src
-SRC	= $(OBJ_DIR)/ft_isalpha.o		\
-	  $(OBJ_DIR)/ft_isdigit.o		\
-	  $(OBJ_DIR)/ft_isalnum.o		\
-	  $(OBJ_DIR)/ft_isascii.o		\
-	  $(OBJ_DIR)/ft_isprint.o		\
-	  $(OBJ_DIR)/ft_strlen.o		\
-	  $(OBJ_DIR)/ft_memset.o		\
-	  $(OBJ_DIR)/ft_bzero.o			\
-	  $(OBJ_DIR)/ft_memcpy.o		\
-	  $(OBJ_DIR)/ft_memmove.o		\
-	  $(OBJ_DIR)/ft_strlcpy.o		\
-	  $(OBJ_DIR)/ft_strlcat.o		\
-	  $(OBJ_DIR)/ft_toupper.o		\
-	  $(OBJ_DIR)/ft_tolower.o		\
-	  $(OBJ_DIR)/ft_strtoupper.o		\
-	  $(OBJ_DIR)/ft_strchr.o		\
-	  $(OBJ_DIR)/ft_strrchr.o		\
-	  $(OBJ_DIR)/ft_strncmp.o		\
-	  $(OBJ_DIR)/ft_memchr.o		\
-	  $(OBJ_DIR)/ft_memcmp.o		\
-	  $(OBJ_DIR)/ft_strnstr.o		\
-	  $(OBJ_DIR)/ft_atoi.o			\
-	  $(OBJ_DIR)/ft_calloc.o		\
-	  $(OBJ_DIR)/ft_strdup.o		\
-	  $(OBJ_DIR)/ft_substr.o		\
-	  $(OBJ_DIR)/ft_strjoin.o		\
-	  $(OBJ_DIR)/ft_strcontains.o		\
-	  $(OBJ_DIR)/ft_strtrim.o		\
-	  $(OBJ_DIR)/ft_countchar.o		\
-	  $(OBJ_DIR)/ft_countwords.o		\
-	  $(OBJ_DIR)/ft_split.o			\
-	  $(OBJ_DIR)/ft_intlen.o		\
-	  $(OBJ_DIR)/ft_abs.o			\
-	  $(OBJ_DIR)/ft_itoa.o			\
-	  $(OBJ_DIR)/ft_strmapi.o		\
-	  $(OBJ_DIR)/ft_striteri.o		\
-	  $(OBJ_DIR)/ft_putchar_fd.o		\
-	  $(OBJ_DIR)/ft_putstr_fd.o		\
-	  $(OBJ_DIR)/ft_putendl_fd.o		\
-	  $(OBJ_DIR)/ft_putnbr_fd.o		\
-	  $(OBJ_DIR)/ft_putchar.o		\
-	  $(OBJ_DIR)/ft_putstr.o		\
-	  $(OBJ_DIR)/ft_atol.o			\
-	  $(OBJ_DIR)/ft_lstnew.o		\
-	  $(OBJ_DIR)/ft_lstadd_front.o		\
-	  $(OBJ_DIR)/ft_lstsize.o		\
-	  $(OBJ_DIR)/ft_lstlast.o		\
-	  $(OBJ_DIR)/ft_lstadd_back.o		\
-	  $(OBJ_DIR)/ft_lstdelone.o		\
-	  $(OBJ_DIR)/ft_lstclear.o		\
-	  $(OBJ_DIR)/ft_lstiter.o		\
-	  $(OBJ_DIR)/ft_lstmap.o		\
-	  $(OBJ_DIR)/ft_lstpos.o		\
-	  $(OBJ_DIR)/ft_lstsecondlast.o		\
-	  $(OBJ_DIR)/get_next_line.o		\
-	  $(OBJ_DIR)/ft_check_newline.o		\
-	  $(OBJ_DIR)/ft_free_str.o		\
-	  $(OBJ_DIR)/ft_printf.o		\
-	  $(OBJ_DIR)/ft_cal_min_field.o		\
-	  $(OBJ_DIR)/ft_cal_prec.o		\
-	  $(OBJ_DIR)/ft_count_arg_len.o		\
-	  $(OBJ_DIR)/ft_create_arg.o		\
-	  $(OBJ_DIR)/ft_flag.o			\
-	  $(OBJ_DIR)/ft_numlen.o		\
-	  $(OBJ_DIR)/ft_character.o		\
-	  $(OBJ_DIR)/ft_string.o		\
-	  $(OBJ_DIR)/ft_hexa_pointer.o		\
-	  $(OBJ_DIR)/ft_integer.o		\
-	  $(OBJ_DIR)/ft_apply_min_field_int.o	\
-	  $(OBJ_DIR)/ft_unsig_int.o		\
-	  $(OBJ_DIR)/ft_hexa_num_lower.o	\
-	  $(OBJ_DIR)/ft_hexa_num_upper.o	\
-	  $(OBJ_DIR)/ft_create_character_arg.o	\
+# Colors and Formatting
+RESET = \033[0m
+BOLD = \033[1m
+RED = \033[31m
+GREEN = \033[32m
+YELLOW = \033[33m
+BLUE = \033[34m
+MAGENTA = \033[35m
+CYAN = \033[36m
+WHITE = \033[37m
 
-HEADER	= libft.h
+# Project Configuration
+NAME = libft.a
+CC = cc
+WARNING_FLAGS = -Wall -Werror -Wextra
+INCLUDE_FLAGS = -I$(INC_DIR)
+ALL_CFLAGS = $(WARNING_FLAGS) $(INCLUDE_FLAGS)
+MAKE = make --no-print-directory
 
-OBJ	= $(SRC:.c=.o)
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+INC_DIR = include
 
-CFLAGS	= -Wall -Werror -Wextra -fPIC -I$(INC_DIR) #fPIC (position independent code) es para que no se guarde siempre en la misma direccion de memoria. Esto hace el codigo mas seguro. Las versiones mas modernas de linux lo hacen por defecto
-CC	= cc
+# Source Files
+SRCS = ft_isalpha ft_isdigit ft_isalnum ft_isascii ft_isprint ft_strlen ft_memset ft_bzero \
+	ft_memcpy ft_memmove ft_strlcpy ft_strlcat ft_toupper ft_tolower ft_strtoupper ft_strchr \
+	ft_strrchr ft_strncmp ft_memchr ft_memcmp ft_strnstr ft_atoi ft_calloc ft_strdup ft_substr \
+	ft_strjoin ft_strcontains ft_strtrim ft_countchar ft_countwords ft_split ft_intlen ft_abs \
+	ft_itoa ft_strmapi ft_striteri ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd \
+	ft_putchar ft_putstr ft_atol ft_lstnew ft_lstadd_front ft_lstsize ft_lstlast ft_lstadd_back \
+	ft_lstdelone ft_lstclear ft_lstiter ft_lstmap ft_lstpos ft_lstsecondlast get_next_line \
+	ft_check_newline ft_free_str ft_printf ft_cal_min_field ft_cal_prec ft_count_arg_len \
+	ft_create_arg ft_flag ft_numlen ft_character ft_string ft_hexa_pointer ft_integer \
+	ft_apply_min_field_int ft_unsig_int ft_hexa_num_lower ft_hexa_num_upper ft_create_character_arg \
+	ft_lstadd_pos ft_lstdel_pos ft_lstdel_last ft_getenv
 
-.PHONY : all clean fclean re
+OBJS = $(patsubst %,$(OBJ_DIR)/%.o,$(SRCS))
 
-all : $(NAME)
+# Header File
+HEADER = $(INC_DIR)/libft.h
 
-$(NAME) : $(OBJ) $(HEADER)
-	ar rcs $(NAME) $(OBJ)
+# Targets rules
+all: $(NAME)
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) $(MAKEFILE_LIST)
-	mkdir -p $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $< -o $@
+$(NAME): $(OBJS) $(HEADER)
+	@ar rcs $(NAME) $?
+	@echo "$(BOLD)$(WHITE)>> Library build successfully! 🎉$(RESET)"
 
+# Rule to compile .c files into .o files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER) | $(OBJ_DIR)
+	@echo "$(CYAN)>> Compiling $<... $(BOLD)$(GREEN)[ OK ]$(RESET)"
+	@$(CC) $(ALL_CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $@
+
+# Clean Object Files
 clean:
-	rm -rf $(OBJ_DIR)
+	@echo -n "$(BOLD)$(WHITE)>> Cleaning object files$(RESET)"
+	@rm -rf $(OBJ_DIR)
+	@echo "$(BOLD)$(GREEN)[ OK ]$(RESET)"
 
-fclean:
-	$(MAKE) clean
-	rm -f $(NAME)
+# Full Clean
+fclean: clean
+	@if [ -f "$(NAME)" ]; then \
+		echo -n "$(BOLD)$(RED)>> Removing library...$(RESET)"; \
+		rm -f $(NAME); \
+		echo "$(BOLD)$(GREEN) [ OK ]$(RESET)"; \
+	else \
+		echo "$(BOLD)$(RED)>> Library does not exist or already removed$(RESET)"; \
+	fi
 
-re:
-	$(MAKE) fclean
-	$(MAKE)
+# Rebuild the Project
+re: fclean all
+
+# Phony Targets
+.PHONY: all clean fclean re
