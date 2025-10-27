@@ -47,7 +47,7 @@ static void	fork_and_exec(t_ast *node, char **env_for_exec)
 	}
 	if (pid == 0)
 		child_exec_command(node, env_for_exec);
-	wait_child_and_update_status(pid, env_for_exec);
+	wait_child_and_update_status(pid);
 }
 
 /**
@@ -97,20 +97,21 @@ char	*get_last_arg(char **args)
  * @param envp Environment pointer.
  * @param last_arg Last argument to set in environment variable '_'.
  */
-void	exec_command_aux(t_ast *node, t_temp_lst_exec **temp_vars,
-			char ***envp, char *last_arg)
+void exec_command_aux(t_ast *node, t_temp_lst_exec **temp_vars,
+                      char ***envp, char *last_arg)
 {
-	char	**env_for_exec;
+    char **env_for_exec;
 
-	update_env_var(envp, "_", last_arg);
-	env_for_exec = build_envp(*temp_vars, *envp);
-	if (!env_for_exec)
-	{
-		g_exit_status = 1;
-		return ;
-	}
-	fork_and_exec(node, env_for_exec);
+    update_env_var(envp, "_", last_arg);
+    env_for_exec = build_envp(*temp_vars, *envp);
+    if (!env_for_exec)
+    {
+        g_exit_status = 1;
+        return;
+    }
+    fork_and_exec(node, env_for_exec);
 }
+
 
 /**
  * @brief Executes a simple command node (builtin or external).

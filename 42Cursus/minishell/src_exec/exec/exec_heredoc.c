@@ -89,6 +89,7 @@ void	exec_heredoc(t_ast *node, t_temp_lst_exec **temp_vars,
 {
 	t_heredoc_ctx	ctx;
 
+	printf("DEBUG: heredoc content = '%s'\n", node->right_ast->value[0]);
 	if (pipe(ctx.hd) == -1)
 	{
 		write(2, "minishell: Heredoc pipe error\n", 30);

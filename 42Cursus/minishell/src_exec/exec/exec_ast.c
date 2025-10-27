@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti@student.42barcelon>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 14:15:19 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/26 14:00:55 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/26 22:26:53 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static t_pair split_assignment(const char *str)
  * @param parser_tmp_var Parser's temporary variable table (optional)
  * @param envp Pointer to the shell global environment
  */
+/*
 static void handle_assignment(t_ast *node, t_temp_lst_exec **temp_vars,
         t_list **parser_tmp_var, char ***envp)
 {
@@ -85,7 +86,7 @@ static void handle_assignment(t_ast *node, t_temp_lst_exec **temp_vars,
     free(p.name);
     free(p.value);
 }
-
+*/
 /**
  * @brief Forks a child process and executes a command with a given environment.
  *
@@ -121,7 +122,7 @@ static void fork_and_exec(t_ast *node, char **env_for_exec)
     }
 
     // Parent
-    wait_child_and_update_status(pid, env_for_exec);
+    wait_child_and_update_status(pid);
 }
 
 /**
@@ -145,14 +146,13 @@ static void exec_ast_simple(t_ast *node, t_temp_lst_exec **temp_vars,
         g_exit_status = 0;
         return;
     }
-
     if (node->type == TOKEN_P_ASSIGNMENT)
     {
         t_ast *assign = node;
         char **env_for_exec = NULL;
         int has_command = 0;
 
-        // Check if there's a command after assignments
+        // Comprobar si hay comando después de las asignaciones
         t_ast *tmp = assign;
         while (tmp)
         {
@@ -164,38 +164,51 @@ static void exec_ast_simple(t_ast *node, t_temp_lst_exec **temp_vars,
             tmp = tmp->right_ast;
         }
 
-        // If there's a command, create temporary environment
+        // Si hay comando, clonamos envp completamente
         if (has_command)
-            env_for_exec = build_envp(*temp_vars, *envp);
+            env_for_exec = clone_envp(*envp);
 
-        // Apply all consecutive assignments
+        // Aplicar todas las asignaciones consecutivas
         while (assign && assign->type == TOKEN_P_ASSIGNMENT)
         {
-            handle_assignment(assign, temp_vars, parser_tmp_var, envp);
-
-            if (env_for_exec)
+            t_pair p = split_assignment(assign->value[0]);
+            if (!p.name || !p.value)
             {
-                t_pair p = split_assignment(assign->value[0]);
-                if (p.name && p.value)
-                {
-                    update_env_var(&env_for_exec, p.name, p.value);
-                    free(p.name);
-                    free(p.value);
-                }
+                assign = assign->right_ast;
+                continue;
             }
+
+            // Actualizar envp o temp_vars
+            if (get_env_val(*envp, p.name))
+                update_env_var(envp, p.name, p.value);
+            else
+                add_temp_var(temp_vars, p.name, p.value);
+
+            add_parser_tmp_var(parser_tmp_var, p.name, p.value);
+
+            // Actualizar env_for_exec si existe
+            if (env_for_exec)
+                update_env_var(&env_for_exec, p.name, p.value);
+
+            free(p.name);
+            free(p.value);
 
             assign = assign->right_ast;
         }
-
-        // Execute command if exists
+        // Ejecutar el comando si existe
         if (has_command && assign && assign->type == TOKEN_P_COMMAND)
+        {
             fork_and_exec(assign, env_for_exec);
+        }
 
+        // Liberar env_for_exec siempre, aunque no haya comando
         if (env_for_exec)
+        {
             free_envp(env_for_exec);
-
+        }
         g_exit_status = 0;
     }
+
     else if (node->type == TOKEN_P_COMMAND)
         exec_command(node, temp_vars, envp, parser_tmp_var);
     else if (node->type == TOKEN_P_PIPE)

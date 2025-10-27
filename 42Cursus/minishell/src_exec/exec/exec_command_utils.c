@@ -39,14 +39,12 @@ void	child_exec_command(t_ast *node, char **env_for_exec)
  * @brief Waits for the child process and updates g_exit_status.
  *
  * @param pid PID of the forked child.
- * @param env_for_exec Environment array to free after execution.
  */
-void	wait_child_and_update_status(pid_t pid, char **env_for_exec)
+void	wait_child_and_update_status(pid_t pid)
 {
 	int	status;
 
 	waitpid(pid, &status, 0);
-	free_envp(env_for_exec);
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))

@@ -16,79 +16,83 @@
 #include <unistd.h>
 
 /**
- * @brief Determines if the newline should be printed based on first argument.
+ * @brief Checks if a given argument is a valid -n flag.
  *
- * @param arg First argument
- * @return 1 if newline should be printed, 0 if suppressed
+ * Accepts multiple forms like `-n`, `-nn`, `-nnnn`, etc.
+ *
+ * @param arg The argument string to check
+ * @return 1 if it's a valid -n flag, 0 otherwise
  */
-static int	check_newline(char *arg)
+static int	is_n_flag(const char *arg)
 {
-    int	i;
+	int	i;
 
-    if (!arg)
-        return (1);
-    if (arg[0] != '-')
-        return (1);
-    i = 1;
-    if (arg[i] == '\0')
-        return (1);
-    while (arg[i])
-    {
-        if (arg[i] != 'n')
-            return (1);
-        i++;
-    }
-    return (0);
+	if (!arg || arg[0] != '-' || arg[1] == '\0')
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 /**
  * @brief Prints a single argument, expanding it if it starts with '$'.
  *
- * @param arg Argument string
- * @param tmp_var Temporary variable list
+ * @param arg Argument string to print
+ * @param tmp_var Temporary variable list for variable expansion
  */
 static void	print_single_arg(char *arg, t_temp_lst_exec *tmp_var)
 {
-    char	*expanded;
+	char	*expanded;
 
-    if (!arg)
-        return ;
-    if (arg[0] == '$')
-    {
-        expanded = find_var_exec(arg + 1, tmp_var);
-        if (expanded)
-            ft_putstr_fd(expanded, 1);
-    }
-    else
-        ft_putstr_fd(arg, 1);
+	if (!arg)
+		return ;
+	if (arg[0] == '$')
+	{
+		expanded = find_var_exec(arg + 1, tmp_var);
+		if (expanded)
+			ft_putstr_fd(expanded, 1);
+	}
+	else
+		ft_putstr_fd(arg, 1);
 }
 
 /**
- * @brief Executes the builtin 'echo'.
+ * @brief Executes the builtin `echo` command.
  *
- * Handles the -n flag and variable expansion.
+ * Mimics Bash behavior:
+ * - Handles one or more `-n` flags (e.g. `echo -n -n hello`).
+ * - Expands variables beginning with `$`.
+ * - Prints arguments separated by spaces.
  *
- * @param args Array of arguments
+ * @param args Array of arguments (`args[0]` is "echo")
  * @param tmp_var Temporary variable list
- * @return Exit status (always 0)
+ * @return Always returns 0 (success)
  */
 int	builtin_echo(char **args, t_temp_lst_exec *tmp_var)
 {
-    int	i;
-    int	newline;
+	int	i;
+	int	newline;
 
-    i = 1;
-    newline = check_newline(args[i]);
-    if (args[i] && newline == 0)
-        i++;
-    while (args && args[i])
-    {
-        print_single_arg(args[i], tmp_var);
-        if (args[i + 1])
-            ft_putstr_fd(" ", 1);
-        i++;
-    }
-    if (newline)
-        ft_putchar_fd('\n', 1);
-    return (0);
+	i = 1;
+	newline = 1;
+	while (args[i] && is_n_flag(args[i]))
+	{
+		newline = 0;
+		i++;
+	}
+	while (args[i])
+	{
+		print_single_arg(args[i], tmp_var);
+		if (args[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+	if (newline)
+		ft_putchar_fd('\n', 1);
+	return (0);
 }

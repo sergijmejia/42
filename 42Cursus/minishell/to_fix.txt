@@ -1,0 +1,30 @@
+TESTS que FALLAN:
+
+1. export VAR=test && echo $VAR
+
+2.	var1=hola var2=mundo
+	echo $var1
+	hola
+	echo $var2
+	mundo (ahora no muestra nada)
+
+-------------------------------------------------------------------------
+Para que el CTRL-C solo salga uno, en los hijos hacer un:
+    signal(SIGINT, SIG_IGN);
+
+Multiples asignaciones (con una seria lo mismo):
+    1. mirar si hay comando
+    2. si hay comando las asignaciones son solo validas durante la ejecucion
+       de ese comando
+    3. si no hay comando se hacen las asignaciones en la tabla temporal
+
+    Ejemplo: var4=hola export var5=adios
+        var4 solo existe mientras export se ejecuta y no se guarda en ninguna parente
+        var5 se guarda en environment
+
+-------------------------------------------------------------------------
+
+   norminette de main
+   actualizar parte de Sergio
+
+   comprobar memory leaks

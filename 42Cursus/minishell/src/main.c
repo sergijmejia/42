@@ -44,7 +44,7 @@ static int	main_loop(char **env, t_list **p_tmp, t_temp_lst_exec **tmp)
 	t_ast	**ast;
 
 	aux_line = readline("minishell$ ");
-	if (!aux_line) 
+	if (!aux_line)
 		return (0);
 	line = ft_strjoin(aux_line, "\n");
 	free(aux_line);
@@ -85,7 +85,7 @@ static int	main_loop(char **env, t_list **p_tmp, t_temp_lst_exec **tmp)
  * @brief Signal handler for Ctrl-C (SIGINT).
  *
  * This handler is triggered when the user presses Ctrl-C.
- * It clears the current input line, moves to a new line, 
+ * It clears the current input line, moves to a new line,
  * redisplays the prompt, and sets the global exit status to 1.
  *
  * @param signum The signal number (unused).
@@ -94,7 +94,7 @@ void sigint_handler(int signum)
 {
     (void)signum;
 
-    rl_on_new_line();        
+    rl_on_new_line();
     rl_replace_line("", 0);
     write(1, "\n", 1);
     rl_redisplay();

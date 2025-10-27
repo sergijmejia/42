@@ -64,7 +64,7 @@ int	exec_builtin(t_ast *node, t_temp_lst_exec **temp_vars, char ***envp, t_list 
 	else if (type == BUILTIN_CD)
 		return (builtin_cd(node->value, envp));
 	else if (type == BUILTIN_EXIT)
-		return (builtin_exit(node->value));
+		return (builtin_exit(node->value, *temp_vars, *envp, parser_tmp_var));
 	else if (type == BUILTIN_ENV)
 		return (builtin_env(*envp));
 	else if (type == BUILTIN_EXPORT)

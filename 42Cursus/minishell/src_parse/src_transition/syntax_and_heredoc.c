@@ -35,7 +35,7 @@ static char	*reduce_nl(char *line)
 	int		len;
 	int		i;
 	char	*new_line;
-	
+
 	len = (int) ft_strlen(line);
 	new_line = (char *) malloc (len * sizeof(char));
 	if (new_line == NULL)

@@ -9,7 +9,9 @@ WHITE = \033[37m
 # Project Configuration
 NAME = minishell
 CC = cc
-WARNING_FLAGS = -g -Wall -Wextra -Werror
+WARNING_FLAGS = -g -O0 -Wall -Wextra -Werror
+#WARNING_FLAGS = -g -O0 -fsanitize=address -Wall -Wextra -Werror
+#WARNING_FLAGS = -g -Wall -Wextra -Werror
 MAKE = make --no-print-directory
 
 OBJ_DIR = obj

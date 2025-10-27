@@ -1,0 +1,1 @@
+VAR=prueba valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=./error_leak.supp ./minishell
