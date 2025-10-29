@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:33:36 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/05/01 18:12:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/05/09 20:51:26 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,26 @@
 
 typedef struct	s_philo_data
 {
-	int				number_of_philo;
+	int				num_philo;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_to_eat;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	msg;
+	struct s_philo	*philosophers;
 } t_philo_data;
-
-typedef struct	s_waiter
-{
-	int				id_next_eat;
-} t_waiter;
 
 typedef struct	s_philo
 {
 	pthread_t		thread;
+	long long		time_last_eat; //<---requiere mutex
 	int				id;
-	long long		time_last_eat;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	int				state;
-	int				is_alive;
-	t_waiter		*waiter;
-	t_philo_data	data;
+	int				l_fork; 
+	int				r_fork;
+	int				is_alive; //<---requiere mutex
+	pthread_mutex_t	philo_mutex;
+	t_philo_data	*data;
 } t_philo;
 
 #endif

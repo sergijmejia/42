@@ -6,11 +6,21 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 19:39:01 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/05/01 19:24:56 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/29 13:00:12 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+long long	get_current_time(void)
+{
+	struct		timeval	actual_tv;
+	long long	current_time;
+
+	gettimeofday(&actual_tv, NULL);
+	current_time = actual_tv.tv_sec * 1000 + actual_tv.tv_usec / 1000;
+	return (current_time);
+}
 
 int	ft_atoi(char *nptr)
 {
@@ -58,44 +68,56 @@ int	check_values(int argc, char **argv)
 	return (0);
 }
 
-void	print_dead(int id, long long time)
+void	print_dead(t_philo *philosophers, long long time)
 {
-	printf("%lld %d died\n", time, id);
+	pthread_mutex_lock(&(philosophers->data->msg));
+	printf("%lld %d died\n", time, philosophers->id);
+	pthread_mutex_unlock(&(philosophers->data->msg));
 }
 
-void    print_start_thinking(int id, long long time)
+void    print_start_thinking(t_philo *philosophers, long long time)
 {
-	printf("%lld %d is thinking\n", time, id);
+	pthread_mutex_lock(&(philosophers->data->msg));
+	printf("%lld %d is thinking\n", time, philosophers->id);
+	pthread_mutex_unlock(&(philosophers->data->msg));
 }
 
-void    print_get_fork(int id, long long time)
+void    print_get_fork(t_philo *philosophers, long long time)
 {
-	printf("%lld %d has taken a fork\n", time, id);
+	pthread_mutex_lock(&(philosophers->data->msg));
+	printf("%lld %d has taken a fork\n", time, philosophers->id);
+	pthread_mutex_unlock(&(philosophers->data->msg));
 }
 
-void    print_start_eat(int id, long long time)
+void    print_start_eat(t_philo *philosophers, long long time)
 {
-	printf("%lld %d is eating\n", time, id);
+	pthread_mutex_lock(&(philosophers->data->msg));
+	printf("%lld %d is eating\n", time, philosophers->id);
+	pthread_mutex_unlock(&(philosophers->data->msg));
 }
 
-void	print_start_sleeping(int id, long long time)
+void	print_start_sleeping(t_philo *philosophers, long long time)
 {
-	printf("%lld %d is sleeping\n", time, id);
+	pthread_mutex_lock(&(philosophers->data->msg));
+	printf("%lld %d is sleeping\n", time, philosophers->id);
+	pthread_mutex_unlock(&(philosophers->data->msg));
 }
 
 long long	check_alive(t_philo *philosophers)
 {
-	int				time_to_die;
-	struct timeval	actual_tv;
-	long long		actual_time;
+	int			time_to_die;
+	long long	actual_time_alive;
+	long long	time_difference;
 
-	time_to_die = philosophers->data.time_to_die;
-	gettimeofday(&actual_tv, NULL);
-	actual_time = actual_tv.tv_sec * 1000 + actual_tv.tv_usec / 1000;
-	if (((long long)time_to_die) < (actual_time - philosophers->time_last_eat))
+	time_to_die = philosophers->data->time_to_die;
+	actual_time_alive = get_current_time();
+	pthread_mutex_lock(&(philosophers->philo_mutex));
+	time_difference = actual_time_alive - philosophers->time_last_eat;
+	pthread_mutex_unlock(&(philosophers->philo_mutex));
+	if (((long long)time_to_die) < time_difference)
 		return (-1);
 	else
-		return (actual_time);
+		return (actual_time_alive);
 }
 
 long long	check_sleep_time(t_philo *philosophers, long long time, int sleep)
@@ -104,182 +126,179 @@ long long	check_sleep_time(t_philo *philosophers, long long time, int sleep)
 	int			time_to_die;
 	useconds_t	sleep_to_die;
 
+	pthread_mutex_lock(&(philosophers->philo_mutex));
 	last_eat = philosophers->time_last_eat;
-	time_to_die = philosophers->data.time_to_die;
+	pthread_mutex_unlock(&(philosophers->philo_mutex));
+	time_to_die = philosophers->data->time_to_die;
 	if ((last_eat + (long long) time_to_die) <= (time + (long long) sleep))
 	{
 		sleep_to_die = (useconds_t) (last_eat + (long long) time_to_die - time);
-		usleep(sleep_to_die);
+		usleep(sleep_to_die * 1000);
 		return (last_eat + (long long) time_to_die);
 	}
 	else
 		return (0);
 }
 
-void	next_allowed_philosopher(t_philo *philosophers)
-{
-	philosophers->waiter->id_next_eat++;
-	if (philosophers->waiter->id_next_eat > philosophers->data.number_of_philo)
-		philosophers->waiter->id_next_eat = 1;
-	printf("El siguiente que puede comer es: %d\n", philosophers->waiter->id_next_eat);
-	return ;
-}
-
 void	philo_think(t_philo *philosophers)
 {
-	long long		actual_time;
+	long long		actual_time_think;
 
-	actual_time = check_alive(philosophers);
-	if (actual_time == -1)
+	actual_time_think = check_alive(philosophers);
+	if (actual_time_think == -1)
 	{
-		print_dead(philosophers->id, actual_time);
+		print_dead(philosophers, actual_time_think);
+		pthread_mutex_lock(&(philosophers->philo_mutex));
 		philosophers->is_alive = 0;
+		pthread_mutex_unlock(&(philosophers->philo_mutex));
 		return ;
 	}
-	else
-	{
-		print_start_thinking(philosophers->id, actual_time);
-		philosophers->state = 1;
-		return ;
-	}
+	print_start_thinking(philosophers, actual_time_think);
+	return ;
 }
 
 void	philo_get_right_fork(t_philo *philosophers)
 {
-	int			id_forbidden;
-	long long	actual_time;
+	long long	actual_time_right_fork;
 
-	actual_time = check_alive(philosophers);
-    if (actual_time == -1)
+	actual_time_right_fork = check_alive(philosophers);
+   	if (actual_time_right_fork == -1)
 	{
-		print_dead(philosophers->id, actual_time);
+		print_dead(philosophers, actual_time_right_fork);
+		pthread_mutex_lock(&(philosophers->philo_mutex));
 		philosophers->is_alive = 0;
+		pthread_mutex_unlock(&(philosophers->philo_mutex));
 		return ;
 	}
-	id_forbidden = philosophers->waiter->id_next_eat - 1;
-	if (id_forbidden == 0)
-		id_forbidden = philosophers->data.number_of_philo;
-	if (philosophers->id == id_forbidden)
-		return ;
-	else
-	{
-		print_get_fork(philosophers->id, actual_time);
-		pthread_mutex_lock(philosophers->right_fork);
-		philosophers->state = 2;
-		return ;
-	}
+	//printf("Filosofo %d, forbidden %d\n", philosophers->id, philosophers->waiter->id_next_eat - 1);
+	pthread_mutex_lock(&(philosophers->data->forks[philosophers->r_fork - 1]));
+	print_get_fork(philosophers, actual_time_right_fork);
+	return ;
 }
 
-void	philo_get_left_fork_and_eat(t_philo *philosophers)
+void	philo_get_left_fork_and_eat(t_philo *philosopher)
 {
-	int			id_allowed;
+	long long	actual_time_left_fork;
+	useconds_t	time_to_eat;
+
+	actual_time_left_fork = check_alive(philosopher);
+	if (actual_time_left_fork == -1)
+	{
+		print_dead(philosopher, actual_time_left_fork);
+		pthread_mutex_lock(&(philosopher->philo_mutex));
+		philosopher->is_alive = 0;
+		pthread_mutex_unlock(&(philosopher->philo_mutex));
+		return ;
+	}
+	time_to_eat = (useconds_t) philosopher->data->time_to_eat;
+	pthread_mutex_lock(&(philosopher->data->forks[philosopher->l_fork - 1]));
+	print_get_fork(philosopher, actual_time_left_fork);
+	print_start_eat(philosopher, actual_time_left_fork);
+	//printf("El tiempo de comer es: %lld\n", (long long) time_to_eat);
+	usleep(time_to_eat * 1000);
+	//printf("Termina de comer\n");
+	pthread_mutex_unlock(&(philosopher->data->forks[philosopher->l_fork - 1]));
+	pthread_mutex_unlock(&(philosopher->data->forks[philosopher->r_fork - 1]));
+	return ;
+}
+
+void	philo_eat(t_philo *philosopher)
+{
 	long long	actual_time;
 	useconds_t	time_to_eat;
 
-	actual_time = check_alive(philosophers);
+	pthread_mutex_lock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
+	actual_time = check_alive(philosopher);
 	if (actual_time == -1)
 	{
-		print_dead(philosophers->id, actual_time);
-		philosophers->is_alive = 0;
+		print_dead(philosopher, actual_time);
+		pthread_mutex_lock(&(philosopher->philo_mutex));
+		philosopher->is_alive = 0;
+		pthread_mutex_unlock(&(philosopher->philo_mutex));
+		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
 		return ;
 	}
-	time_to_eat = (useconds_t) philosophers->data.time_to_eat;
-	id_allowed = philosophers->waiter->id_next_eat;
-	if (philosophers->id == id_allowed)
+	print_get_fork(philosopher, actual_time);
+	pthread_mutex_lock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
+	actual_time = check_alive(philosopher);
+	if (actual_time == -1)
 	{
-		print_get_fork(philosophers->id, actual_time);
-		print_start_eat(philosophers->id, actual_time);
-		pthread_mutex_lock(philosophers->left_fork);
-		//printf("El tiempo de comer es: %lld\n", (long long) time_to_eat);
-		usleep(time_to_eat);
-		//printf("Termina de comer\n");
-		pthread_mutex_unlock(philosophers->left_fork);
-		pthread_mutex_unlock(philosophers->right_fork);
-		next_allowed_philosopher(philosophers);
-		philosophers->state = 3;
+		print_dead(philosopher, actual_time);
+		pthread_mutex_lock(&(philosopher->philo_mutex));
+		philosopher->is_alive = 0;
+		pthread_mutex_unlock(&(philosopher->philo_mutex));
+		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
 		return ;
 	}
-	else
-		return ;
+	print_get_fork(philosopher, actual_time);
+	time_to_eat = (useconds_t) philosopher->data->time_to_eat;
+	print_start_eat(philosopher, actual_time);
+	//printf("El tiempo de comer es: %lld\n", (long long) time_to_eat);
+	usleep(time_to_eat * 1000);
+	//printf("Termina de comer\n");
+	pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
+	pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
+	return ;
 }
 
 void	philo_get_sleep(t_philo *philosophers)
 {
-	long long	actual_time;
+	long long	actual_time_sleep;
 	useconds_t	time_to_sleep;
-	long long	dead_time;
 
-	actual_time = check_alive(philosophers);
-	if (actual_time == -1)
-	{
-		print_dead(philosophers->id, actual_time);
-		philosophers->is_alive = 0;
-		return ;
-	}
-	time_to_sleep = (useconds_t) philosophers->data.time_to_sleep;
-	print_start_sleeping(philosophers->id, actual_time);
-	dead_time = check_sleep_time(philosophers, actual_time, time_to_sleep);
-	if (dead_time > 0)
-	{
-		print_dead(philosophers->id, dead_time);
-		philosophers->is_alive = 0;
-		return ;
-	}
-	usleep(time_to_sleep);
-	philosophers->state = 0;
+	actual_time_sleep = check_alive(philosophers);
+	time_to_sleep = (useconds_t) philosophers->data->time_to_sleep;
+	print_start_sleeping(philosophers, actual_time_sleep);
+	usleep(time_to_sleep * 1000);
 	return ;
+}
+
+int	check_running_simulation(t_philo *philosophers)
+{
+	int	is_alive;
+
+	pthread_mutex_lock(&(philosophers->philo_mutex));
+	is_alive = philosophers->is_alive;
+	pthread_mutex_unlock(&(philosophers->philo_mutex));
+	return (is_alive);
 }
 
 void	*routine(void *arg)
 {
-	t_philo		*philosophers;
-	useconds_t	time_to_sleep;
-	useconds_t	time_to_eat;
+	t_philo	*philosophers;
 
 	philosophers = (t_philo *) arg;
-	time_to_sleep = (useconds_t) philosophers->data.time_to_sleep;
-	time_to_eat = (useconds_t) philosophers->data.time_to_eat;
-	while (philosophers->is_alive)
+	if (philosophers->id % 2 == 0)
+        usleep(1000); // Duerme 1ms (o menos) para dar tiempo a los impares
+	while (check_running_simulation(philosophers))
 	{
-		if (philosophers->state == 0)
-			philo_think(philosophers);
-		else if (philosophers->state == 1)
-			philo_get_right_fork(philosophers);
-		else if (philosophers->state == 2)
-			philo_get_left_fork_and_eat(philosophers);
-		else if (philosophers->state == 3)
-			philo_get_sleep(philosophers);
+		//printf("Entra en la rutina\n");
+		philo_think(philosophers);
+		//philo_get_right_fork(philosophers);
+		//philo_get_left_fork_and_eat(philosophers);
+		philo_eat(philosophers);
+		philo_get_sleep(philosophers);
+		//printf("Hace la rutina\n");
 	}
 	printf("Sale de la rutina\n");
 	pthread_detach(philosophers->thread);
 	return (NULL);
 }
 
-void	philosophers_start(t_philo *philosophers, t_philo_data philo, pthread_mutex_t *forks, t_waiter *waiter)
+void	philosophers_start(t_philo_data *philo, long long start_time)
 {
 	int				i;
-	long long		first_think;
-	struct timeval	actual_tv;
 
 	i = 0;
-	while (i < philo.number_of_philo)
+	while (i < philo->num_philo)
 	{
-		printf("Se crea el filosofo numero %d\n", i + 1);
-		philosophers[i].id = i + 1;
-		gettimeofday(&actual_tv, NULL);
-		first_think = actual_tv.tv_sec * 1000 + actual_tv.tv_usec / 1000;
+		//printf("Se crea el filosofo numero %d\n", i + 1);
+		philo->philosophers[i].id = i + 1;
 		//printf("el tiempo para empezar a pensar es: %lld\n", first_think);
-		philosophers[i].data = philo;
-		philosophers[i].time_last_eat = first_think;
-		philosophers[i].left_fork = &forks[i];
-		if (i == (philo.number_of_philo - 1))
-			philosophers[i].right_fork = &forks[0];
-		else
-			philosophers[i].right_fork = &forks[i + 1];
-		philosophers[i].state = 0;
-		philosophers[i].is_alive = 1;
-		philosophers[i].waiter = waiter;
-		pthread_create(&philosophers[i].thread, NULL, routine, &philosophers[i]);
+		philo->philosophers[i].time_last_eat = start_time;
+		philo->philosophers[i].is_alive = 1;
+		pthread_mutex_init(&(philo->philosophers[i].philo_mutex), NULL);
+		pthread_create(&philo->philosophers[i].thread, NULL, routine, &philo->philosophers[i]);
 		i++;
 	}
 }
@@ -296,36 +315,48 @@ void	forks_start(pthread_mutex_t *forks, int n)
 	}
 }
 
-void	philosophers(t_philo_data philo)
+void	philosophers(t_philo_data *philo, long long start_time)
 {
-	t_philo	*philosophers;
-	pthread_mutex_t *forks;
-	t_waiter	waiter;
-	int	n;
+	int				n;
 
-	n = philo.number_of_philo;
-	philosophers = (t_philo *) malloc (sizeof (t_philo) * n);
-	forks = (pthread_mutex_t *) malloc (sizeof (pthread_mutex_t) * n);
-	forks_start(forks, n);
-	waiter.id_next_eat = 1;
-	philosophers_start(philosophers, philo, forks, &waiter);
+	n = philo->num_philo;
+	forks_start(philo->forks, n);
+	philosophers_start(philo, start_time);
 }
 
-void	complete_philo_data(int argc, char **argv, t_philo_data *philo)
+void	complete_philo_data(int argc, char **argv, t_philo_data **d)
 {
-	philo->number_of_philo = ft_atoi(argv[1]);
-	philo->time_to_die = ft_atoi(argv[2]);
-	philo->time_to_eat = ft_atoi(argv[3]);
-	philo->time_to_sleep = ft_atoi(argv[4]);
+	int	i;
+
+	(*d)->num_philo = ft_atoi(argv[1]);
+	(*d)->time_to_die = ft_atoi(argv[2]);
+	(*d)->time_to_eat = ft_atoi(argv[3]);
+	(*d)->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		philo->number_to_eat = ft_atoi(argv[5]);
+		(*d)->number_to_eat = ft_atoi(argv[5]);
 	else
-		philo->number_to_eat = -1;
+		(*d)->number_to_eat = -1;
+	printf("Termina la asignacion de argumentos\n");
+	(*d)->forks = (pthread_mutex_t *) malloc (sizeof(pthread_mutex_t)*((*d)->num_philo));
+	(*d)->philosophers = (t_philo *) malloc (sizeof(t_philo)*((*d)->num_philo));
+	i = 0;
+	while (i < (*d)->num_philo)
+	{
+		pthread_mutex_init(&((*d)->forks[i]), NULL);
+		(*d)->philosophers[i].r_fork = i + 1;
+		(*d)->philosophers[i].l_fork = i;
+		(*d)->philosophers[i].id = i + 1;
+		(*d)->philosophers[i].data = (*d);
+		i++;
+	}
+	(*d)->philosophers[0].l_fork = (*d)->num_philo;
+	pthread_mutex_init(&((*d)->msg), NULL);
 }
 
 int	main(int argc, char **argv)
 {
-	t_philo_data philo;
+	t_philo_data	*philo;
+	long long		start_time;
 
 	//printf("La cantidad de argumentos es: %d\n", argc);
 	if (argc < 5 || argc > 6)
@@ -338,7 +369,31 @@ int	main(int argc, char **argv)
 		write(2, "Negative or nul arguments.\n", 27);
 		exit(EXIT_FAILURE);
 	}
+	philo = (t_philo_data *) malloc (sizeof(t_philo_data));
+	if (!philo)
+		return (EXIT_FAILURE);
+	start_time = get_current_time();
+	printf("Termina la verificacion de argumentos\n");
 	complete_philo_data(argc, argv, &philo);
-	philosophers(philo);
+	printf("Termina de completar el philo_data\n");
+	philosophers(philo, start_time);
 	return (EXIT_SUCCESS);
 }
+
+/*
+int	main(void)
+{
+	pthread_mutex_t	*forks;
+	t_philo_data	philo;
+
+	philo.num_philo = 2;
+	philo.time_to_die = 1000;
+	philo.time_to_eat = 200;
+	philo.time_to_sleep = 200;
+	philo.number_to_eat = 10;
+	forks = (pthread_mutex_t *) malloc (sizeof (pthread_mutex_t) * 2);
+	forks_start(forks, 2);
+	philosophers_start(philo);
+	return (1);
+}
+*/
