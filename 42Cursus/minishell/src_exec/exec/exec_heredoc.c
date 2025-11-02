@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 14:53:50 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 11:34:20 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:00:00 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,83 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <stdio.h>
 #include "exec.h"
-#include "exec_heredoc.h"
 #include "libft.h"
 
-/**
- * @brief Writes heredoc content to the write end of a pipe.
- *
- * @param content The string content of the heredoc.
- * @param hd Pipe file descriptors array (fd[0] read, fd[1] write).
- */
-static void	write_heredoc(const char *content, int hd[2])
+/* ----------------------------------------
+   Escribe las líneas del heredoc en fd_write
+---------------------------------------- */
+static void	write_heredoc_lines(char **lines, int fd_write)
 {
 	int	i;
 
-	i = 0;
-	while (content[i])
-		write(hd[1], &content[i++], 1);
-	write(hd[1], "\n", 1);
-	close(hd[1]);
+	if (!lines)
+		return ;
+	i = -1;
+	while (lines[++i])
+		write(fd_write, lines[i], ft_strlen(lines[i]));
+	close(fd_write);
 }
 
-/**
- * @brief Forks a child process to execute the left AST node with stdin
- *        redirected from the heredoc pipe.
- *
- * Uses the t_heredoc_ctx structure to pass all required parameters.
- *
- * @param node AST node for the command to execute.
- * @param ctx Pointer to heredoc context (env, temp vars, parser tmp, pipe).
- */
-static void	fork_exec_heredoc(t_ast *node, t_heredoc_ctx *ctx)
+/* ----------------------------------------
+   Prepara un heredoc y devuelve el fd de lectura
+---------------------------------------- */
+int	exec_heredoc_prepare(t_ast *node)
 {
+	int	hd[2];
+
+	if (!node || !node->right_ast || !node->right_ast->value)
+		return (-1);
+
+	if (pipe(hd) == -1)
+	{
+		perror("minishell: heredoc pipe");
+		return (-1);
+	}
+
+	write_heredoc_lines(node->right_ast->value, hd[1]);
+	return (hd[0]);
+}
+
+/* ----------------------------------------
+   Ejecuta un heredoc standalone (caso sencillo)
+---------------------------------------- */
+void	exec_heredoc(t_ast *node, t_temp_lst_exec **temp_vars,
+		char ***envp, t_list **parser_tmp_var)
+{
+	int		fd;
 	pid_t	pid;
 	int		status;
 
+	fd = exec_heredoc_prepare(node);
+	if (fd == -1)
+	{
+		g_exit_status = 1;
+		return ;
+	}
+
 	pid = fork();
+	if (pid == -1)
+	{
+		perror("minishell: heredoc fork");
+		close(fd);
+		g_exit_status = 1;
+		return ;
+	}
+
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		if (dup2(ctx->hd[0], STDIN_FILENO) == -1)
+		if (dup2(fd, STDIN_FILENO) == -1)
 			_exit(1);
-		close(ctx->hd[0]);
-		exec_ast(node->left_ast, ctx->temp_vars,
-			ctx->envp, ctx->parser_tmp_var);
+		close(fd);
+		exec_ast(node->left_ast, temp_vars, envp, parser_tmp_var);
 		_exit(g_exit_status);
 	}
-	close(ctx->hd[0]);
+
+	close(fd);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
@@ -69,36 +98,4 @@ static void	fork_exec_heredoc(t_ast *node, t_heredoc_ctx *ctx)
 		g_exit_status = 128 + WTERMSIG(status);
 	else
 		g_exit_status = 1;
-}
-
-/**
- * @brief Executes a heredoc redirection node (<<).
- *
- * Creates a pipe, writes the heredoc content, and forks a child to execute
- * the command with stdin redirected from the pipe.
- *
- * @param node AST node of type TOKEN_P_DOUBLE_LT.
- * @param temp_vars Pointer to temporary environment variable list.
- * @param envp Pointer to the environment array.
- * @param parser_tmp_var Parser's temporary variable table.
- *
- * @note Updates the global g_exit_status.
- */
-void	exec_heredoc(t_ast *node, t_temp_lst_exec **temp_vars,
-		char ***envp, t_list **parser_tmp_var)
-{
-	t_heredoc_ctx	ctx;
-
-	printf("DEBUG: heredoc content = '%s'\n", node->right_ast->value[0]);
-	if (pipe(ctx.hd) == -1)
-	{
-		write(2, "minishell: Heredoc pipe error\n", 30);
-		g_exit_status = 1;
-		return ;
-	}
-	ctx.temp_vars = temp_vars;
-	ctx.envp = envp;
-	ctx.parser_tmp_var = parser_tmp_var;
-	write_heredoc(node->right_ast->value[0], ctx.hd);
-	fork_exec_heredoc(node, &ctx);
 }

@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 22:17:28 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/21 22:18:43 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/29 00:05:46 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,24 @@
 #include "utils.h"
 
 /**
- * @brief Frees an envp array using ft_free_split.
+ * @brief Frees an envp array safely and nullifies its elements
  *
  * @param envp Array to free
  */
 void	free_envp(char **envp)
 {
-	if (envp)
-		free_split(envp);
+	int	i;
+
+	if (!envp)
+		return ;
+	i = 0;
+    while (envp[i])
+    {
+     	free(envp[i]);
+        envp[i] = NULL;
+        i++;
+    }
+    free(envp);
 }
 
 /**
@@ -52,66 +62,33 @@ char	**clone_envp(char **envp)
 	while (i < count)
 	{
 		new_env[i] = ft_strdup(envp[i]);
+        if (!new_env[i])
+        {
+            while(--i >= 0)
+                free(new_env[i]);
+            free(new_env);
+            return (NULL);
+        }
 		i++;
 	}
 	new_env[count] = NULL;
 	return (new_env);
 }
 
-static int update_or_append_var(char ***envp, const char *new_var, const char *name)
+/**
+ * @brief Safe string join of three strings.
+ */
+static char *ft_strjoin3(const char *s1, const char *s2, const char *s3)
 {
-    if (!envp || !new_var || !name)
-        return 1;
+    char    *tmp;
+    char    *res;
 
-    size_t len = ft_strlen(name);
-    int i = 0;
-
-    // Buscar si la variable existe
-    while ((*envp)[i])
-    {
-        if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
-        {
-            char *tmp = ft_strdup(new_var);  // duplicamos para no tocar el original
-            if (!tmp)
-                return 1;
-            free((*envp)[i]);               // liberamos solo el string viejo
-            (*envp)[i] = tmp;
-            return 0;                        // éxito
-        }
-        i++;
-    }
-
-    // No existe: crear nuevo array con i strings + new_var + NULL
-    char **new_env = malloc(sizeof(char *) * (i + 2));
-    if (!new_env)
-        return 1;
-
-    for (int j = 0; j < i; j++)
-    {
-        new_env[j] = ft_strdup((*envp)[j]);
-        if (!new_env[j])
-        {
-            while (--j >= 0)
-                free(new_env[j]);
-            free(new_env);
-            return 1;
-        }
-    }
-
-    new_env[i] = ft_strdup(new_var);
-    if (!new_env[i])
-    {
-        while (--i >= 0)
-            free(new_env[i]);
-        free(new_env);
-        return 1;
-    }
-
-    new_env[i + 1] = NULL;
-
-    free(*envp);   // liberamos solo el array viejo, strings ya duplicados
-    *envp = new_env;
-    return 0;
+    tmp = ft_strjoin(s1, s2);
+    if (!tmp)
+        return (NULL);
+    res = ft_strjoin(tmp, s3);
+    free(tmp);
+    return (res);
 }
 
 /**
@@ -121,30 +98,63 @@ static int update_or_append_var(char ***envp, const char *new_var, const char *n
  * - If not, allocates a new env array and appends it.
  * - Ensures no leaks or dangling pointers.
  */
-void update_env_var(char ***envp, const char *name, const char *value)
+int update_env_var(char ***envp, const char *name, const char *value)
 {
+    int i;
+    int j;
+    size_t len;
+    char *new_entry;
+    char **new_env;
+
     if (!envp || !name || !value)
-        return;
-
-    char *tmp = ft_strjoin(name, "=");
-    if (!tmp)
-        return;
-
-    char *new_var = ft_strjoin(tmp, value);
-    free(tmp);
-    if (!new_var)
-        return;
-
-    // Actualiza o agrega: ahora siempre duplica los strings, nunca toca punteros compartidos
-    if (update_or_append_var(envp, new_var, name) != 0)
+        return (-1);
+    len = ft_strlen(name);
+    i = 0;
+    while ((*envp)[i])
     {
-        free(new_var);
-        return;
+        if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
+        {
+            new_entry = ft_strjoin3(name, "=", value);
+            if (!new_entry)
+                return (-1);
+            free((*envp)[i]);
+            (*envp)[i] = new_entry;
+            return (0);
+        }
+        i++;
     }
+    // Variable no existe, crear nuevo array duplicando
+    new_env = malloc(sizeof(char *) * (i + 2));
+    if (!new_env)
+        return (-1);
+    j = 0;
+    while (j < i)
+    {
+        new_env[j] = ft_strdup((*envp)[j]);
+        if (!new_env[j])
+        {
+		    while (--j >= 0)
+                free(new_env[j]);
+            free(new_env);
+            return (-1);
+        }
+        j++;
+    }
+    new_env[i] = ft_strjoin3(name, "=", value);
+    if (!new_env[i])
+    {
+		while (--j >= 0)
+			free(new_env[j]);
+		free(new_env);
+		return (-1);
+    }
+    new_env[i + 1] = NULL;
 
-    free(new_var);
+    free_envp(*envp);
+    *envp = new_env;
+
+    return (0);
 }
-
 
 /**
  * @brief Retrieves the value of an environment variable from envp only
@@ -157,9 +167,12 @@ char	*get_env_val(char **envp, const char *name)
 	if (!envp || !name)
 		return (NULL);
 	len = ft_strlen(name);
-	i = -1;
-	while (envp[++i])
+	i = 0;
+	while (envp[i])
+    {
 		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
 			return (envp[i] + len + 1);
-	return (NULL);
+        i++;
+    }
+    return (NULL);
 }

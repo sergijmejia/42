@@ -45,3 +45,14 @@ t_ast	**clean_ast(t_ast **ast_list)
 	ast_list = NULL;
 	return (NULL);
 }
+
+/*Libera un elemento de la tabla tmp_lst*/
+void	free_tmp_var_p(void *content)
+{
+	t_temp_lst	*tmp_lst;
+
+	tmp_lst = (t_temp_lst *)content;
+	free(tmp_lst->name);
+	free(tmp_lst->value);
+	free(tmp_lst);
+}

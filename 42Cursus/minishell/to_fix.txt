@@ -2,11 +2,19 @@ TESTS que FALLAN:
 
 1. export VAR=test && echo $VAR
 
-2.	var1=hola var2=mundo
-	echo $var1
-	hola
-	echo $var2
-	mundo (ahora no muestra nada)
+2. cat <<A <<B
+   ahora mismo el resultado es '<<'
+
+3. comando complejo crea nodo '<<'
+   ls -la > ls << EOF | echo hola
+
+4.   norminette de main
+
+5. quitar main de exec_src y parse_src
+
+6. limpiar Makefile
+
+7. comprobar memory leaks
 
 -------------------------------------------------------------------------
 Para que el CTRL-C solo salga uno, en los hijos hacer un:
@@ -23,8 +31,3 @@ Multiples asignaciones (con una seria lo mismo):
         var5 se guarda en environment
 
 -------------------------------------------------------------------------
-
-   norminette de main
-   actualizar parte de Sergio
-
-   comprobar memory leaks

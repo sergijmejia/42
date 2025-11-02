@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:41:22 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 12:21:09 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/28 02:55:07 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,64 +36,6 @@ int	builtin_env(char **envp)
 }
 
 /**
- * @brief Duplicates a single env string safely into dst[j].
- *
- * @param dst Destination array
- * @param j Index in destination array
- * @param src_string Source string to duplicate
- * @return 0 on success, -1 on allocation failure
- */
-static int	duplicate_env_string(char **dst, int j, const char *src_string)
-{
-	dst[j] = ft_strdup(src_string);
-	if (!dst[j])
-		return (-1);
-	return (0);
-}
-
-/**
- * @brief Copies all strings from src to dst except those matching the given name.
- *
- * Allocates new strings for dst. Frees strings from src regardless of whether
- * they are copied or not. Skips all occurrences of "name=" in src.
- *
- * @param src Source array of strings (null-terminated).
- * @param dst Destination array, already allocated with enough space.
- * @param name Variable name to exclude from copying.
- * @return 0 on success, -1 on memory allocation failure.
- */
-static int	copy_env_except_safe(char **src, char **dst, const char *name)
-{
-	int	i;
-	int	j;
-	size_t	len;
-
-	i = -1;
-	j = 0;
-	len = ft_strlen(name);
-	while (src[++i])
-	{
-		// Omitir TODAS las coincidencias exactas de name=
-		if (ft_strncmp(src[i], name, len) == 0 && src[i][len] == '=')
-		{
-			free(src[i]);
-			continue ;
-		}
-		if (duplicate_env_string(dst, j, src[i]) == -1)
-		{
-			while (j > 0)
-				free(dst[--j]);
-			free(dst);
-			return (-1);
-		}
-		free(src[i]);
-		j++;
-	}
-	dst[j] = NULL;
-	return (0);
-}
-
-/**
  * @brief Removes all occurrences of a variable from the environment array.
  *
  * Allocates a new environment array, copies all variables except the ones
@@ -109,24 +51,30 @@ static int	copy_env_except_safe(char **src, char **dst, const char *name)
  */
 int	unset_assignment(const char *name, char ***envp)
 {
-	int		count;
-	char	**new_env;
+    int count, j;
+    char **new_env;
 
-	if (!name || !envp || !*envp)
-		return (-1);
-	count = 0;
-	while ((*envp)[count])
-		count++;
-	new_env = malloc(sizeof(char *) * (count + 1));
-	if (!new_env)
-		return (-1);
-	if (copy_env_except_safe(*envp, new_env, name) == -1)
-	{
-		free(new_env);
-		*envp = NULL;
-		return (-1);
-	}
-	free(*envp);
-	*envp = new_env;
-	return (0);
+    if (!name || !envp || !*envp)
+        return (-1);
+    count = 0;
+    for (int i = 0; (*envp)[i]; i++)
+        if (!(ft_strncmp((*envp)[i], name, ft_strlen(name)) == 0 && (*envp)[i][ft_strlen(name)] == '='))
+            count++;
+    new_env = malloc(sizeof(char *) * (count + 1));
+    if (!new_env)
+        return (-1);
+    j = 0;
+    for (int i = 0; (*envp)[i]; i++)
+    {
+        if (ft_strncmp((*envp)[i], name, ft_strlen(name)) == 0 && (*envp)[i][ft_strlen(name)] == '=')
+        {
+            free((*envp)[i]);
+            continue;
+        }
+        new_env[j++] = (*envp)[i];
+    }
+    new_env[j] = NULL;
+    free(*envp);
+    *envp = new_env;
+    return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 14:07:41 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/21 11:09:55 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/28 02:48:35 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,11 @@ static t_list	**divide_assignment(t_list **token_list, int *i)
 	pos = find_next_equal(str, 0);
 	while (pos > 0)
 	{
-        //printf("El str es %s\n", ((t_token *)(ft_lstpos(*token_list, *i)->content))->value);	
-        assignment = assignment_candidate(token_list, i, pos);
+		assignment = assignment_candidate(token_list, i, pos);
 		if (assignment == -1)
 			return (clean_list(token_list));
 		else if (assignment == 1)
 		{
-/*
-        // DEBUG: imprimir token_list en cada iteracion   
-        printf("\nEn esta iteracion i=%d y token_list es:\n", *i);
-        print_lst(*token_list);
-        printf("\n");
-*/
 			lst = ft_lstpos(*token_list, *i);
 			str = ((t_token *)(lst->content))->value;
 			pos = find_next_equal(str, 0);

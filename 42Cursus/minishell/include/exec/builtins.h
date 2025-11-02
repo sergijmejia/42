@@ -26,7 +26,7 @@ int		builtin_echo(char **args, t_temp_lst_exec *tmp_var);
 int		builtin_export(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_vars);
 int 	builtin_history(void);
 int		builtin_unset(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_var);
-int 	builtin_exit(char **args, t_temp_lst_exec *tmp_var, char **env, t_list **parser_tmp_var);
+int		builtin_exit(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_var);
 int		builtin_env(char **envp);
 
 /* utility */

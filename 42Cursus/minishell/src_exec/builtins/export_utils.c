@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 23:43:11 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/21 23:43:16 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/01 12:53:32 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,37 @@
 #include <stdio.h>
 
 /**
+ * @brief Comprueba si name es un identificador válido de variable.
+ *
+ * - Debe empezar por letra o '_'
+ * - Puede contener letras, números o '_'
+ *
+ * @param name Nombre a comprobar
+ * @return 1 si es válido, 0 si no
+ */
+static int is_valid_var_name(const char *name)
+{
+    int i;
+
+    if (!name || !*name)
+        return 0;
+    if (!isalpha(name[0]) && name[0] != '_')
+        return 0;
+    i = 1;
+    while (name[i])
+    {
+        if (!isalnum(name[i]) && name[i] != '_')
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
+/**
  * @brief Inserts a new temporary variable into the list.
  *
- * Allocates a new node with name and value, and adds it
- * at the front of temp_vars list.
+ * Ownership of name and value is transferred to the list.
+ * On malloc failure, both are freed.
  *
  * @param temp_vars Pointer to the head of temporary variable list
  * @param name Name of the variable (will be owned by the list)
@@ -32,6 +59,8 @@ void	insert_temp_var(t_temp_lst_exec **temp_vars,
 {
 	t_temp_lst_exec	*new;
 
+	if (!name || !value)
+		return ;
 	new = malloc(sizeof(t_temp_lst_exec));
 	if (!new)
 	{
@@ -46,110 +75,101 @@ void	insert_temp_var(t_temp_lst_exec **temp_vars,
 }
 
 /**
- * @brief Handles the addition or export of shell variables.
+ * @brief Handles the addition or export of shell variables safely.
  *
- * Implements Bash-like behavior for the `export` builtin:
- * - When called as `export VAR=value`, the variable is added or updated in the
- *   global environment (`envp`).
- * - When called as `export VAR` (without '='), the function promotes the variable
- *   from a local scope (either `temp_vars` or `parser_tmp_vars`) to the environment.
- *   If the variable does not exist in any local scope, an empty variable is
- *   created in the environment.
- *
- * Promotion means:
- *   1. The variable's value is copied from the local list to `envp`.
- *   2. The variable is removed from both the temporary (`temp_vars`) and parser
- *      (`parser_tmp_vars`) variable lists, to avoid duplicates.
- *
- * @param temp_vars Pointer to the list of temporary (local) shell variables.
- * @param arg The argument string, e.g. "VAR=value" or "VAR".
- * @param envp Pointer to the environment array to update.
- * @param parser_tmp_vars Pointer to the parser's local variable list.
- *
- * @note This function ensures consistent synchronization between local,
- *       parser-level, and environment variable scopes.
+ * Ownership rules:
+ * - If inserting into temp_vars, ownership of name/value is transferred.
+ * - Otherwise, name/value are freed at the end of the function.
  */
 void	add_var(t_temp_lst_exec **temp_vars, char *arg,
-              char ***envp, t_list **parser_tmp_vars)
+		char ***envp, t_list **parser_tmp_vars)
 {
-	char	*eq;
-	char	*name;
-	char	*value;
-	char 	*tmp_val;
+    char *eq;
+    char *name;
+    char *value;
+    char *tmp_val;
 
-	if (!arg || !*arg)
-		return ;
-	eq = ft_strchr(arg, '=');
-	if (!eq)
-	{
-		// Look in the temp_vars (local shell)
-		tmp_val = get_temp_var_value(*temp_vars, arg);
-		if (tmp_val)
-		{
-			update_env_var(envp, arg, tmp_val);
-			remove_local_var(temp_vars, arg);
-			remove_parser_tmp_var(parser_tmp_vars, arg);
-			return;
-		}
-		// Look in the parser_tmp_vars
-		tmp_val = get_parser_tmp_var_value(*parser_tmp_vars, arg);
-		if (tmp_val)
-		{
-			update_env_var(envp, arg, tmp_val);
-			remove_parser_tmp_var(parser_tmp_vars, arg);
-			return;
-		}
-		// If cannot find it then create it new
-		if (!get_env_val(*envp, arg))
-			export_assignment(arg, envp);
-		return;
-	}
-	name = ft_substr(arg, 0, eq - arg);
-	if (!name)
-		return ;
-	value = ft_strdup(eq + 1);
-	if (!value)
-	{
-		free(name);
-		return ;
-	}
-	// Si ya existe, actualiza; si no, inserta nueva
-	if (get_env_val(*envp, name))
-		update_env_var(envp, name, value);
+    name = NULL;
+    value = NULL;
+    if (!arg || !*arg)
+        return ;
+
+    eq = ft_strchr(arg, '=');
+    if (!eq)
+    {
+        /* Promoción desde temp_vars */
+        tmp_val = get_temp_var_value(*temp_vars, arg);
+        if (tmp_val)
+        {
+            if (is_valid_var_name(arg))
+                update_env_var(envp, arg, tmp_val);
+            remove_local_var(temp_vars, arg);
+            remove_parser_tmp_var(parser_tmp_vars, arg);
+            return ;
+        }
+        tmp_val = get_parser_tmp_var_value(*parser_tmp_vars, arg);
+        if (tmp_val)
+        {
+            if (is_valid_var_name(arg))
+                update_env_var(envp, arg, tmp_val);
+            remove_parser_tmp_var(parser_tmp_vars, arg);
+            return ;
+        }
+        if (!get_env_val(*envp, arg) && is_valid_var_name(arg))
+            export_assignment(arg, envp);
+        return ;
+    }
+
+    /* Separar nombre y valor */
+    name = ft_substr(arg, 0, eq - arg);
+    if (!name)
+        return ;
+    value = ft_strdup(eq + 1);
+    if (!value)
+    {
+        free(name);
+        return ;
+    }
+
+    /* Validar nombre */
+    if (!is_valid_var_name(name))
+    {
+        fprintf(stderr, "minishell: export: `%s': not a valid identifier\n", name);
+        free(name);
+        free(value);
+        return ;
+    }
+
+    /* Insertar o actualizar */
+    if (get_env_val(*envp, name))
+    {
+        update_env_var(envp, name, value);
+        free(name);
+        free(value);
+    }
 	else
 	{
+		// Transfer ownership to temp_vars
 		insert_temp_var(temp_vars, name, value);
 		export_assignment(arg, envp);
+		// name/value ownership transferred, do not free
 	}
-	free(name);
-	free(value);
 }
 
 /**
  * @brief Counts total variables in temp_vars and envp.
  *
  * @param envp Environment array
- * @param temp_vars Temporary variable list
  * @return Total count of variables
  */
-int	count_vars(char **envp, t_temp_lst_exec *temp_vars)
+int	count_vars(char **envp)
 {
-	int				count;
-	int				i;
-	t_temp_lst_exec	*cur;
+	int	i;
 
-	count = 0;
-	cur = temp_vars;
-	while (cur)
-	{
-		count++;
-		cur = cur->next;
-	}
 	i = 0;
 	while (envp[i])
 		i++;
-	count += i;
-	return (count);
+	return (i);
 }
 
 /**
@@ -160,32 +180,16 @@ int	count_vars(char **envp, t_temp_lst_exec *temp_vars)
  * @param temp_vars Temporary variable list
  * @return Number of entries filled
  */
-int	fill_all_vars(char **all_vars, char **envp,
-						t_temp_lst_exec *temp_vars)
+int	fill_all_vars(char **all_vars, char **envp)
 {
 	int				i;
-	int				j;
-	t_temp_lst_exec	*cur;
-	char			*tmp;
 
 	i = 0;
-	cur = temp_vars;
-	while (cur)
+	while (envp[i])
 	{
-		if (cur->value)
-		{
-			tmp = ft_strjoin(cur->name, "=");
-			all_vars[i] = ft_strjoin(tmp, cur->value);
-			free(tmp);
-		}
-		else
-			all_vars[i] = ft_strdup(cur->name);
+		all_vars[i] = ft_strdup(envp[i]);
 		i++;
-		cur = cur->next;
 	}
-	j = -1;
-	while (envp[++j])
-		all_vars[i++] = ft_strdup(envp[j]);
 	all_vars[i] = NULL;
 	return (i);
 }

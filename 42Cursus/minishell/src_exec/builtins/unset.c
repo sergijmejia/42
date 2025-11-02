@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:41:04 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/25 11:00:00 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/28 02:57:10 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,55 @@
 #include "exec.h"
 #include <stdlib.h>
 
+/**
+ * @brief Removes a variable from envp by name.
+ *
+ * Frees only the line corresponding to the variable.
+ *
+ * @param name Variable name
+ * @param envp Pointer to environment array
+ */
+static void	unset_assignment_safe(const char *name, char ***envp)
+{
+	int i, j;
+	size_t len;
+
+	if (!name || !envp || !*envp)
+		return ;
+	len = ft_strlen(name);
+	i = 0;
+	while ((*envp)[i])
+	{
+		if (ft_strncmp((*envp)[i], name, len) == 0
+			&& (*envp)[i][len] == '=')
+		{
+			free((*envp)[i]);
+			j = i;
+			while ((*envp)[j + 1])
+			{
+				(*envp)[j] = (*envp)[j + 1];
+				j++;
+			}
+			(*envp)[j] = NULL;
+			break ;
+		}
+		i++;
+	}
+}
 
 /**
  * @brief Builtin unset: removes variables from local and environment.
  *
- * Bash-like behavior:
- *  - Removes all occurrences of a variable from the shell's local variables.
- *  - Removes the variable from the global environment (envp) if it exists.
- *
- * This function handles multiple variables passed as arguments:
- * unset VAR1 VAR2 ...
- *
  * @param args Array of command arguments (args[1..] are variable names)
- * @param temp_vars Pointer to the list of temporary shell variables
- * @param envp Pointer to the shell's global environment array
- * @return Exit status: 0 on success, 1 if args or temp_vars is NULL
+ * @param temp_vars Pointer to shell temporary variables list
+ * @param envp Pointer to shell environment array
+ * @param parser_tmp_var Parser's temporary variables table
+ * @return Exit status (0 on success)
  */
 int	builtin_unset(char **args, t_temp_lst_exec **temp_vars,
-        char ***envp, t_list **parser_tmp_var)
+		char ***envp, t_list **parser_tmp_var)
 {
-	int	i;
+	int i;
 
 	if (!args || !args[1])
 		return (0);
@@ -44,10 +73,9 @@ int	builtin_unset(char **args, t_temp_lst_exec **temp_vars,
 	while (args[i])
 	{
 		if (envp && *envp)
-			unset_assignment(args[i], envp);
-		remove_local_var(temp_vars, args[i]);
-        remove_parser_tmp_var(parser_tmp_var, args[i]);
-
+			unset_assignment_safe(args[i], envp); // solo esta línea
+		remove_local_var(temp_vars, args[i]);      // temp_vars
+		remove_parser_tmp_var(parser_tmp_var, args[i]); // parser vars
 		i++;
 	}
 	return (0);

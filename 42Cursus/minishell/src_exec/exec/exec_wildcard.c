@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:13:02 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/22 00:52:24 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:42:24 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,26 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+
+/**
+ * @brief Safe realloc that frees old memory on failure.
+ */
+static void	*safe_realloc(void *ptr, size_t new_size)
+{
+	void	*tmp;
+
+	tmp = realloc(ptr, new_size);
+	if (!tmp)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	return (tmp);
+}
 
 /**
  * @brief Matches a filename against a simple wildcard pattern.
- *
- * Supports only one wildcard character '*', which can appear
- * anywhere in the pattern (no recursive or directory matching).
- *
- * Examples:
- * - "a*" matches "abc"
- * - "*c" matches "abc"
- * - "a*c" matches "abc"
- * - "*" matches any filename
- *
- * @param pattern  The wildcard pattern to match against.
- * @param filename The filename to test.
- * @return 1 if the filename matches the pattern, 0 otherwise.
  */
 static int	match_pattern(const char *pattern, const char *filename)
 {
@@ -62,11 +66,6 @@ static int	match_pattern(const char *pattern, const char *filename)
 
 /**
  * @brief Loops through directory entries and collects matches.
- *
- * @param dir Opened DIR pointer.
- * @param pattern Wildcard pattern to match.
- * @return Dynamically allocated NULL-terminated array of matches.
- *         NULL on allocation failure or no matches.
  */
 static char	**expand_wildcard_loop(DIR *dir, const char *pattern)
 {
@@ -76,34 +75,28 @@ static char	**expand_wildcard_loop(DIR *dir, const char *pattern)
 
 	matches = NULL;
 	count = 0;
-	entry = readdir(dir);
-	while (entry)
+	while ((entry = readdir(dir)))
 	{
 		if (entry->d_name[0] != '.' && match_pattern(pattern, entry->d_name))
 		{
-			matches = realloc(matches, sizeof(char *) * (count + 2));
-			if (!matches)
+			char **tmp = safe_realloc(matches, sizeof(char *) * (count + 2));
+			if (!tmp)
 			{
-				closedir(dir);
+				free_split(matches);
 				return (NULL);
 			}
+			matches = tmp;
 			matches[count++] = ft_strdup(entry->d_name);
 			matches[count] = NULL;
 		}
-		entry = readdir(dir);
 	}
 	return (matches);
 }
 
 /**
  * @brief Expands a single wildcard pattern in the current directory.
- *
- * Opens the directory and scans entries via expand_wildcard_loop()
- *
- * @param pattern Wildcard pattern to expand.
- * @return NULL-terminated array of matching filenames or NULL if none/failed.
  */
-char	**expand_wildcard(const char *pattern)
+static char	**expand_wildcard(const char *pattern)
 {
 	DIR		*dir;
 	char	**matches;
@@ -118,13 +111,6 @@ char	**expand_wildcard(const char *pattern)
 
 /**
  * @brief Expands a single argument if it contains a wildcard '*'.
- *
- * Allocates space in new_args and appends the expanded matches
- * from the current directory. Updates count.
- *
- * @param arg The argument string to expand.
- * @param new_args Pointer to the current array of expanded arguments.
- * @param count Pointer to the number of arguments currently in new_args.
  */
 static void	expand_wildcard_arg(char *arg, char ***new_args, int *count)
 {
@@ -135,34 +121,26 @@ static void	expand_wildcard_arg(char *arg, char ***new_args, int *count)
 	j = 0;
 	while (matches && matches[j])
 	{
-		*new_args = realloc(*new_args, sizeof(char *) * (*count + 2));
+		char **tmp = safe_realloc(*new_args, sizeof(char *) * (*count + 2));
+		if (!tmp)
+		{
+			free_split(*new_args);
+			free_split(matches);
+			perror("wildcard realloc failed");
+			g_exit_status = 1;
+			return ;
+		}
+		*new_args = tmp;
 		(*new_args)[*count] = ft_strdup(matches[j]);
 		(*new_args)[*count + 1] = NULL;
 		(*count)++;
 		j++;
 	}
-	if (matches)
-		free_split(matches);
+	free_split(matches);
 }
 
 /**
  * @brief Expands all wildcard patterns in a command argument list.
- *
- * Iterates through each argument in the array and replaces any argument
- * containing '*' with the matching filenames in the current directory.
- * Example:
- *
- * echo *.c main.*
- *
- * Might expand to: *
- * echo exec_ast.c exec_command.c main.c main.h
- *
- * If no matches are found for a given pattern, the original argument
- * is left unchanged, just like in bash.
- *
- * @param args NULL-terminated array of command arguments.
- * @return A new NULL-terminated array with expanded arguments.
- *         The caller must free it with free_split().
  */
 char	**expand_wildcards(char **args)
 {
@@ -181,7 +159,15 @@ char	**expand_wildcards(char **args)
 			expand_wildcard_arg(args[i], &new_args, &count);
 		else
 		{
-			new_args = realloc(new_args, sizeof(char *) * (count + 2));
+			char **tmp = safe_realloc(new_args, sizeof(char *) * (count + 2));
+			if (!tmp)
+			{
+				free_split(new_args);
+				perror("minishell: wildcard realloc failed");
+				g_exit_status = 1;
+				return (NULL);
+			}
+			new_args = tmp;
 			new_args[count] = ft_strdup(args[i]);
 			new_args[count + 1] = NULL;
 			count++;

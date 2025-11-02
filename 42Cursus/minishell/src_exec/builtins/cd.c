@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 18:07:02 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 12:19:43 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/01 02:08:01 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,24 @@ static char	*get_cd_target(char **args, char **envp, int *print)
 	{
 		target = get_env_val(envp, "HOME");
 		if (!target)
-			return (ft_putendl_fd("minishell: cd: HOME not set", 2), NULL);
-		else if (*target == '\0')
-			return ("");
-		return (target);
+		{
+			ft_putendl_fd("minishell: cd: HOME not set", 2);
+			return (NULL);
+		}
+		return (ft_strdup(target));
 	}
 	if (ft_strncmp(args[1], "-", 2) == 0)
 	{
 		target = get_env_val(envp, "OLDPWD");
 		if (!target)
-			return (ft_putendl_fd("minishell: cd: OLDPWD not set", 2), NULL);
+		{
+			ft_putendl_fd("minishell: cd: OLDPWD not set", 2);
+			return (NULL);
+		}
 		*print = 1;
-		return (target);
+		return (ft_strdup(target));
 	}
-	return (args[1]);
+	return (ft_strdup(args[1]));
 }
 
 /**
@@ -122,6 +126,10 @@ static int	do_chdir(char *target, char *oldpwd, int print)
  */
 static void	update_cd_env(char ***envp, char *oldpwd, char *pwd_before)
 {
+	(void)envp;
+	(void)oldpwd;
+	(void)pwd_before;
+	
 	char	cwd[1024];
 	char	*logical;
 
@@ -143,6 +151,7 @@ static void	update_cd_env(char ***envp, char *oldpwd, char *pwd_before)
 			}
 		}
 	}
+	
 }
 
 /**
@@ -167,10 +176,17 @@ int	builtin_cd(char **args, char ***envp)
 		return (1);
 	oldpwd = resolve_oldpwd(pwd_before);
 	if (!oldpwd)
+	{
+		free(target);
 		return (1);
+	}
 	if (do_chdir(target, oldpwd, print))
+	{
+		free(target);
 		return (1);
+	}
 	update_cd_env(envp, oldpwd, pwd_before);
 	free(oldpwd);
+	free(target);
 	return (0);
 }

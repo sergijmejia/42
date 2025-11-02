@@ -1,151 +1,126 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_build.c                                        :+:      :+:    :+:   */
+/*   env_build.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/10 14:00:32 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/26 12:00:00 by rafaguti         ###   ########.fr       */
+/*   Created: 2025/10/29 12:00:00 by rafaguti          #+#    #+#             */
+/*   Updated: 2025/10/29 12:20:00 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "minishell_exec.h"
 #include "libft.h"
+#include "minishell_exec.h"
 
 /**
- * @brief Converts a temp variable into "NAME=VALUE" string.
+ * @brief Converts a temporary variable to a "NAME=VALUE" string.
  *
- * Uses ft_strjoin safely, freeing temporary memory if needed.
- *
- * @param var Temporary variable
- * @return Newly allocated string "NAME=VALUE" or NULL
+ * @param var Temporary variable.
+ * @return Allocated string or NULL on failure.
  */
-static char *var_to_string(t_temp_lst_exec *var)
+static char	*var_to_string(t_temp_lst_exec *var)
 {
-    char *tmp;
-    char *res;
+	char	*tmp;
+	char	*res;
 
-    if (!var)
-        return NULL;
-    tmp = ft_strjoin(var->name, "=");
-    if (!tmp)
-        return NULL;
-    res = ft_strjoin(tmp, var->value);
-    free(tmp);
-    if (!res)
-        return NULL;
-    return res;
+	if (!var)
+		return (NULL);
+	tmp = ft_strjoin(var->name, "=");
+	if (!tmp)
+		return (NULL);
+	res = ft_strjoin(tmp, var->value);
+	free(tmp);
+	return (res);
 }
 
 /**
- * @brief Counts the number of nodes in temp_vars list.
+ * @brief Frees a partially filled env array in case of malloc failure.
  *
- * @param temp_vars Head of the list
- * @return Number of nodes
+ * @param env Array to free.
+ * @param filled Number of allocated elements.
  */
-static int count_temp_vars(t_temp_lst_exec *temp_vars)
+static void	free_partial_env(char **env, int filled)
 {
-    int count = 0;
-
-    while (temp_vars)
-    {
-        count++;
-        temp_vars = temp_vars->next;
-    }
-    return count;
+	while (--filled >= 0)
+		free(env[filled]);
+	free(env);
 }
 
 /**
- * @brief Counts the number of strings in envp array.
+ * @brief Counts the nodes in a linked list.
  *
- * @param envp Environment array
- * @return Number of strings
+ * @param temp_vars Head of list.
+ * @return Number of nodes.
  */
-static int count_env(char **envp)
+static int	count_temp_vars(t_temp_lst_exec *temp_vars)
 {
-    int count = 0;
+	int	count = 0;
 
-    if (!envp)
-        return 0;
-    while (envp[count])
-        count++;
-    return count;
+	while (temp_vars)
+	{
+		count++;
+		temp_vars = temp_vars->next;
+	}
+	return (count);
 }
 
 /**
- * @brief Copies temp_vars list into an envp array starting at index start.
+ * @brief Counts the strings in an envp array.
  *
- * Returns 0 on success, 1 on allocation failure.
- *
- * @param temp_vars Head of the temp_vars list
- * @param new_env Array to store the strings
- * @param start Pointer to index to start writing in new_env
- * @return int 0 = ok, 1 = error
+ * @param envp Array.
+ * @return Number of strings.
  */
-static int copy_temp_vars(t_temp_lst_exec *temp_vars, char **new_env, int *start)
+static int	count_env(char **envp)
 {
-    char *str;
+	int	count = 0;
 
-    while (temp_vars)
-    {
-        str = var_to_string(temp_vars);
-        if (!str)
-            return 1; // fallo
-        new_env[*start] = str;
-        (*start)++;
-        temp_vars = temp_vars->next;
-    }
-    return 0; // todo ok
+	if (!envp)
+		return (0);
+	while (envp[count])
+		count++;
+	return (count);
 }
 
 /**
  * @brief Builds a new envp array from temp_vars and existing envp.
  *
- * Handles allocation failures safely, liberando memoria parcialmente creada.
+ * Each element is newly allocated. Returns NULL on failure.
  *
- * @param temp_vars Linked list of temporary variables
- * @param envp Existing environment array
- * @return Newly allocated envp array or NULL on failure
+ * @param temp_vars Linked list of temporary variables.
+ * @param envp Existing environment array.
+ * @return Newly allocated envp array or NULL.
  */
-char **build_envp(t_temp_lst_exec *temp_vars, char **envp)
+char	**build_envp(t_temp_lst_exec *temp_vars, char **envp)
 {
-    char **new_env;
-    int total_count;
-    int i = 0, j = 0;
+	char	**new_env;
+	int		total;
+	int		i;
+	int		j;
 
-    total_count = count_temp_vars(temp_vars) + count_env(envp);
-    new_env = malloc(sizeof(char *) * (total_count + 1));
-    if (!new_env)
-        return NULL;
-
-    if (copy_temp_vars(temp_vars, new_env, &i))
-    {
-        while (--i >= 0)
-            free(new_env[i]);
-        free(new_env);
-        return NULL;
-    }
-
-    if (envp)
-    {
-        j = 0;
-        while (envp[j])
-        {
-            new_env[i] = ft_strdup(envp[j]);
-            if (!new_env[i])
-            {
-                while (--i >= 0)
-                    free(new_env[i]);
-                free(new_env);
-                return NULL;
-            }
-            i++;
-            j++;
-        }
-    }
-
-    new_env[i] = NULL;
-    return new_env;
+	total = count_temp_vars(temp_vars) + count_env(envp);
+	new_env = malloc(sizeof(char *) * (total + 1));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (temp_vars)
+	{
+		new_env[i] = var_to_string(temp_vars);
+		if (!new_env[i])
+			return (free_partial_env(new_env, i), NULL);
+		i++;
+		temp_vars = temp_vars->next;
+	}
+	j = 0;
+	while (envp && envp[j])
+	{
+		new_env[i] = ft_strdup(envp[j]);
+		if (!new_env[i])
+			return (free_partial_env(new_env, i), NULL);
+		i++;
+		j++;
+	}
+	new_env[i] = NULL;
+	return (new_env);
 }

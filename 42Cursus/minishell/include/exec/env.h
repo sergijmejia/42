@@ -21,7 +21,7 @@ void add_parser_tmp_var(t_list **parser_tmp_var, const char *name, const char *v
 // env_envp_utils.c
 void	free_envp(char **envp);
 char	**clone_envp(char **envp);
-void update_env_var(char ***envp, const char *name, const char *value);
+int update_env_var(char ***envp, const char *name, const char *value);
 char	*get_env_val(char **envp, const char *name);
 
 #endif

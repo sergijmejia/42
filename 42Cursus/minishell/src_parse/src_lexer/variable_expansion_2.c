@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 11:53:44 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/23 13:18:37 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:40:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,25 @@ static char	*second_exp_var(char *str, int i, int *command_len, t_aux *aux)
 }
 
 /*Funcion que gestiona el bucle de while(str[i])*/
-static t_list	**expandible_string_loop(t_aux *aux, int *i, char **str)
+static t_list	**expandible_string_loop(t_aux *aux, int *i, char **s)
 {
 	t_list	**lst;
 	char	*new_str;
 	int		command_len;
 
 	lst = aux->token_list;
-	if ((*str)[*i] == '$' && (*str)[*i + 1] != '\0')
+	if ((*s)[*i] == '$' && (*s)[*i + 1] != '\0')
 	{
-		if ((*str)[*i + 1] != '$')
+		if ((*s)[*i + 1] != '$' && (*s)[*i + 1] != '\'' && (*s)[*i + 1] != '\"')
 		{
-			new_str = second_exp_var(*str, *i, &command_len, aux);
+			new_str = second_exp_var(*s, *i, &command_len, aux);
 			if (new_str == NULL)
 				return (NULL);
-			*i = replace_string(str, new_str, command_len, *i);
+			*i = replace_string(s, new_str, command_len, *i);
 			free(new_str);
 			if (*i == -1)
 				return (NULL);
-			((t_token *)((ft_lstpos(*lst, aux->x))->content))->value = *str;
+			((t_token *)((ft_lstpos(*lst, aux->x))->content))->value = *s;
 		}
 		else
 			(*i)++;
@@ -96,6 +96,8 @@ static int	quote_manager(char *str, int *double_quote, int i)
 		i = next_quote(str, i);
 		i++;
 	}
+	else
+		i++;
 	return (i);
 }
 

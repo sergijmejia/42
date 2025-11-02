@@ -9,9 +9,7 @@ WHITE = \033[37m
 # Project Configuration
 NAME = minishell
 CC = cc
-WARNING_FLAGS = -g -O0 -Wall -Wextra -Werror
-#WARNING_FLAGS = -g -O0 -fsanitize=address -Wall -Wextra -Werror
-#WARNING_FLAGS = -g -Wall -Wextra -Werror
+WARNING_FLAGS = -g -Wall -Wextra -Werror
 MAKE = make --no-print-directory
 
 OBJ_DIR = obj
@@ -22,12 +20,13 @@ SRC_PARSE_DIR = src_parse
 # --------------------------
 # PART 1: PARSER
 # --------------------------
-PARSER_INCLUDE_FLAGS = -Iinc_parse -Ilib/libft/include
+PARSER_INCLUDE_FLAGS = -Iinclude -Iinclude/parse -Ilib/libft/include
 PARSER_CFLAGS = $(WARNING_FLAGS) $(PARSER_INCLUDE_FLAGS)
 
 PARSER_SRCS = src_parse/src_clean_functions/clean_functions.c \
               src_parse/src_clean_functions/clean_utils.c   \
               src_parse/src_clean_functions/error_functions.c\
+              src_parse/src_general/process_input.c \
               src_parse/src_general/check_env.c \
               src_parse/src_general/check_parentheses_balance.c \
               src_parse/src_general/check_quote_balance.c \
@@ -52,6 +51,7 @@ PARSER_SRCS = src_parse/src_clean_functions/clean_functions.c \
               src_parse/src_lexer/special_char_divider.c \
               src_parse/src_lexer/special_char_divider_2.c \
               src_parse/src_lexer/special_char_divider_3.c \
+			  src_parse/src_lexer/special_char_divider_4.c \
               src_parse/src_lexer/variable_expansion.c \
               src_parse/src_lexer/variable_expansion_2.c \
               src_parse/src_transition/command_union.c  \
@@ -85,7 +85,7 @@ PARSER_OBJS = $(patsubst %,$(OBJ_DIR)/parser/%,$(PARSER_SRCS:.c=.o))
 # --------------------------
 # PART 2: EXECUTOR
 # --------------------------
-EXEC_INCLUDE_FLAGS = -Iinc_exec -Iinc_parse -Ilib/libft/include
+EXEC_INCLUDE_FLAGS = -Iinclude -Iinclude/exec -Iinclude/parse -Ilib/libft/include
 EXEC_CFLAGS = $(WARNING_FLAGS) $(EXEC_INCLUDE_FLAGS)
 
 EXEC_SRCS = ast/ast_nodes.c \
@@ -116,6 +116,7 @@ EXEC_SRCS = ast/ast_nodes.c \
             exec/exec_wildcard.c \
             utils/dup_argv.c \
             utils/var_utils.c \
+            utils/clean.c \
             utils/utils.c
 
 EXEC_OBJS = $(patsubst %,$(OBJ_DIR)/exec/%,$(EXEC_SRCS:.c=.o))

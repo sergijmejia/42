@@ -6,13 +6,11 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:45:21 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/22 12:01:02 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/10/28 02:47:47 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 /*Funcion que calcula la cantidad de strings que hay en un string doble*/
 int	doublestr_len(char **str)

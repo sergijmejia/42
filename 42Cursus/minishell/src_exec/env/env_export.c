@@ -48,10 +48,10 @@ static int	update_current_var(char **envp, const char *name, const char *value)
 }
 
 /**
- * @brief Adds a new variable to the environment array.
+ * @brief Adds a new variable to the environment array safely.
  *
- * Allocates a new array, copies old entries, appends the new assignment,
- * frees the old array, and updates the pointer.
+ * Allocates a new array, duplicates old entries, appends the new assignment,
+ * and frees old array. Protects against allocation failures.
  *
  * @param envp Pointer to the environment array
  * @param assignment Full "VAR=value" string
@@ -70,9 +70,23 @@ static int	add_new_var(char ***envp, const char *assignment, int count)
 	while (j < count)
 	{
 		new_env[j] = ft_strdup((*envp)[j]);
+		if (!new_env[j])
+		{
+			while (--j >= 0)
+				free(new_env[j]);
+			free(new_env);
+			return (-1);
+		}
 		j++;
 	}
 	new_env[count] = ft_strdup(assignment);
+    if (!new_env[count])
+    {
+        while (--j >= 0)
+            free(new_env[j]);
+        free(new_env);
+        return (-1);
+    }
 	new_env[count + 1] = NULL;
 	free_envp(*envp);
 	*envp = new_env;
@@ -80,12 +94,9 @@ static int	add_new_var(char ***envp, const char *assignment, int count)
 }
 
 /**
- * @brief Adds or updates an environment variable assignment.
+ * @brief Adds or updates an environment variable assignment safely.
  *
- * Takes a string of the form "VAR=value" and either updates the variable
- * in envp if it exists, or adds it if it doesn't.
- *
- * @param assignment The string containing the assignment (e.g. "PATH=/usr/bin")
+ * @param assignment The string containing the assignment (e.g., "VAR=value")
  * @param envp A pointer to the environment array (char ***)
  * @return 0 on success, -1 on allocation error or invalid input
  */

@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:10:02 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/21 17:39:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:43:15 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_list	**syntax_and_heredoc(t_aux *aux, char **line)
 	if (count_nl(*line) == 1)
 	{
 		aux_line = reduce_nl(*line);
-		if (aux_line== NULL)
+		if (aux_line == NULL)
 			return (error_tr(lst));
 		free (*line);
 		*line = aux_line;

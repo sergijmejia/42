@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:40:56 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 12:37:56 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/10/28 02:53:52 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,16 @@ void	print_sorted_vars(char **all_vars, int count)
  * @param envp Environment array
  * @param temp_vars Temporary variable list
  */
-static void	print_exported_vars(char **envp, t_temp_lst_exec *temp_vars)
+static void	print_exported_vars(char **envp)
 {
 	int		count;
 	char	**all_vars;
 
-	count = count_vars(envp, temp_vars);
+	count = count_vars(envp);
 	all_vars = malloc(sizeof(char *) * (count + 1));
 	if (!all_vars)
 		return ;
-	count = fill_all_vars(all_vars, envp, temp_vars);
+	count = fill_all_vars(all_vars, envp);
 	print_sorted_vars(all_vars, count);
 }
 
@@ -84,7 +84,8 @@ static void	print_exported_vars(char **envp, t_temp_lst_exec *temp_vars)
  * @param envp Pointer to environment array
  * @return 0 on success, 1 on error
  */
-int	builtin_export(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_vars)
+int	builtin_export(char **args, t_temp_lst_exec **temp_vars,
+		char ***envp, t_list **parser_tmp_vars)
 {
 	int	i;
 
@@ -92,7 +93,7 @@ int	builtin_export(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_lis
 		return (1);
 	if (!args[1])
 	{
-		print_exported_vars(*envp, *temp_vars);
+		print_exported_vars(*envp);
 		return (0);
 	}
 	i = 1;

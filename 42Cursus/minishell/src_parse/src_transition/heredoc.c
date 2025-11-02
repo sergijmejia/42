@@ -37,7 +37,8 @@ static int	create_heredoc_file(char *here_doc)
 		len = (int) ft_strlen(str);
 	}
 	free(str);
-	close(fd);
+	if (close(fd) == -1)
+		return (1);
 	return (0);
 }
 

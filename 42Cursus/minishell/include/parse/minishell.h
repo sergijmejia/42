@@ -131,6 +131,7 @@ typedef struct s_ast
 char			**dup_env(char **envp);
 int				check_env(char **envp);
 t_list			**create_var_table(void);
+int				process_input(char **env, t_list **p_tmp, char *line, t_ast ***ast);
 
 /*Funciones de testeo*/
 void			print_lst(t_list *lst);
@@ -167,6 +168,7 @@ t_list			**node_before_div(t_list **token_list, int i, int pos);
 t_list			**special_char_divider(t_list **token_list);
 t_list			**divide_special(t_list **token_list, int *i, char *sp_char);
 t_list			**special_char(t_list **token_list, int i, int n);
+t_type_lexer	select_special_type(char *str, int n);
 t_list			**find_redirection(t_list **token_list);
 t_list			**find_wildcard(t_list **token_list);
 t_list			**var_expansion(t_list **lst, char **env, t_list **tmp_var);
@@ -223,6 +225,7 @@ t_list			**clean_token(t_list **token_list, t_token *token);
 t_list			**clean_list(t_list **token_list);
 t_list			**clean_tr(t_list **token_list);
 t_ast			**clean_ast(t_ast **ast_list);
+void			free_tmp_var_p(void *content);
 t_list			**error_token(t_list **token_list, t_token *token);
 t_list			**error_list(t_list **token_list);
 t_list			**error_tr(t_list **token_list);

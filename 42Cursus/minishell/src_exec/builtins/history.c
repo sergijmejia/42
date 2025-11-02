@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti@student.42barcelon>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 13:00:00 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 10:26:17 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/01 21:55:00 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	builtin_history(void)
 	i = 0;
 	while (hist_list[i])
 	{
-		printf("%5d  %s\n", i + 1, hist_list[i]->line);
+		printf("%5d  %s", i + 1, hist_list[i]->line);
 		i++;
 	}
 	return (0);

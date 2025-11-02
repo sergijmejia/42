@@ -20,35 +20,67 @@
 #include "exec_search.h"
 #include "exec_wildcard.h"
 
-/**
- * @brief Executes the command in the child process.
- *
- * Restores default signals and calls find_and_exec.
- *
- * @param node AST node containing the command.
- * @param env_for_exec Environment array for execve.
- */
-void	child_exec_command(t_ast *node, char **env_for_exec)
+void fork_and_exec(t_ast *node, char **env_for_exec)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	_exit(find_and_exec(node->value, env_for_exec));
+    pid_t pid;
+    int status;
+
+    if (!node || !env_for_exec || !node->value || !node->value[0])
+        return ;
+
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("minishell: fork failed");
+        free_envp(env_for_exec);
+        g_exit_status = 1;
+        return ;
+    }
+
+    if (pid == 0)
+    {
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        _exit(find_and_exec(node->value, env_for_exec));
+    }
+
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status))
+        g_exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        g_exit_status = 128 + WTERMSIG(status);
+    else
+        g_exit_status = 1;
 }
 
 /**
- * @brief Waits for the child process and updates g_exit_status.
+ * @brief Check if a string is a valid export argument.
  *
- * @param pid PID of the forked child.
+ * Accepts:
+ *  - VAR
+ *  - VAR=value
+ *
+ * Rules:
+ *  - First character: letter or '_'
+ *  - Following characters before '=': letters, digits, or '_'
+ *
+ * @param arg Argument string
+ * @return 1 if valid, 0 if invalid
  */
-void	wait_child_and_update_status(pid_t pid)
+int	check_export_args(const char *arg)
 {
-	int	status;
+	int	i;
 
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		g_exit_status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		g_exit_status = 128 + WTERMSIG(status);
-	else
-		g_exit_status = 1;
+	if (!arg || !*arg)
+		return (0);
+	if (!(ft_isalpha(arg[0]) || arg[0] == '_'))
+		return (0);
+	i = 1;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!(ft_isalnum(arg[i]) || arg[i] == '_'))
+			return (0);
+		i++;
+	}
+	return (1);
 }
