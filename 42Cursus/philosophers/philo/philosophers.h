@@ -27,8 +27,11 @@ typedef struct	s_philo_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_to_eat;
+	long long		time_start;
+	int				finished;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	msg;
+	pthread_mutex_t	sim;
 	struct s_philo	*philosophers;
 } t_philo_data;
 
