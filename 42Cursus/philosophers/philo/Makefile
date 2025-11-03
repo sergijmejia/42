@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET	= philosophers
+TARGET	= philo
 OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= ./src

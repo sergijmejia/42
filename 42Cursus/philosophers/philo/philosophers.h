@@ -29,7 +29,9 @@ typedef struct	s_philo_data
 	int				number_to_eat;
 	long long		time_start;
 	int				finished;
+	int				*available_forks;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	read_forks;
 	pthread_mutex_t	msg;
 	pthread_mutex_t	sim;
 	struct s_philo	*philosophers;
