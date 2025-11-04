@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 12:00:00 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/11/01 01:58:56 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 16:02:40 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,8 @@ static int	main_loop(char ***env, t_list **p_tmp, t_temp_lst_exec **tmp)
 {
 	char	*aux_line;
 	char	*line;
-	t_ast	**ast;
-	
-	(void)tmp;
+	t_ast	*ast;
+
 	aux_line = readline("minishell$ ");
 	if (!aux_line)
 	{
@@ -46,8 +45,8 @@ static int	main_loop(char ***env, t_list **p_tmp, t_temp_lst_exec **tmp)
 		return (free(line), 1);
 	ast = NULL;
 	if (process_input(*env, p_tmp, line, &ast))
-		return (1);		//linea modificada para evitar double free
-	exec_ast(*ast, tmp, env, p_tmp);
+		return (1);
+	exec_ast(ast, tmp, env, p_tmp);
 	clean_ast(ast);
 	if (g_exit_status == -2)
 		return (0);
@@ -102,7 +101,6 @@ int	main(int argc, char **argv, char **envp)
 	t_list			**parser_tmp_var;
 	t_temp_lst_exec	*tmp_var;
 	char			**env;
-	int				should_continue;
 
 	(void)argc;
 	(void)argv;
@@ -118,9 +116,8 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	tmp_var = convert_tmp_var(parser_tmp_var);
-	should_continue = 1;
-	while (should_continue)
-		should_continue = main_loop(&env, parser_tmp_var, &tmp_var);
+	while (main_loop(&env, parser_tmp_var, &tmp_var))
+		;
 	free_tmp_var_exec(tmp_var);
 	ft_lstclear(parser_tmp_var, free_tmp_var_p);
 	free(parser_tmp_var);

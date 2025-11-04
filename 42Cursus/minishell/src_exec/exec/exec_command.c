@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 14:28:51 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/28 12:04:41 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:28:29 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,50 +83,63 @@ void	exec_command_aux(t_ast *node, t_temp_lst_exec **temp_vars,
 		return ;
 	}
 	fork_and_exec(node, env_for_exec);
-	free_envp(env_for_exec); 
+	free_envp(env_for_exec);
 }
 
 /**
- * @brief Executes a simple command node (builtin or external).
+ * @brief Validate arguments for the 'export' builtin.
  *
- * Handles wildcard expansion ('*') before execution.
- * If the command contains patterns like "*.c", these are expanded to
- * matching filenames in the current directory.
+ * Checks that all provided arguments to the 'export' command
+ * are valid identifiers. Prints an error message and sets
+ * g_exit_status = 1 if any argument is invalid.
  *
- * Determines if the command is a builtin; executes builtins directly
- * in the parent process, or forks for external commands.
+ * @param args Array of argument strings (full command, including "export").
+ * @param i Starting index for argument validation (usually 1).
+ * @return 1 if all arguments are valid, 0 otherwise.
+ */
+static int	validate_export_args(char **args, int i)
+{
+	while (args[i])
+	{
+		if (!check_export_args(args[i]))
+		{
+			ft_putendl_fd("minishell: export: not a valid identifier", 2);
+			g_exit_status = 1;
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+/**
+ * @brief Execute a simple command node (builtin or external).
+ *
+ * Handles wildcard expansion ('*'), determines if the command
+ * is a builtin or external, and executes it accordingly.
  *
  * @param node AST node containing the command and its arguments.
  * @param temp_vars Pointer to the temporary environment variable list.
  * @param envp Pointer to the original environment array.
+ * @param parser_tmp_var Parser temporary variables list.
  */
 void	exec_command(t_ast *node, t_temp_lst_exec **temp_vars,
 		char ***envp, t_list **parser_tmp_var)
 {
+	int		i;
 	char	*last_arg;
 
 	if (!node || !node->value)
-	{
-		g_exit_status = 1;
-		return ;
-	}
+		return ((void)(g_exit_status = 1));
 	handle_wildcards(node);
 	last_arg = get_last_arg(node->value);
 	if (get_builtin_type(node->value[0]) != BUILTIN_UNKNOWN)
 	{
 		if (ft_strncmp(node->value[0], "export", ft_strlen("export") + 1) == 0)
 		{
-			int i = 1;
-			while (node->value[i])
-			{
-				if (!check_export_args(node->value[i]))
-				{
-					ft_putendl_fd("minishell: export: not a valid identifier", 2);
-					g_exit_status = 1;
-					return;
-				}
-				i++;
-			}
+			i = 1;
+			if (!validate_export_args(node->value, i))
+				return ;
 		}
 		g_exit_status = exec_builtin(node, temp_vars, envp, parser_tmp_var);
 		update_env_var(envp, "_", last_arg);

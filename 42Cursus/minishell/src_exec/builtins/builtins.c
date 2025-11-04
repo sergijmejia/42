@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 23:12:48 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/28 02:57:40 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:01:06 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ int	exec_builtin(t_ast *node, t_temp_lst_exec **temp_vars,
 	if (type == BUILTIN_PWD)
 		return (builtin_pwd(*envp));
 	else if (type == BUILTIN_ECHO)
-		return (builtin_echo(node->value, *temp_vars));
+		return (builtin_echo(node->value));
 	else if (type == BUILTIN_CD)
 		return (builtin_cd(node->value, envp));
 	else if (type == BUILTIN_EXIT)
-		return (builtin_exit(node->value, temp_vars, envp, parser_tmp_var));
+		return (builtin_exit(node, temp_vars, envp, parser_tmp_var));
 	else if (type == BUILTIN_ENV)
 		return (builtin_env(*envp));
 	else if (type == BUILTIN_EXPORT)

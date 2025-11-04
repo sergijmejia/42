@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/04 17:55:16 by rafaguti          #+#    #+#             */
+/*   Updated: 2025/11/04 17:56:33 by rafaguti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
@@ -17,17 +29,21 @@ typedef enum e_builtin
 }	t_builtin;
 
 /* dispatcher */
-int		exec_builtin(t_ast *node, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_var);
+int			exec_builtin(t_ast *node, t_temp_lst_exec **temp_vars,
+				char ***envp, t_list **parser_tmp_var);
 
 /* helpers for each builtin */
-int		builtin_cd(char **args, char ***envp);
-int		builtin_pwd(char **envp);
-int		builtin_echo(char **args, t_temp_lst_exec *tmp_var);
-int		builtin_export(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_vars);
-int 	builtin_history(void);
-int		builtin_unset(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_var);
-int		builtin_exit(char **args, t_temp_lst_exec **temp_vars, char ***envp, t_list **parser_tmp_var);
-int		builtin_env(char **envp);
+int			builtin_cd(char **args, char ***envp);
+int			builtin_pwd(char **envp);
+int			builtin_echo(char **args);
+int			builtin_export(char **args, t_temp_lst_exec **temp_vars,
+				char ***envp, t_list **parser_tmp_vars);
+int			builtin_history(void);
+int			builtin_unset(char **args, t_temp_lst_exec **temp_vars,
+				char ***envp, t_list **parser_tmp_var);
+int			builtin_exit(t_ast *node, t_temp_lst_exec **temp_vars,
+				char ***envp, t_list **parser_tmp_var);
+int			builtin_env(char **envp);
 
 /* utility */
 t_builtin	get_builtin_type(char *name);

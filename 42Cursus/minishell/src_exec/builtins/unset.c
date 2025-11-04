@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:41:04 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/28 02:57:10 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:05:47 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@
  */
 static void	unset_assignment_safe(const char *name, char ***envp)
 {
-	int i, j;
-	size_t len;
+	int		i;
+	int		j;
+	size_t	len;
 
 	if (!name || !envp || !*envp)
 		return ;
@@ -65,7 +66,7 @@ static void	unset_assignment_safe(const char *name, char ***envp)
 int	builtin_unset(char **args, t_temp_lst_exec **temp_vars,
 		char ***envp, t_list **parser_tmp_var)
 {
-	int i;
+	int	i;
 
 	if (!args || !args[1])
 		return (0);
@@ -73,9 +74,9 @@ int	builtin_unset(char **args, t_temp_lst_exec **temp_vars,
 	while (args[i])
 	{
 		if (envp && *envp)
-			unset_assignment_safe(args[i], envp); // solo esta línea
-		remove_local_var(temp_vars, args[i]);      // temp_vars
-		remove_parser_tmp_var(parser_tmp_var, args[i]); // parser vars
+			unset_assignment_safe(args[i], envp);
+		remove_local_var(temp_vars, args[i]);
+		remove_parser_tmp_var(parser_tmp_var, args[i]);
 		i++;
 	}
 	return (0);

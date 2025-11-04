@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 18:07:02 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/11/01 02:08:01 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 11:54:38 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,6 @@ static int	do_chdir(char *target, char *oldpwd, int print)
  */
 static void	update_cd_env(char ***envp, char *oldpwd, char *pwd_before)
 {
-	(void)envp;
-	(void)oldpwd;
-	(void)pwd_before;
-	
 	char	cwd[1024];
 	char	*logical;
 
@@ -151,7 +147,6 @@ static void	update_cd_env(char ***envp, char *oldpwd, char *pwd_before)
 			}
 		}
 	}
-	
 }
 
 /**

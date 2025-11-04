@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_search.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/04 18:06:31 by rafaguti          #+#    #+#             */
+/*   Updated: 2025/11/04 18:06:49 by rafaguti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXEC_SEARCH_H
 # define EXEC_SEARCH_H
 
-int find_and_exec(char **argv, char **envp);
+int	find_and_exec(char **argv, char **envp);
 
 #endif

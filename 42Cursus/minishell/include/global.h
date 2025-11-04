@@ -6,13 +6,13 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 22:25:41 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/28 22:26:11 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:52:57 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GLOBAL_H
 # define GLOBAL_H
 
-extern int g_exit_status;
+extern int	g_exit_status;
 
 #endif

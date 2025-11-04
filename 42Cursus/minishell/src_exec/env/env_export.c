@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 13:21:18 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/18 02:26:44 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:45:27 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,12 @@ static int	add_new_var(char ***envp, const char *assignment, int count)
 	{
 		new_env[j] = ft_strdup((*envp)[j]);
 		if (!new_env[j])
-		{
-			while (--j >= 0)
-				free(new_env[j]);
-			free(new_env);
-			return (-1);
-		}
+			return (free_partial_env(new_env, j), -1);
 		j++;
 	}
 	new_env[count] = ft_strdup(assignment);
-    if (!new_env[count])
-    {
-        while (--j >= 0)
-            free(new_env[j]);
-        free(new_env);
-        return (-1);
-    }
+	if (!new_env[count])
+		return (free_partial_env(new_env, j), -1);
 	new_env[count + 1] = NULL;
 	free_envp(*envp);
 	*envp = new_env;

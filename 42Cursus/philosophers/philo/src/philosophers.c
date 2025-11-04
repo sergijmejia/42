@@ -238,7 +238,7 @@ void	philo_eat(t_philo *philosopher)
 			usleep(100);
 		}
 	}
-	print_get_fork(philosopher, actual_time);
+	
 	while (1)
 	{
 		if (monitorize_finished(philosopher))
@@ -262,7 +262,7 @@ void	philo_eat(t_philo *philosopher)
 			return (philo_dead_eat(philosopher, 3));
 
 	print_get_fork(philosopher, actual_time);
-
+	print_get_fork(philosopher, actual_time);
 	time_to_eat = (useconds_t) philosopher->data->time_to_eat;
 	pthread_mutex_lock(&(philosopher->philo_mutex));
 	philosopher->time_last_eat = actual_time;

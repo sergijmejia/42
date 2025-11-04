@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:41:22 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/28 02:55:07 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 16:07:35 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,45 +36,73 @@ int	builtin_env(char **envp)
 }
 
 /**
+ * @brief Counts how many env vars remain after removing 'name'.
+ */
+static int	count_env_vars_to_remove(const char *name, char **envp)
+{
+	int		count;
+	int		i;
+	size_t	len;
+
+	count = 0;
+	i = 0;
+	len = ft_strlen(name);
+	while (envp[i])
+	{
+		if (!(ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '='))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+/**
+ * @brief Builds a new env array without the given variable.
+ */
+static void	rebuild_env_without_var(char **new_env,
+	const char *name, char **envp)
+{
+	int		i;
+	int		j;
+	size_t	len;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(name);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+		{
+			free(envp[i]);
+			i++;
+			continue ;
+		}
+		new_env[j++] = envp[i++];
+	}
+	new_env[j] = NULL;
+}
+
+/**
  * @brief Removes all occurrences of a variable from the environment array.
  *
- * Allocates a new environment array, copies all variables except the ones
- * matching the given name, and frees the old array.
+ * Allocates a new environment array excluding any variable that matches `name`.
+ * Frees the old environment and updates the pointer.
  *
- * Example:
- *   unset_assignment("VAR", &envp);
- *   -> removes all "VAR=..." entries from envp.
- *
- * @param name Variable name to remove.
- * @param envp Pointer to the environment array to modify.
- * @return 0 on success, -1 on error (e.g., allocation failure or invalid input).
+ * @return 0 on success, -1 on error.
  */
 int	unset_assignment(const char *name, char ***envp)
 {
-    int count, j;
-    char **new_env;
+	int		count;
+	char	**new_env;
 
-    if (!name || !envp || !*envp)
-        return (-1);
-    count = 0;
-    for (int i = 0; (*envp)[i]; i++)
-        if (!(ft_strncmp((*envp)[i], name, ft_strlen(name)) == 0 && (*envp)[i][ft_strlen(name)] == '='))
-            count++;
-    new_env = malloc(sizeof(char *) * (count + 1));
-    if (!new_env)
-        return (-1);
-    j = 0;
-    for (int i = 0; (*envp)[i]; i++)
-    {
-        if (ft_strncmp((*envp)[i], name, ft_strlen(name)) == 0 && (*envp)[i][ft_strlen(name)] == '=')
-        {
-            free((*envp)[i]);
-            continue;
-        }
-        new_env[j++] = (*envp)[i];
-    }
-    new_env[j] = NULL;
-    free(*envp);
-    *envp = new_env;
-    return (0);
+	if (!name || !envp || !*envp)
+		return (-1);
+	count = count_env_vars_to_remove(name, *envp);
+	new_env = malloc(sizeof(char *) * (count + 1));
+	if (!new_env)
+		return (-1);
+	rebuild_env_without_var(new_env, name, *envp);
+	free(*envp);
+	*envp = new_env;
+	return (0);
 }

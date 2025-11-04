@@ -51,16 +51,36 @@ void	remove_local_var(t_temp_lst_exec **temp_vars, const char *name)
 }
 
 /**
- * @brief Removes all nodes with the given name from the parser's temporary
- * variable list.
+ * @brief Frees a parser temporary variable node and updates list links.
  *
- * Iterates through the linked list of parser variables (t_list containing
- * t_pair)
- * and safely frees any node whose name matches the provided variable name.
  *
- * @param parser_tmp_var Pointer to the head of the parser's temporary 
+ * @param head Pointer to the head of the parser's temporary variable list.
+ * @param prev Pointer to the previous node in the list (may be NULL).
+ * @param curr Pointer to the current node to be removed.
+ */
+static void	free_parser_tmp_node(t_list **head, t_list *prev, t_list *curr)
+{
+	t_pair	*p;
+
+	p = (t_pair *)curr->content;
+	if (prev)
+		prev->next = curr->next;
+	else
+		*head = curr->next;
+	free(p->name);
+	free(p->value);
+	free(p);
+	free(curr);
+}
+
+/**
+ * @brief Removes the first node with the given name from the parser's
+ * temporary variable list.
+ *
+ *
+ * @param parser_tmp_var Pointer to the head of the parser's temporary
  * variable list.
- * @param name Name of the variable to remove.
+ * @param name The name of the variable to remove.
  */
 void	remove_parser_tmp_var(t_list **parser_tmp_var, char *name)
 {
@@ -68,26 +88,15 @@ void	remove_parser_tmp_var(t_list **parser_tmp_var, char *name)
 	t_list	*curr;
 	t_pair	*p;
 
-	prev = NULL;
-	curr = *parser_tmp_var;
 	if (!parser_tmp_var || !name)
 		return ;
+	prev = NULL;
+	curr = *parser_tmp_var;
 	while (curr)
 	{
 		p = (t_pair *)curr->content;
-		if (p && p->name && ft_strncmp(p->name,
-				name, ft_strlen(name) + 1) == 0)
-		{
-			if (prev)
-				prev->next = curr->next;
-			else
-				*parser_tmp_var = curr->next;
-			free(p->name);
-			free(p->value);
-			free(p);
-			free(curr);
-			return ;
-		}
+		if (p && p->name && ft_strncmp(p->name, name, ft_strlen(name) + 1) == 0)
+			return (free_parser_tmp_node(parser_tmp_var, prev, curr));
 		prev = curr;
 		curr = curr->next;
 	}

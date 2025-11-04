@@ -15,6 +15,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "exec.h"
+#include "env.h"
+#include "minishell.h"
 #include "minishell_exec.h"
 #include "exec_pipe_ctx.h"
 
@@ -56,6 +58,10 @@ static pid_t	fork_pipe_left(t_ast *node, t_pipe_ctx *ctx)
 		close(ctx->fd[0]);
 		close(ctx->fd[1]);
 		exec_ast(node, ctx->temp_vars, ctx->envp, ctx->parser_tmp_var);
+		free_envp(*ctx->envp);
+		ft_lstclear(ctx->parser_tmp_var, free_tmp_var_p);
+		free(ctx->parser_tmp_var);
+		clean_ast(node);
 		_exit(g_exit_status);
 	}
 	return (pid);
@@ -82,6 +88,10 @@ static pid_t	fork_pipe_right(t_ast *node, t_pipe_ctx *ctx)
 		close(ctx->fd[0]);
 		close(ctx->fd[1]);
 		exec_ast(node, ctx->temp_vars, ctx->envp, ctx->parser_tmp_var);
+		free_envp(*ctx->envp);
+		ft_lstclear(ctx->parser_tmp_var, free_tmp_var_p);
+		free(ctx->parser_tmp_var);
+		clean_ast(node);
 		_exit(g_exit_status);
 	}
 	return (pid);

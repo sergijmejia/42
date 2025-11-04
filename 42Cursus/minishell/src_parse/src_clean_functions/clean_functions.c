@@ -38,10 +38,9 @@ t_list	**clean_tr(t_list **token_list)
 }
 
 /*Funcion que gestiona la liberacion de memoria de un arbol*/
-t_ast	**clean_ast(t_ast **ast_list)
+t_ast	*clean_ast(t_ast *ast_list)
 {
-	astdel(*ast_list);
-	free(ast_list);
+	astdel(ast_list);
 	ast_list = NULL;
 	return (NULL);
 }

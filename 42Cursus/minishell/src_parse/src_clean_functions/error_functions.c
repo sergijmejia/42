@@ -41,7 +41,10 @@ t_ast	**error_ast(t_ast **ast_list)
 {
 	write(2, "Error\n", 6);
 	g_exit_status = 1;
-	return (clean_ast(ast_list));
+	clean_ast(*ast_list);
+	free(ast_list);
+	ast_list = NULL;
+	return (NULL);
 }
 
 /*Funcion que gestiona y reporta un syntax error*/

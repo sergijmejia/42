@@ -6,14 +6,30 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 22:17:28 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/29 00:05:46 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/02 12:54:02 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell_exec.h"
 #include "libft.h"
+#include "env.h"
 #include "utils.h"
+
+/**
+ * @brief Frees a partially allocated env array and returns NULL.
+ *
+ * @param env The partially allocated environment array
+ * @param filled The number of valid entries already allocated
+ * @return Always returns NULL for convenience in error returns
+ */
+void	*free_partial_env(char **env, int filled)
+{
+	while (--filled >= 0)
+		free(env[filled]);
+	free(env);
+	return (NULL);
+}
 
 /**
  * @brief Frees an envp array safely and nullifies its elements
@@ -27,13 +43,13 @@ void	free_envp(char **envp)
 	if (!envp)
 		return ;
 	i = 0;
-    while (envp[i])
-    {
-     	free(envp[i]);
-        envp[i] = NULL;
-        i++;
-    }
-    free(envp);
+	while (envp[i])
+	{
+		free(envp[i]);
+		envp[i] = NULL;
+		i++;
+	}
+	free(envp);
 }
 
 /**
@@ -62,98 +78,12 @@ char	**clone_envp(char **envp)
 	while (i < count)
 	{
 		new_env[i] = ft_strdup(envp[i]);
-        if (!new_env[i])
-        {
-            while(--i >= 0)
-                free(new_env[i]);
-            free(new_env);
-            return (NULL);
-        }
+		if (!new_env[i])
+			return (free_partial_env(new_env, i));
 		i++;
 	}
 	new_env[count] = NULL;
 	return (new_env);
-}
-
-/**
- * @brief Safe string join of three strings.
- */
-static char *ft_strjoin3(const char *s1, const char *s2, const char *s3)
-{
-    char    *tmp;
-    char    *res;
-
-    tmp = ft_strjoin(s1, s2);
-    if (!tmp)
-        return (NULL);
-    res = ft_strjoin(tmp, s3);
-    free(tmp);
-    return (res);
-}
-
-/**
- * @brief Updates or creates an environment variable in envp (name=value)
- *
- * - If the variable exists, replaces it safely.
- * - If not, allocates a new env array and appends it.
- * - Ensures no leaks or dangling pointers.
- */
-int update_env_var(char ***envp, const char *name, const char *value)
-{
-    int i;
-    int j;
-    size_t len;
-    char *new_entry;
-    char **new_env;
-
-    if (!envp || !name || !value)
-        return (-1);
-    len = ft_strlen(name);
-    i = 0;
-    while ((*envp)[i])
-    {
-        if (ft_strncmp((*envp)[i], name, len) == 0 && (*envp)[i][len] == '=')
-        {
-            new_entry = ft_strjoin3(name, "=", value);
-            if (!new_entry)
-                return (-1);
-            free((*envp)[i]);
-            (*envp)[i] = new_entry;
-            return (0);
-        }
-        i++;
-    }
-    // Variable no existe, crear nuevo array duplicando
-    new_env = malloc(sizeof(char *) * (i + 2));
-    if (!new_env)
-        return (-1);
-    j = 0;
-    while (j < i)
-    {
-        new_env[j] = ft_strdup((*envp)[j]);
-        if (!new_env[j])
-        {
-		    while (--j >= 0)
-                free(new_env[j]);
-            free(new_env);
-            return (-1);
-        }
-        j++;
-    }
-    new_env[i] = ft_strjoin3(name, "=", value);
-    if (!new_env[i])
-    {
-		while (--j >= 0)
-			free(new_env[j]);
-		free(new_env);
-		return (-1);
-    }
-    new_env[i + 1] = NULL;
-
-    free_envp(*envp);
-    *envp = new_env;
-
-    return (0);
 }
 
 /**
@@ -169,10 +99,10 @@ char	*get_env_val(char **envp, const char *name)
 	len = ft_strlen(name);
 	i = 0;
 	while (envp[i])
-    {
+	{
 		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
 			return (envp[i] + len + 1);
-        i++;
-    }
-    return (NULL);
+		i++;
+	}
+	return (NULL);
 }

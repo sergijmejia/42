@@ -13,7 +13,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include "env.h"
 #include "exec.h"
+#include "minishell.h"
 #include "minishell_exec.h"
 #include "exec_logic.h"
 
@@ -83,16 +85,17 @@ void	exec_parenthesis(t_ast *node, t_temp_lst_exec **temp_vars,
 	int		status;
 
 	if (!node)
-	{
-		g_exit_status = 1;
-		return ;
-	}
+		return ((void)(g_exit_status = 1));
 	pid = fork();
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		exec_ast(node->left_ast, temp_vars, envp, parser_tmp_var);
+		free_envp(*envp);
+		ft_lstclear(parser_tmp_var, free_tmp_var_p);
+		free(parser_tmp_var);
+		clean_ast(node);
 		_exit(g_exit_status);
 	}
 	waitpid(pid, &status, 0);

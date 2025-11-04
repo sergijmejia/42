@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 02:21:30 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/18 03:47:48 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:16:23 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,3 @@ typedef struct s_temp_lst_exec
 }	t_temp_lst_exec;
 
 #endif
-

@@ -1,2 +1,0 @@
-cat fichero | wc -l && true || echo -e "hola"
-VAR1=hola > VAR2=hola

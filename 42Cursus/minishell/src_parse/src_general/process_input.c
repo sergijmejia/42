@@ -12,9 +12,10 @@
 
 #include "minishell.h"
 
-int	process_input(char **env, t_list **p_tmp, char *line, t_ast ***ast)
+int	process_input(char **env, t_list **p_tmp, char *line, t_ast **ast)
 {
 	t_list	**lst;
+	t_ast	**ast_list;
 
 	lst = lexer(line, env, p_tmp);
 	if (!lst)
@@ -30,9 +31,11 @@ int	process_input(char **env, t_list **p_tmp, char *line, t_ast ***ast)
 	}
 	add_history(line);
 	free(line);
-	*ast = parser(lst);
+	ast_list = parser(lst);
 	clean_tr(lst);
-	if (!(*ast))
+	if (!ast_list)
 		return (1);
+	*ast = *ast_list;
+	free(ast_list);
 	return (0);
 }

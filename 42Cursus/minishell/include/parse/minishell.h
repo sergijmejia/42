@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:47:34 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/10/23 14:25:06 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:34:58 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,8 @@ typedef struct s_ast
 char			**dup_env(char **envp);
 int				check_env(char **envp);
 t_list			**create_var_table(void);
-int				process_input(char **env, t_list **p_tmp, char *line, t_ast ***ast);
+int				process_input(char **env, t_list **p_tmp,
+					char *line, t_ast **ast);
 
 /*Funciones de testeo*/
 void			print_lst(t_list *lst);
@@ -224,7 +225,7 @@ void			astdel(t_ast *ast_list);
 t_list			**clean_token(t_list **token_list, t_token *token);
 t_list			**clean_list(t_list **token_list);
 t_list			**clean_tr(t_list **token_list);
-t_ast			**clean_ast(t_ast **ast_list);
+t_ast			*clean_ast(t_ast *ast_list);
 void			free_tmp_var_p(void *content);
 t_list			**error_token(t_list **token_list, t_token *token);
 t_list			**error_list(t_list **token_list);

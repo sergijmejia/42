@@ -97,6 +97,7 @@ EXEC_SRCS = ast/ast_nodes.c \
             builtins/exit.c \
             builtins/export.c \
             builtins/export_utils.c \
+            builtins/export_utils2.c \
             builtins/history.c \
             builtins/pwd.c \
             builtins/unset.c \
@@ -104,7 +105,9 @@ EXEC_SRCS = ast/ast_nodes.c \
             env/env_export.c \
             env/env_temp_utils.c \
             env/env_envp_utils.c \
+            env/env_envp_update.c \
             exec/exec_ast.c \
+            exec/exec_ast_utils.c \
             exec/exec_command.c \
             exec/exec_command_utils.c \
             exec/exec_heredoc.c \
@@ -112,8 +115,11 @@ EXEC_SRCS = ast/ast_nodes.c \
             exec/exec_path.c \
             exec/exec_pipe.c \
             exec/exec_redir.c \
+            exec/exec_redir_utils.c \
+            exec/exec_redir_utils2.c \
             exec/exec_search.c \
             exec/exec_wildcard.c \
+            exec/exec_wildcard_utils.c \
             utils/dup_argv.c \
             utils/var_utils.c \
             utils/clean.c \
@@ -134,6 +140,7 @@ LINK_LINE = $(CC) $(PARSER_CFLAGS) $(PARSER_OBJS) $(EXEC_CFLAGS) $(EXEC_OBJS) $(
 # --------------------------
 all: minishell
 
+#minishell: check_libft $(OBJ_DIR)/main.o $(OBJ_DIR)/global.o $(PARSER_OBJS) $(EXEC_OBJS)
 minishell: check_libft $(OBJ_DIR)/main.o $(OBJ_DIR)/global.o $(PARSER_OBJS) $(EXEC_OBJS)
 	@$(LINK_LINE)
 	@echo "$(BOLD)$(WHITE)>> $(NAME) build successfully! 🎉$(RESET)"

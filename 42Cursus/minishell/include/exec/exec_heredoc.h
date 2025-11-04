@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_heredoc.h                                    :+:      :+:    :+:   */
+/*   exec_heredoc.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 11:10:00 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/22 11:10:00 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:01:54 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@
  */
 typedef struct s_heredoc_ctx
 {
-	t_temp_lst_exec **temp_vars;
-	char ***envp;
-	t_list **parser_tmp_var;
-	int		hd[2];
+	t_temp_lst_exec	**temp_vars;
+	char			***envp;
+	t_list			**parser_tmp_var;
+	int				hd[2];
 }	t_heredoc_ctx;
 
-int	exec_heredoc_prepare(t_ast *node);
+int		exec_heredoc_prepare(t_ast *node);
 void	exec_heredoc(t_ast *node, t_temp_lst_exec **temp_vars,
 			char ***envp, t_list **parser_tmp_var);
 #endif

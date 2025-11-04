@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 11:40:48 by rafaguti          #+#    #+#             */
-/*   Updated: 2025/10/20 10:50:43 by rafaguti         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:55:32 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,38 @@ static int	is_n_flag(const char *arg)
 }
 
 /**
- * @brief Prints a single argument, expanding it if it starts with '$'.
+ * @brief Prints a single argument.
+ *
+ * Handles the special cases:
+ * - "$$" → prints the shell's PID.
+ * - "$?" → prints the last command's exit status.
  *
  * @param arg Argument string to print
- * @param tmp_var Temporary variable list for variable expansion
  */
-static void	print_single_arg(char *arg, t_temp_lst_exec *tmp_var)
+static void	print_single_arg(char *arg)
 {
-	char	*expanded;
+	char	*pid_str;
+	char	*exit_str;
 
 	if (!arg)
 		return ;
-	if (arg[0] == '$')
+	if (ft_strncmp(arg, "$$", 2) == 0 && arg[2] == '\0')
 	{
-		expanded = find_var_exec(arg + 1, tmp_var);
-		if (expanded)
-			ft_putstr_fd(expanded, 1);
+		pid_str = ft_itoa(getpid());
+		if (pid_str)
+		{
+			ft_putstr_fd(pid_str, 1);
+			free(pid_str);
+		}
+	}
+	else if (ft_strncmp(arg, "$?", 2) == 0 && arg[2] == '\0')
+	{
+		exit_str = ft_itoa(g_exit_status);
+		if (exit_str)
+		{
+			ft_putstr_fd(exit_str, 1);
+			free(exit_str);
+		}
 	}
 	else
 		ft_putstr_fd(arg, 1);
@@ -65,15 +81,15 @@ static void	print_single_arg(char *arg, t_temp_lst_exec *tmp_var)
  * @brief Executes the builtin `echo` command.
  *
  * Mimics Bash behavior:
- * - Handles one or more `-n` flags (e.g. `echo -n -n hello`).
- * - Expands variables beginning with `$`.
+ * - Handles one or more "-n" flags (e.g., `echo -n -n hello`).
+ * - Prints "$$" as the shell's PID.
  * - Prints arguments separated by spaces.
  *
- * @param args Array of arguments (`args[0]` is "echo")
- * @param tmp_var Temporary variable list
+ * @param args Array of arguments, where args[0] is "echo"
+ * @param tmp_var Temporary variable list (currently unused)
  * @return Always returns 0 (success)
  */
-int	builtin_echo(char **args, t_temp_lst_exec *tmp_var)
+int	builtin_echo(char **args)
 {
 	int	i;
 	int	newline;
@@ -87,7 +103,7 @@ int	builtin_echo(char **args, t_temp_lst_exec *tmp_var)
 	}
 	while (args[i])
 	{
-		print_single_arg(args[i], tmp_var);
+		print_single_arg(args[i]);
 		if (args[i + 1])
 			ft_putstr_fd(" ", 1);
 		i++;
