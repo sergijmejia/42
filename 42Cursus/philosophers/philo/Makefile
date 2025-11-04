@@ -23,7 +23,7 @@ MAIN_PHILO_BONUS =
 
 OBJS_BONUS	=
 
-HEADER	= $(INC_DIR)/philosophers.h
+HEADER	= $(INC_DIR)/philo.h
 
 ifndef BONUS
 	OBJ = $(OBJS)

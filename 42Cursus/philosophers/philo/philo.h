@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
+/*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -45,6 +45,7 @@ typedef struct	s_philo
 	int				l_fork; 
 	int				r_fork;
 	int				is_alive; //<---requiere mutex
+	int				num_eat; //<---requiere mutex
 	pthread_mutex_t	philo_mutex;
 	t_philo_data	*data;
 } t_philo;
