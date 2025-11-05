@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 18:26:02 by smejia-a          #+#    #+#              #
-#    Updated: 2025/04/22 20:26:35 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/11/05 17:05:35 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,16 @@ OBJ_DIR	= ./obj
 INC_DIR	= .
 SRC_DIR	= ./src
 
-MAIN_PHILO = $(OBJ_DIR)/philosophers.o
+MAIN_PHILO = $(OBJ_DIR)/philo.o
 
-OBJS	=
+OBJS	=	$(OBJ_DIR)/alive.o			\
+			$(OBJ_DIR)/monitor.o		\
+			$(OBJ_DIR)/philo_eat.o		\
+			$(OBJ_DIR)/philo_sleep.o	\
+			$(OBJ_DIR)/philo_think.o	\
+			$(OBJ_DIR)/print_philo.o	\
+			$(OBJ_DIR)/routine.o		\
+			$(OBJ_DIR)/utils.o
 
 MAIN_PHILO_BONUS = 
 
