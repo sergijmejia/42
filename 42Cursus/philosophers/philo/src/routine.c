@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/*Rutina de cada filsofo*/
 void	*routine(void *arg)
 {
 	t_philo	*philosopher;
@@ -32,7 +31,6 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-/*Rutina para un unico filosofo*/
 void	*routine_single(void *arg)
 {
 	t_philo		*philosopher;

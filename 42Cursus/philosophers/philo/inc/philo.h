@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <limits.h>
 
 typedef struct s_philo_data
 {
@@ -51,33 +52,43 @@ typedef struct s_philo
 }	t_philo;
 
 /*Print*/
-void		print_dead(t_philo *philosophers, long long time);
-void		print_start_thinking(t_philo *philosophers, long long time);
-void		print_get_fork(t_philo *philosophers, long long time);
-void		print_start_eat(t_philo *philosophers, long long time);
-void		print_start_sleeping(t_philo *philosophers, long long time);
+void			print_dead(t_philo *philosophers, long long time);
+void			print_start_thinking(t_philo *philosophers, long long time);
+void			print_get_fork(t_philo *philosophers, long long time);
+void			print_start_eat(t_philo *philosophers, long long time);
+void			print_start_sleeping(t_philo *philosophers, long long time);
+
+/*Complete_data*/
+t_philo_data	**complete_philo_data(int argc, char **argv,
+					t_philo_data **d, long long start_time);
 
 /*Routine*/
-void		*routine(void *arg);
-void		*routine_single(void *arg);
+void			*routine(void *arg);
+void			*routine_single(void *arg);
 
 /*Eat*/
-void		philo_eat(t_philo *philosopher);
+void			philo_eat(t_philo *philosopher);
 
 /*Sleep*/
-void		philo_sleep(t_philo *philosophers);
+void			philo_sleep(t_philo *philosophers);
 
 /*Think*/
-void		philo_think(t_philo *philosophers);
+void			philo_think(t_philo *philosophers);
 
 /*Monitor*/
-void		monitor(t_philo_data *philo);
+void			monitor(t_philo_data *philo);
 
 /*Alive*/
-int			monitorize_finished(t_philo *philosopher);
-long long	check_alive(t_philo *philosopher);
+int				monitorize_finished(t_philo *philosopher);
+long long		check_alive(t_philo *philosopher);
 
 /*Utils*/
-long long	get_current_time(void);
+int				str_is_num(char *str);
+long long		get_current_time(void);
+long long		ft_atoll(char *nptr);
+int				ft_atoi(char *nptr);
+
+/*Input values*/
+int				check_values(int argc, char **argv);
 
 #endif

@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/*Funcion que gestiona la fase think de los filosofos*/
 void	philo_think(t_philo *philosophers)
 {
 	long long		actual_time_think;

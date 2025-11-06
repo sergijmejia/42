@@ -12,78 +12,106 @@
 
 #include "philo.h"
 
-/*Funcion que gestiona el dead durante la fase eat.
-Los mutex de los forks activos: 1 solo right, 2 solo left, 3 ambos*/
-static void	philo_dead_eat(t_philo *philosopher, int r_l)
+static int	philo_dead_eat(t_philo *philosopher, int r_l)
 {
 	if (r_l == 1)
-		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
-	else if (r_l == 2)
-		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
+		pthread_mutex_unlock(&(philosopher->data->forks
+			[(philosopher->r_fork) - 1]));
 	else
 	{
-		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
-		pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
+		pthread_mutex_unlock(&(philosopher->data->forks
+			[(philosopher->r_fork) - 1]));
+		pthread_mutex_unlock(&(philosopher->data->forks
+			[(philosopher->l_fork) - 1]));
 	}
-	return ;
+	return (0);
 }
 
-/*Funcion que gestiona la fase eat de los filosofos*/
-void	philo_eat(t_philo *philosopher)
+static int	first_fork(t_philo *philosopher)
+{
+	int			r_fork;
+
+	r_fork = philosopher->r_fork - 1;
+	while (1)
+	{
+		if (monitorize_finished(philosopher))
+			return (1);
+		pthread_mutex_lock(&(philosopher->data->read_forks));
+		if (philosopher->data->available_forks[r_fork])
+		{
+			philosopher->data->available_forks[r_fork] = 0;
+			pthread_mutex_lock(&(philosopher->data->forks
+				[(philosopher->r_fork) - 1]));
+			pthread_mutex_unlock(&(philosopher->data->read_forks));
+			break ;
+		}
+		else
+		{
+			pthread_mutex_unlock(&(philosopher->data->read_forks));
+			usleep(10);
+		}
+	}
+	return (0);
+}
+
+static int	second_fork(t_philo *philosopher)
+{
+	int			l_fork;
+
+	l_fork = philosopher->l_fork - 1;
+	while (1)
+	{
+		if (monitorize_finished(philosopher))
+			return (1);
+		pthread_mutex_lock(&(philosopher->data->read_forks));
+		if (philosopher->data->available_forks[l_fork])
+		{
+			philosopher->data->available_forks[l_fork] = 0;
+			pthread_mutex_lock(&(philosopher->data->forks
+				[(philosopher->l_fork) - 1]));
+			pthread_mutex_unlock(&(philosopher->data->read_forks));
+			break ;
+		}
+		else
+		{
+			pthread_mutex_unlock(&(philosopher->data->read_forks));
+			usleep(10);
+		}
+	}
+	return (0);
+}
+
+static long long	get_forks(t_philo *philosopher)
 {
 	long long	actual_time;
-	useconds_t	time_to_eat;
 	int			r_fork;
 	int			l_fork;
 
 	r_fork = philosopher->r_fork - 1;
 	l_fork = philosopher->l_fork - 1;
-	while (1)
-	{
-		if (monitorize_finished(philosopher))
-			return ;
-		pthread_mutex_lock(&(philosopher->data->read_forks));
-		if (philosopher->data->available_forks[r_fork])
-		{
-			philosopher->data->available_forks[r_fork] = 0;
-			pthread_mutex_lock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
-			pthread_mutex_unlock(&(philosopher->data->read_forks));
-			break ;
-		}
-		else
-		{
-			pthread_mutex_unlock(&(philosopher->data->read_forks));
-			usleep(100);
-		}
-	}
+	if (first_fork(philosopher))
+		return (0);
 	actual_time = check_alive(philosopher);
 	if (actual_time == -1)
-			return (philo_dead_eat(philosopher, 3));
-
+		return (philo_dead_eat(philosopher, 1));
 	print_get_fork(philosopher, actual_time);
-	while (1)
-	{
-		if (monitorize_finished(philosopher))
-			return (philo_dead_eat(philosopher, 1));
-		pthread_mutex_lock(&(philosopher->data->read_forks));
-		if (philosopher->data->available_forks[l_fork])
-		{
-			philosopher->data->available_forks[l_fork] = 0;
-			pthread_mutex_lock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
-			pthread_mutex_unlock(&(philosopher->data->read_forks));
-			break ;
-		}
-		else
-		{
-			pthread_mutex_unlock(&(philosopher->data->read_forks));
-			usleep(100);
-		}
-	}
+	if (second_fork(philosopher))
+		return (philo_dead_eat(philosopher, 1));
 	actual_time = check_alive(philosopher);
 	if (actual_time == -1)
-			return (philo_dead_eat(philosopher, 3));
-
+		return (philo_dead_eat(philosopher, 2));
 	print_get_fork(philosopher, actual_time);
+	return (actual_time);
+}
+
+void	philo_eat(t_philo *philosopher)
+{
+	long long	actual_time;
+	useconds_t	time_to_eat;
+
+	actual_time = get_forks(philosopher);
+	if (actual_time == 0)
+		return ;
 	time_to_eat = (useconds_t) philosopher->data->time_to_eat;
 	pthread_mutex_lock(&(philosopher->philo_mutex));
 	philosopher->time_last_eat = actual_time;
@@ -92,10 +120,12 @@ void	philo_eat(t_philo *philosopher)
 	print_start_eat(philosopher, actual_time);
 	usleep(time_to_eat * 1000);
 	pthread_mutex_lock(&(philosopher->data->read_forks));
-	philosopher->data->available_forks[r_fork] = 1;
-	philosopher->data->available_forks[l_fork] = 1;
-	pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->l_fork) - 1]));
-	pthread_mutex_unlock(&(philosopher->data->forks[(philosopher->r_fork) - 1]));
+	philosopher->data->available_forks[philosopher->r_fork - 1] = 1;
+	philosopher->data->available_forks[philosopher->l_fork - 1] = 1;
+	pthread_mutex_unlock(&(philosopher->data->forks
+		[(philosopher->l_fork) - 1]));
+	pthread_mutex_unlock(&(philosopher->data->forks
+		[(philosopher->r_fork) - 1]));
 	pthread_mutex_unlock(&(philosopher->data->read_forks));
 	return ;
 }

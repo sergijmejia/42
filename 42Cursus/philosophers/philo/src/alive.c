@@ -12,14 +12,16 @@
 
 #include "philo.h"
 
-int	monitorize_finished(t_philo *philosopher)
+static int	monitorize_alive(t_philo *philosopher)
 {
-	int	finished;
-
-	pthread_mutex_lock(&(philosopher->data->sim));
-	finished = philosopher->data->finished;
-	pthread_mutex_unlock(&(philosopher->data->sim));
-	return (finished);
+	pthread_mutex_lock(&(philosopher->philo_mutex));
+	if (philosopher->is_alive == 0)
+	{
+		pthread_mutex_unlock(&(philosopher->philo_mutex));
+		return (1);
+	}
+	pthread_mutex_unlock(&(philosopher->philo_mutex));
+	return (0);
 }
 
 long long	check_alive(t_philo *philosopher)
@@ -30,10 +32,8 @@ long long	check_alive(t_philo *philosopher)
 
 	if (monitorize_finished(philosopher))
 		return (-1);
-	pthread_mutex_lock(&(philosopher->philo_mutex));
-	if (philosopher->is_alive == 0)
+	if (monitorize_alive(philosopher))
 		return (-1);
-	pthread_mutex_unlock(&(philosopher->philo_mutex));
 	time_to_die = philosopher->data->time_to_die;
 	actual_time_alive = get_current_time();
 	pthread_mutex_lock(&(philosopher->philo_mutex));
@@ -50,6 +50,15 @@ long long	check_alive(t_philo *philosopher)
 		pthread_mutex_unlock(&(philosopher->philo_mutex));
 		return (-1);
 	}
-	else
-		return (actual_time_alive);
+	return (actual_time_alive);
+}
+
+int	monitorize_finished(t_philo *philosopher)
+{
+	int	finished;
+
+	pthread_mutex_lock(&(philosopher->data->sim));
+	finished = philosopher->data->finished;
+	pthread_mutex_unlock(&(philosopher->data->sim));
+	return (finished);
 }

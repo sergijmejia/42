@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/*Funcion que gestiona la fase sleep de los filosofos*/
 void	philo_sleep(t_philo *philosophers)
 {
 	long long	actual_time_sleep;
