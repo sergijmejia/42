@@ -20,11 +20,15 @@ Se incuyen los siguientes proyectos:
 
 ### 🔢 Algoritmia y estructuras de datos
 - **push_swap** → Algoritmo de ordenación con dos pilas y un conjunto de operaciones limitadas.
+
+### 🖥️ Programación Gráfica
 - **fdf** → Representación gráfica de mapas en 3D.
+- **miniRT** → Renderizado de escenas 3D simples mediante *Ray Tracing*.
 
 ### ⚙️ Sistemas y redes
 - **pipex** → Manejo de pipes en procesos en C.
 - **philosophers** → Implementación del problema clásico de los filósofos cenando con hilos en C.
+- **netpractice** → Configuración y comprensión de redes TCP/IP y subredes.
 
 ### 🖥️ Proyectos Avanzados
 - **minishell** → Implementación de un shell básico en C.
