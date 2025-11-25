@@ -54,6 +54,55 @@ La simulación se construye utilizando la librería `pthread` (POSIX Threads):
 
 ---
 
-## BONUS ⭐️
-### 🚧 En Desarrollo 🚧
-La parte bonus de este proyecto aún está en desarrollo y puede contener errores o funciones incompletas. 
+## BONUS: Procesos y Semáforos 🚥
+
+La parte **Bonus** plantea el mismo problema de "Los Filósofos Cenando", pero con un cambio radical en la arquitectura interna: **Procesos en lugar de Hilos**.
+
+En esta versión, cada filósofo es un proceso independiente (`fork`), lo que significa que **no comparten memoria**. Un filósofo no puede leer las variables de otro. Esto nos obliga a cambiar por completo la estrategia de sincronización.
+
+---
+
+### Diferencias Clave 🔄
+
+| Característica | Mandatory (Hilos) 🧵 | Bonus (Procesos) 🏭 |
+| :--- | :--- | :--- |
+| **Memoria** | Compartida (Data Races posibles). | Aislada (Copia exacta pero separada). |
+| **Sincronización** | `mutex` (bloqueo local). | `semáforos` (bloqueo a nivel de S.O.). |
+| **Tenedores** | Tienen dueño (izq/der) y son mutexes. | Están en el centro (pila común) y son un semáforo contador. |
+| **Muerte** | Un hilo monitor vigila variables compartidas. | El proceso hijo muere (`exit`) y el padre recibe la señal. |
+
+---
+
+### Nuevos Desafíos Técnicos 🧠
+
+Al pasar a multiproceso, surgen problemas nuevos que no existían con los hilos:
+
+✔️ **Gestión de Recursos del Sistema (Semáforos)** Los mutexes desaparecen al cerrar el programa, pero los **semáforos con nombre** (`named semaphores`) persisten en el Sistema Operativo. El desafío aquí es asegurar una limpieza perfecta (`sem_unlink`) tanto al inicio como al final, incluso si el programa se interrumpe con `Ctrl+C`, para evitar empezar una nueva simulación con semáforos "sucios" o bloqueados.
+
+✔️ **El Problema de los Zombies y Huérfanos** El proceso principal (Padre) debe actuar como un gestor estricto. Debe usar `waitpid` para detectar si algún hijo muere (de hambre o éxito) y, en ese caso, encargarse de finalizar (`kill`) a todos los demás procesos hijos inmediatamente para evitar que queden procesos "zombis" consumiendo recursos en segundo plano.
+
+✔️ **Deadlock por Acorralamiento** Como los tenedores están en el centro, si todos los filósofos intentan comer a la vez, el semáforo de tenedores llegaría a 0 y todos tendrían un solo tenedor.  
+**Solución:** Se implementa un semáforo adicional ("portero") que limita el aforo a `N-1` filósofos intentando comer simultáneamente, garantizando matemáticamente que al menos uno siempre podrá completar su comida.
+
+---
+
+### Herramientas Utilizadas 🛠️
+
+En el bonus sustituimos las herramientas de hilos por las de procesos y semáforos POSIX:
+
+* **`fork`**: Crea un proceso nuevo (filósofo) idéntico al padre pero con memoria aislada.
+* **`sem_open` / `sem_close` / `sem_unlink`**: Para crear, cerrar y borrar los semáforos del sistema.
+* **`sem_wait`**: Decrementa el semáforo (coger tenedor). Si es 0, bloquea el proceso.
+* **`sem_post`**: Incrementa el semáforo (soltar tenedor). Despierta a procesos en espera.
+* **`kill` y `waitpid`**: Para el control del ciclo de vida de los procesos hijos.
+* **`pthread_create` (Híbrido)**: Aunque usamos procesos, cada filósofo crea internamente un **único hilo monitor** separado para comprobar su propia muerte mientras el hilo principal espera por los semáforos.
+
+---
+
+### Cómo Ejecutar el Bonus
+
+La compilación y ejecución es idéntica a la parte obligatoria, generando un ejecutable distinto:
+
+```bash
+make bonus
+./philo_bonus [num_philo] [time_to_die] [time_to_eat] [time_to_sleep] [num_meals]

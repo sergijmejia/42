@@ -6,7 +6,7 @@
 #    By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 18:26:02 by smejia-a          #+#    #+#              #
-#    Updated: 2025/11/14 12:42:45 by smejia-a         ###   ########.fr        #
+#    Updated: 2025/11/24 13:47:59 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,16 +17,15 @@ SRC_DIR	= ./src
 
 MAIN_PHILO = $(OBJ_DIR)/philo_bonus.o
 
-OBJS	=	$(OBJ_DIR)/alive.o			\
-			$(OBJ_DIR)/complete_data.o	\
-			$(OBJ_DIR)/input_values.o	\
-			$(OBJ_DIR)/monitor.o		\
-			$(OBJ_DIR)/philo_eat.o		\
-			$(OBJ_DIR)/philo_sleep.o	\
-			$(OBJ_DIR)/philo_think.o	\
-			$(OBJ_DIR)/print_philo.o	\
-			$(OBJ_DIR)/routine.o		\
-			$(OBJ_DIR)/utils.o
+OBJS	=	$(OBJ_DIR)/complete_data_bonus.o	\
+			$(OBJ_DIR)/input_values_bonus.o		\
+			$(OBJ_DIR)/monitor_bonus.o			\
+			$(OBJ_DIR)/philo_eat_bonus.o		\
+			$(OBJ_DIR)/philo_sleep_bonus.o		\
+			$(OBJ_DIR)/philo_think_bonus.o		\
+			$(OBJ_DIR)/print_philo_bonus.o		\
+			$(OBJ_DIR)/routine_bonus.o			\
+			$(OBJ_DIR)/utils_bonus.o
 
 MAIN_PHILO_BONUS =
 

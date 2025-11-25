@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:33:36 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/11/05 17:24:09 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/24 13:08:59 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ typedef struct s_philo_data
 typedef struct s_philo
 {
 	pthread_t		thread;
-	long long		time_last_eat; //<---requiere mutex
+	long long		time_last_eat;
 	int				id;
 	int				l_fork;
 	int				r_fork;
-	int				is_alive; //<---requiere mutex
-	int				num_eat; //<---requiere mutex
+	int				is_alive;
+	int				num_eat;
 	pthread_mutex_t	philo_mutex;
 	t_philo_data	*data;
 }	t_philo;

@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_think.c                                      :+:      :+:    :+:   */
+/*   philo_sleep_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/05 16:38:51 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/11/05 16:39:49 by smejia-a         ###   ########.fr       */
+/*   Created: 2025/11/05 16:36:06 by smejia-a          #+#    #+#             */
+/*   Updated: 2025/11/18 14:05:49 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-void	philo_think(t_philo *philosophers)
+void	philo_sleep(t_philosopher *philosopher)
 {
-	long long		actual_time_think;
+	long long	actual_time_sleep;
 
-	actual_time_think = check_alive(philosophers);
-	if (actual_time_think == -1)
-		return ;
-	print_start_thinking(philosophers, actual_time_think);
+	actual_time_sleep = get_current_time();
+	print_start_sleep(philosopher->philo, actual_time_sleep, philosopher->id);
+	usleep(philosopher->philo->time_to_sleep * 1000);
 	return ;
 }

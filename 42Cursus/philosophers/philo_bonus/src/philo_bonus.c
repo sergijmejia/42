@@ -1,82 +1,82 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:10:58 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/11/06 10:19:05 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/24 12:02:35 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-static void	philosophers_start(t_philo_data *philo, long long start_time)
-{
-	pid_t	aux;
-	pid_t	*pid;
-	int		i;
-	long long	time_last_eat;		
-
-	i = 0;
-	pid = (pid_t *) malloc ((philo->num_philo) * sizeof(pid_t));
-	if (pid == NULL)
-		return ;
-	while (i < philo->num_philo)
-	{
-		aux = fork();
-		if (aux == -1)
-		{
-		
-		}
-		if (aux == 0)
-		{
-			//hijo
-			routine(philo, start_time);
-			break ; //->para que al morir el hijo salga del bucle
-		}
-		else
-		{
-			//padre
-			pid[i] = aux;
-			i++; //->para crear el siguiente hijo
-		}
-	}
-	waitpid()
-	return ;
-}
-
-static void	philosophers_end(t_philo_data *philo)
+static void	philosophers_end(t_philo_data *philo, pid_t *pids, int len)
 {
 	int	i;
 
 	i = 0;
-	while (i < philo->num_philo)
+	while (i < len)
 	{
-		pthread_join(philo->philosophers[i].thread, NULL);
+		if (pids[i] != 0)
+			kill(pids[i], SIGKILL);
 		i++;
 	}
-	i = 0;
-	while (i < philo->num_philo)
-	{
-		pthread_mutex_destroy(&philo->forks[i]);
-		pthread_mutex_destroy(&philo->philosophers[i].philo_mutex);
-		i++;
-	}
-	pthread_mutex_destroy(&philo->read_forks);
-	pthread_mutex_destroy(&philo->msg);
-	pthread_mutex_destroy(&philo->sim);
-	free(philo->forks);
-	free(philo->philosophers);
+	sem_unlink("/p_forks");
+	sem_unlink("/p_print");
+	sem_unlink("/p_room");
+	free(pids);
 	free(philo);
 	return ;
+}
+
+static pid_t	*philosophers_start_loop(t_philo_data *philo, pid_t *pid, int i)
+{
+	pid_t	aux;
+	int		exit_status;
+
+	aux = fork();
+	if (aux == -1)
+	{
+		philosophers_end(philo, pid, i);
+		return (NULL);
+	}
+	if (aux == 0)
+	{
+		exit_status = start_routine(philo, i + 1);
+		if (exit_status)
+			exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
+	}
+	else
+		pid[i] = aux;
+	return (pid);
+}
+
+static pid_t	*philosophers_start(t_philo_data *philo)
+{
+	pid_t	*pid;
+	int		i;
+
+	i = 0;
+	pid = (pid_t *) malloc ((philo->num_philo) * sizeof(pid_t));
+	if (pid == NULL)
+		return (NULL);
+	while (i < philo->num_philo)
+	{
+		if (philosophers_start_loop(philo, pid, i) == NULL)
+			return (NULL);
+		i++;
+	}
+	return (pid);
 }
 
 int	main(int argc, char **argv)
 {
 	t_philo_data	*philo;
 	long long		start_time;
+	pid_t			*pids;
 
 	if (check_values(argc, argv))
 		return (EXIT_FAILURE);
@@ -89,8 +89,10 @@ int	main(int argc, char **argv)
 		free(philo);
 		return (EXIT_FAILURE);
 	}
-	philosophers_start(philo, start_time);
-	waitpid
-	philosophers_end(philo);
+	pids = philosophers_start(philo);
+	if (pids == NULL)
+		return (EXIT_FAILURE);
+	monitor(philo, pids);
+	philosophers_end(philo, pids, philo->num_philo);
 	return (EXIT_SUCCESS);
 }
