@@ -51,6 +51,7 @@ static void	philosophers_end(t_philo_data *philo)
 	pthread_mutex_destroy(&philo->read_forks);
 	pthread_mutex_destroy(&philo->msg);
 	pthread_mutex_destroy(&philo->sim);
+	free(philo->available_forks);
 	free(philo->forks);
 	free(philo->philosophers);
 	free(philo);
@@ -61,7 +62,6 @@ int	main(int argc, char **argv)
 {
 	t_philo_data	*philo;
 	long long		start_time;
-	int				i;
 
 	if (check_values(argc, argv))
 		return (EXIT_FAILURE);
@@ -76,7 +76,6 @@ int	main(int argc, char **argv)
 	}
 	philosophers_start(philo, start_time);
 	monitor(philo);
-	i = 0;
 	philosophers_end(philo);
 	return (EXIT_SUCCESS);
 }

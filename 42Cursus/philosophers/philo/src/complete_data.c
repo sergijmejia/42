@@ -6,7 +6,7 @@
 /*   By: smejia-a <smejia-a@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 14:06:26 by smejia-a          #+#    #+#             */
-/*   Updated: 2025/11/24 13:34:44 by smejia-a         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:27:06 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,6 @@ static void	complete_philosophers(t_philo_data **d)
 	return ;
 }
 
-static void	stagger_odd_philosophers(t_philo_data **d)
-{
-	int	i;
-	int	aux;
-
-	(*d)->philosophers[0].l_fork = (*d)->num_philo;
-	i = 0;
-	while (i < (*d)->num_philo)
-	{
-		if ((i % 2) == 0)
-		{
-			aux = (*d)->philosophers[i].r_fork;
-			(*d)->philosophers[i].r_fork = (*d)->philosophers[i].l_fork;
-			(*d)->philosophers[i].l_fork = aux;
-		}
-		i++;
-	}
-}
-
 t_philo_data	**complete_philo_data(int argc, char **argv,
 					t_philo_data **d, long long start_time)
 {
@@ -88,7 +69,7 @@ t_philo_data	**complete_philo_data(int argc, char **argv,
 		return (NULL);
 	}
 	complete_philosophers(d);
-	stagger_odd_philosophers(d);
+	(*d)->philosophers[0].l_fork = (*d)->num_philo;
 	pthread_mutex_init(&((*d)->read_forks), NULL);
 	pthread_mutex_init(&((*d)->msg), NULL);
 	pthread_mutex_init(&((*d)->sim), NULL);
