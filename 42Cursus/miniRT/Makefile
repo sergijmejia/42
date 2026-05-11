@@ -33,22 +33,22 @@ MLX         := $(MLX_DIR)/libmlx.a
 
 # --- mandatory sources (42 subject: mandatory part) ------------------------- #
 
-SRC_M       := main.c init.c cleanup.c hooks.c utils.c geometry.c \
-		geometry_utils.c parse.c parse_utils.c parse_types.c parse_env.c \
-		parse_objs.c parse_read.c render.c render_present_image.c trace.c \
-		trace_normals.c lighting.c bonus_stub.c
+SRC_M       := main.c init.c cleanup.c hooks.c vec_utils.c vec_utils_ext.c \
+		color_utils.c geometry.c geometry_utils.c parse.c parse_utils.c \
+		parse_types.c parse_env.c parse_objs.c parse_read.c render.c \
+		render_present_image.c trace.c trace_normals.c lighting.c bonus_stub.c
 
 # --- bonus: extra sources, no stub/lighting_mandatory ----------------------- #
 
 ifeq ($(BONUS),1)
 CFLAGS      += -DBONUS
-SRC_M       := main.c init.c cleanup.c hooks.c utils.c geometry.c \
-		geometry_utils.c parse.c parse_utils.c parse_types.c parse_env.c \
-		parse_objs.c parse_read.c render.c render_present_image.c trace.c \
-		trace_normals.c
-SRC_B       := parse_bonus.c parse_utils_bonus.c cone_bonus.c \
-		cone_utils_bonus.c cone_intersection_logic_bonus.c lighting_bonus.c \
-		color_utils_bonus.c
+SRC_M       := main.c init.c cleanup.c hooks.c vec_utils.c vec_utils_ext.c \
+		color_utils.c geometry.c geometry_utils.c parse_utils.c \
+		parse_types.c parse_env.c parse_objs.c parse_read.c render.c \
+		render_present_image.c
+SRC_B       := parse_bonus.c parse_utils_bonus.c parse_elements_bonus.c \
+		cone_bonus.c cone_utils_bonus.c trace_bonus.c trace_normals_bonus.c \
+		cone_intersection_logic_bonus.c color_utils_bonus.c lighting_bonus.c
 else
 SRC_B       :=
 endif
@@ -73,7 +73,7 @@ $(NAME): $(OBJS) $(LIBFT) $(MLX) | $(OBJ_DIR)
 	@echo "$(CYAN)🔗 Linking $(NAME)...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) \
 	-lXext -lX11 -lm -o $(NAME)
-	@echo "$(GREEN)✅ $(NAME) compiled (BONUS=$(BONUS))$(RESET)"
+	@echo "$(GREEN)✅ $(NAME) compiled$(RESET)"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)

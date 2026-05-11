@@ -1,10 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_read.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/11 19:28:22 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/05/11 19:28:25 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <fcntl.h>
 #include <unistd.h>
 #include "minirt.h"
 #include "libft.h"
 
-# define RT_READ_CHUNK 65536
-# define RT_MAX_BYTES (16 * 1024 * 1024)
+#define RT_READ_CHUNK 65536
+#define RT_MAX_BYTES 16777216 
+//#define RT_MAX_BYTES (16 * 1024 * 1024)
 
 /**
  * @brief Expands the buffer capacity using realloc and checks for limits.

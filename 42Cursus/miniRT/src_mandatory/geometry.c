@@ -44,7 +44,8 @@ static void	try_cyl_t(double t, t_vec ro, t_vec rd, t_cyl_data *d)
 }
 
 /**
- * @brief Checks if an intersection point on a cap's plane falls within its radius.
+ * @brief Checks if an intersection point on a cap's plane falls within its
+ * radius.
  * @param t Distance from ray origin to the plane intersection.
  * @param cap_c Center point of the specific cap being tested.
  * @param c Pointer to the auxiliary cap data (ray and radius info).

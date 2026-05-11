@@ -15,8 +15,15 @@
 #include "minirt.h"
 #include "libft.h"
 
-# define RT_READ_CHUNK 65536
-# define RT_MAX_BYTES (16 * 1024 * 1024)
+#define RT_READ_CHUNK 65536
+#define RT_MAX_BYTES 16777216 
+//#define RT_MAX_BYTES (16 * 1024 * 1024)
+
+#ifdef BONUS
+# define BONUS_CONDITION 1
+#else
+# define BONUS_CONDITION 0
+#endif
 
 /**
  * @brief Normalize whitespace, skip comments/empty, parse one line.
@@ -53,7 +60,6 @@ static int	process_line(char *line, t_scene *scene)
 	return (ok);
 }
 
-#ifndef BONUS
 /**
  * @brief Count lights in the linked list (mandatory must have exactly one).
  * @param s Scene with lights list.
@@ -61,7 +67,7 @@ static int	process_line(char *line, t_scene *scene)
  */
 static int	count_lights(t_scene *s)
 {
-	int			n;
+	int				n;
 	t_light_node	*p;
 
 	n = 0;
@@ -73,7 +79,6 @@ static int	count_lights(t_scene *s)
 	}
 	return (n);
 }
-#endif
 
 /**
  * @brief Checks if all mandatory elements (A, C, L) are present in the scene.
@@ -85,10 +90,8 @@ static int	validate_mandatory(t_scene *scene)
 	if (scene->has_ambient != 1 || scene->has_camera != 1
 		|| scene->has_light != 1)
 		return (put_error("A, C and L are mandatory"));
-#ifndef BONUS
 	if (count_lights(scene) != 1)
 		return (put_error("Exactly one light (mandatory)"));
-#endif
 	return (1);
 }
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color_utils_bonus.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/11 20:38:15 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/05/11 20:38:17 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include "lighting.h"
 #include "trace.h"
@@ -11,8 +23,8 @@
 t_color	checker_color(t_hit_rec *rec)
 {
 	t_rt_plane	*pl;
-	int		ix;
-	int		iz;
+	int			ix;
+	int			iz;
 	double		sc;
 
 	if (!rec->obj || rec->obj->type != OBJ_PLANE || !rec->obj->pl.checker)

@@ -73,7 +73,7 @@ static t_vec	cam_ray_dir(t_rt_camera *cam, t_cam_axes ax, int x, int y)
 void	put_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
-	int	offset;
+	int		offset;
 
 	if (x < 0 || x >= WIN_W || y < 0 || y >= WIN_H)
 		return ;

@@ -14,7 +14,7 @@
 #include "cone_bonus.h"
 #include <math.h>
 
-# define T_MIN 1e-6
+#define T_MIN 1e-6
 
 /**
  * @brief Checks intersection with the cone's circular base.

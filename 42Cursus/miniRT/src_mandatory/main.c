@@ -38,7 +38,6 @@ int	main(int ac, char **av)
 	init_window(&data);
 	present_image(&data);
 	init_hooks(&data);
-
 	mlx_loop(data.mlx);
 	return (0);
 }

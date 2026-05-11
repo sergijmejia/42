@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils_bonus.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/11 19:12:13 by rafaguti          #+#    #+#             */
+/*   Updated: 2026/05/11 19:16:59 by rafaguti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "minirt.h"
 #include "libft.h"
@@ -32,7 +44,6 @@ double	bonus_atod(const char *str)
 	}
 	return (num * sign);
 }
-
 
 /**
  * @brief Parse "x,y,z" vector for bonus elements.

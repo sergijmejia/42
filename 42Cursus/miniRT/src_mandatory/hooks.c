@@ -102,8 +102,6 @@ void	init_hooks(t_data *data)
 	mlx_hook(data->win, 17, 0, close_window, data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
 	mlx_expose_hook(data->win, expose_redraw, data);
-#ifdef __linux__
 	mlx_hook(data->win, ConfigureNotify, StructureNotifyMask,
 		linux_resize_clamp, data);
-#endif
 }

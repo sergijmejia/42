@@ -72,14 +72,12 @@ int	cleanup_and_exit(t_data *data, int exit_code)
 			mlx_destroy_image(data->mlx, data->img.img);
 		if (data->win && data->mlx)
 			mlx_destroy_window(data->mlx, data->win);
-#ifdef __linux__
 		if (data->mlx)
 		{
 			mlx_destroy_display(data->mlx);
 			free(data->mlx);
 			data->mlx = NULL;
 		}
-#endif
 	}
 	exit(exit_code);
 	return (0);

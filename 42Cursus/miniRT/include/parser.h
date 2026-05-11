@@ -9,11 +9,50 @@
 /*   Updated: 2026/05/02 17:57:30 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
- 
+
 #ifndef PARSER_H
 # define PARSER_H
 
 # include <unistd.h>
+
+typedef struct s_hit
+{
+	double	t;
+	int		hit;
+}	t_hit;
+
+typedef struct s_vec
+{
+	double	x;
+	double	y;
+	double	z;
+}	t_vec;
+
+typedef struct s_quad
+{
+	double	a;
+	double	b;
+	double	c;
+	double	d;
+	double	t;
+}	t_quad;
+
+typedef struct s_cyl_data
+{
+	t_vec	a;
+	t_vec	oc;
+	double	r2;
+	double	h_h;
+	double	best_t;
+	int		found;
+}	t_cyl_data;
+
+typedef struct s_cap_data
+{
+	t_vec	ro;
+	t_vec	rd;
+	double	r2;
+}	t_cap_data;
 
 typedef enum e_obj_type
 {
@@ -45,9 +84,9 @@ typedef struct s_rt_camera
 
 typedef struct s_light_node
 {
-	struct s_vec	pos;
-	double			ratio;
-	t_color			color;
+	struct s_vec		pos;
+	double				ratio;
+	t_color				color;
 	struct s_light_node	*next;
 }	t_light_node;
 

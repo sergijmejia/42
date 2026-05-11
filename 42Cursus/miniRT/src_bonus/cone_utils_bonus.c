@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cone_utils_bonus.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/11 20:42:01 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/05/11 20:42:04 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include <math.h>
 
-# define T_MIN 1e-6
+#define T_MIN 1e-6
 
 /**
  * @brief Compute cone apex from midpoint center and axis.

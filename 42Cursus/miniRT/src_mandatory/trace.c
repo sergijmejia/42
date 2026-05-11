@@ -14,10 +14,6 @@
 #include "trace.h"
 #include <math.h>
 
-#ifdef BONUS
-# include "cone_bonus.h"
-#endif
-
 /**
  * @brief Fills basic hit record data common to all objects.
  * @param rec Pointer to the hit record to be filled.
@@ -38,10 +34,6 @@ static void	fill_rec(t_hit_rec *rec, t_object *o, double t, t_vec p)
 		rec->color = o->pl.color;
 	else if (o->type == OBJ_CYLINDER)
 		rec->color = o->cy.color;
-#ifdef BONUS
-	else if (o->type == OBJ_CONE)
-		rec->color = o->cn.color;
-#endif
 }
 
 /**
@@ -64,10 +56,6 @@ int	trace_object_hit(t_object *o, t_vec ro, t_vec rd, t_hit_rec *rec)
 		h = hit_plane(ro, rd, o->pl.point, o->pl.normal);
 	else if (o->type == OBJ_CYLINDER)
 		h = hit_cylinder_obj(ro, rd, o->cy);
-#ifdef BONUS
-	else if (o->type == OBJ_CONE)
-		h = hit_cone_obj(ro, rd, o->cn);
-#endif
 	if (!h.hit)
 		return (0);
 	fill_rec(rec, o, h.t, vec_add(ro, vec_scale(rd, h.t)));
@@ -86,7 +74,8 @@ int	trace_object_hit(t_object *o, t_vec ro, t_vec rd, t_hit_rec *rec)
  * @param skip Object ignored (to avoid self-intersection).
  * @return int 1 if something was hit, 0 otherwise.
  */
-int	trace_closest_skip(t_scene *scene, t_ray ray, t_hit_rec *out, t_object *skip)
+int	trace_closest_skip(t_scene *scene, t_ray ray, t_hit_rec *out,
+	t_object *skip)
 {
 	t_object	*obj;
 	t_hit_rec	rec;

@@ -16,54 +16,15 @@
 # include <mlx.h>
 # include <stdlib.h>
 
-# define WIN_W 800
-# define WIN_H 600
-
-typedef struct s_hit
-{
-	double	t;
-	int		hit;
-}	t_hit;
-
-typedef struct s_vec
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_vec;
-
-typedef struct s_quad
-{
-	double	a;
-	double	b;
-	double	c;
-	double	d;
-	double	t;
-}	t_quad;
-
-typedef struct s_cyl_data
-{
-	t_vec	a;
-	t_vec	oc;
-	double	r2;
-	double	h_h;
-	double	best_t;
-	int		found;
-}	t_cyl_data;
-
-typedef struct s_cap_data
-{
-	t_vec	ro;
-	t_vec	rd;
-	double	r2;
-}	t_cap_data;
-
 # include "parser.h"
+
+# define WIN_W 1600
+# define WIN_H 1200
 
 typedef struct s_hit_rec
 {
 	double		t;
-	int		hit;
+	int			hit;
 	t_vec		p;
 	t_vec		n;
 	t_color		color;
@@ -132,9 +93,9 @@ t_hit	hit_cylinder_obj(t_vec ro, t_vec rd, t_rt_cylinder cy);
 
 /* hooks */
 void	init_hooks(t_data *data);
-int	key_press(int keycode, void *param);
-int	close_window(void *param);
-int	expose_redraw(void *param);
+int		key_press(int keycode, void *param);
+int		close_window(void *param);
+int		expose_redraw(void *param);
 int		cleanup_and_exit(t_data *data, int exit_code);
 void	scene_objects_clear(t_scene *scene);
 void	scene_lights_clear(t_scene *scene);
@@ -171,6 +132,6 @@ t_vec	vec_cross(t_vec a, t_vec b);
 double	vec_len(t_vec v);
 t_vec	vec_norm(t_vec v);
 int		rgb_to_int(t_color color, double intensity);
-int     pack_rgb(double r, double g, double b);
+int		pack_rgb(double r, double g, double b);
 
 #endif

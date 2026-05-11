@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   trace_normals.c                                    :+:      :+:    :+:   */
+/*   trace_normals_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/11 19:34:56 by smejia-a          #+#    #+#             */
-/*   Updated: 2026/05/11 19:34:58 by smejia-a         ###   ########.fr       */
+/*   Created: 2026/05/11 20:06:23 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/05/11 20:06:25 by smejia-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include "trace.h"
 #include <math.h>
+
+#include "cone_bonus.h"
 
 /**
  * @brief Calculates the normal vector for a cylinder at a given point.
@@ -75,5 +77,7 @@ t_vec	get_obj_norm(t_vec p, t_object *o)
 		return (o->pl.normal);
 	if (o->type == OBJ_CYLINDER)
 		return (get_cylinder_norm(p, o->cy));
+	if (o->type == OBJ_CONE)
+		return (get_cone_norm(p, o->cn));
 	return ((t_vec){0, 0, 0});
 }

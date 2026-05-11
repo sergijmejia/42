@@ -6,7 +6,7 @@
 /*   By: rafaguti <rafaguti>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 17:59:59 by rafaguti          #+#    #+#             */
-/*   Updated: 2026/05/02 18:00:02 by rafaguti         ###   ########.fr       */
+/*   Updated: 2026/05/11 19:22:14 by rafaguti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,14 @@
 #include "trace.h"
 #include <math.h>
 
-# define SHADOW_BIAS 1e-4
-# define SPEC_POW 32.0
-
-
+#define SHADOW_BIAS 1e-4
+#define SPEC_POW 32.0
 
 /**
- * @brief Calculates and initializes the RGB array with the ambient light component.
+ * @brief Calculates and init the RGB array with the ambient light component
  * @param d Pointer to the global data structure.
- * @param rec The hit record containing surface information (point, normal, color).
- * @param rgb Array of 3 doubles to store the resulting red, green, and blue components.
+ * @param rec The hit record with surface information (point, normal, color)
+ * @param rgb Array of 3 doubles to store the resulting RGB components
  * @return None.
  */
 static void	init_ambient_color(t_data *d, t_hit_rec *rec, double rgb[3])
@@ -67,7 +65,7 @@ static double	get_specular(t_vec n, t_vec l, t_vec v)
  * @param rec The hit record of the intersected object.
  * @param ln Pointer to the current light node being processed.
  * @param rgb Array of 3 doubles where color accumulation is stored.
- * @param ds Array containing calculated [0] diffuse and [1] specular intensities.
+ * @param ds Array containing calculated [0] diffuse, [1] specular intensities.
  * @return None.
  */
 static void	add_light_contrib(t_hit_rec *rec, t_light_node *ln,
@@ -130,7 +128,8 @@ int	shade_hit(t_data *d, t_hit_rec *rec, t_vec rd)
 	{
 		if (is_lit(&d->scene, rec->p, rec->n, ln))
 		{
-			ds[0] = fmax(0.0, vec_dot(rec->n, vec_norm(vec_sub(ln->pos, rec->p))));
+			ds[0] = fmax(0.0, vec_dot(rec->n, \
+vec_norm(vec_sub(ln->pos, rec->p))));
 			ds[1] = get_specular(rec->n, vec_norm(vec_sub(ln->pos, rec->p)),
 					vec_scale(rd, -1.0));
 			add_light_contrib(rec, ln, rgb, ds);

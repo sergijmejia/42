@@ -15,7 +15,7 @@
 #include "trace.h"
 #include <math.h>
 
-# define SHADOW_BIAS 1e-4
+#define SHADOW_BIAS 1e-4
 
 /**
  * @brief Calculates ambient light component for the hit object.
