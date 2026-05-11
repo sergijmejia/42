@@ -1,0 +1,6 @@
+# Bonus: finite cone (co) with single bright light — sharp terminator on cone side
+A 0.1 255,255,255
+C 2.5,3,-14 -0.15,-0.05,1 55
+L -6,12,6 0.75 255,248,230
+pl 0,-2.5,0 0,1,0 90,88,85
+co 0,0.5,4 0.35,1,-0.08 5 9 200,120,80

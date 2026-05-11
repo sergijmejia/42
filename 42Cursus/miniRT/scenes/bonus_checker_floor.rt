@@ -1,0 +1,6 @@
+# Bonus: checkerboard horizontal plane (requires make bonus)
+# Shows alternating tiles via pl ... chk scale color1 color2
+A 0.15 255,255,255
+C 0,4,-14 0,0,1 70
+L -8,14,4 0.6 255,255,255
+pl 0,-1.5,0 0,1,0 chk 1.2 220,60,60 40,40,120

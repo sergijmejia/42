@@ -1,0 +1,11 @@
+# Bonus showcase: checker floor + cone + cylinder + RGB lights + specular
+# ./miniRT scenes/bonus_all_features.rt   (after make bonus)
+A 0.12 255,255,255
+C 0,3.5,-18 0,-0.08,1 72
+L -14,16,3 0.45 255,100,90
+L 12,14,4 0.4 90,130,255
+L 0,20,-6 0.25 255,255,255
+pl 0,-2.2,0 0,1,0 chk 2.0 160,155,150 55,60,75
+sp -5.5,0,5 3 230,75,80
+cy 2,-1,8 -0.2,1,0.15 2.8 7 70,110,200
+co 8,-0.5,7 0,1,0 3.4 10 95,200,110

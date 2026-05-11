@@ -1,0 +1,6 @@
+# Big sphere (diameter 100), camera ~10 units from inner wall — strong curvature
+# and shading gradient. Light off-axis.
+A 0.06 255,250,245
+C 0,0,38 0,0,1 80
+L 18,12,30 0.88 255,255,255
+sp 0,0,0 100 195,85,90

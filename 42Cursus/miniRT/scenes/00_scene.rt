@@ -1,0 +1,11 @@
+A 0.15 255,255,255
+C 0,2,-14 0,0,1 70
+L -20,30,10 0.7 255,255,255
+# Ground plane
+pl 0,-4,0 0,1,0 140,135,130
+# Left sphere (red)
+sp -6,0,8 5 220,60,55
+# Right sphere (green, smaller)
+sp 8,1,12 3.5 55,200,90
+# Blue cylinder between them
+cy 1,-1,10 0,1,0 3.5 10 70,110,240

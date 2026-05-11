@@ -1,0 +1,20 @@
+# Iluminación
+A 0.4 255,255,255
+L 5,10,-10 0.8 255,255,255
+
+# Cámara (Bajada a Y=2.5 y ajustada para centrar)
+C 0,2.5,-6 0,-0.2,1 60
+
+# Plano (Suelo)
+pl 0,0,0 0,1,0 150,150,150
+
+# --- PEÓN SEPARADO ---
+
+# CILINDRO (Peana): Altura 0.1 | Centro en Y=0.05
+cy 0,0.05,0 0,1,0 0.9 0.1 200,150,100
+
+# CONO (Cuerpo): Centro en Y=0.55
+co 0,0.55,0 0,-1,0 0.9 1.1 200,150,100
+
+# ESFERA (Cabeza): En Y=1.2
+sp 0,1.2,0 0.45 200,150,100

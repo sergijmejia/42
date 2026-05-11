@@ -1,0 +1,30 @@
+# === AMBIENTE Y CÁMARA ===
+A 0.3 100,100,100
+# Cámara frontal-elevada mirando hacia el hueco de la pirámide
+C 0,8,-25 0,-0.15,1 70
+
+# === LUCES ===
+# Luz principal entrando por la cara frontal abierta (proyectará sombras dramáticas dentro)
+L 10,15,-15 0.9 255,255,255
+# Luz secundaria tenue para rellenar sombras
+L -15,5,-10 0.3 200,200,255
+
+# === EL PLANO (SUELO) ===
+# Un suelo gris claro en Y=0
+pl 0,0,0 0,1,0 180,180,180
+
+# === LA ESFERA INTERIOR ===
+# Esfera roja de diámetro 4, flotando dentro de la pirámide (centro en Y=4)
+sp 0,4,0 4 255,50,50
+
+# === LA PIRÁMIDE FLOTANTE (Hecha con 3 Triángulos) ===
+# El ápice (punta) está en Y=12. La base está en Y=1 (levitando sobre el suelo).
+# Faltará el triángulo frontal para poder ver el interior.
+
+# Pared Trasera
+tr 6,1,6 -6,1,6 0,12,0 50,150,255
+# Pared Derecha
+tr 6,1,-6 6,1,6 0,12,0 50,150,255
+# Pared Izquierda
+tr -6,1,6 -6,1,-6 0,12,0 50,150,255
+
