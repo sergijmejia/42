@@ -7,7 +7,7 @@ MAIN_EX01 = $(OBJ_DIR)/PhoneBook.o
 
 OBJS	= $(OBJ_DIR)/
 
-HEADER	= $(INC_DIR)/PhoneBook.hpp
+HEADER	= $(INC_DIR)/PhoneBook.hpp Contact.hpp
 
 OBJ = $(OBJS)
 MAIN = $(MAIN_EX01)

@@ -1,25 +1,25 @@
+#ifndef PHONEBOOK_HPP
+# define PHONEBOOK_HPP
+
+#include "Contact.hpp"
+
 class PhoneBook {
     private:
-        Contact agenda[8];
-        int old = -1;
+        Contact _agenda[8];
+        int _old;
 
     public:
-        void add();
-        void search();
+        /*Constructor*/
+        PhoneBook();
+
+        /*Destructor*/
+        ~PhoneBook();
+
+        /*Functions*/
+        bool addContact();
+        bool searchContact();
         void exit();
 };
 
-class Contact {
-    private:
-        std::string _firstName;
-        std::string _lastName;
-        std::string _nickname;
-        std::string _phoneNumber;
-        std::string _darkestSecret;
+#endif
 
-    public:
-        void newContact();
-        std::string getFirtsName();
-        std::string getLastName();
-        std::string getNickname();
-};
