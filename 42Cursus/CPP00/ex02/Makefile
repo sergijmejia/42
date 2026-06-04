@@ -1,15 +1,14 @@
-TARGET = PhoneBook
+TARGET = AccountTest
 OBJ_DIR = ./obj
-INC_DIR = ./inc
-SRC_DIR = ./src
+INC_DIR = ./
+SRC_DIR = ./
 
-SRCS = main.cpp \
-       PhoneBook.cpp \
-       Contact.cpp
+SRCS = tests.cpp \
+       Account.cpp
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-HEADERS = $(addprefix $(INC_DIR)/, PhoneBook.hpp Contact.hpp)
+HEADERS = $(addprefix $(INC_DIR)/, Account.hpp)
 
 CXXFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -std=c++98 -g
 CXX = c++
