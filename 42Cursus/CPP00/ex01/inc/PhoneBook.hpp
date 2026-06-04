@@ -8,6 +8,11 @@ class PhoneBook {
         Contact _agenda[8];
         int _old;
 
+        /*Private functions*/
+        void _printContact(int fields, int pos);
+        std::string _trim(const std::string& str);
+        void _printContactField(std::string field);
+
     public:
         /*Constructor*/
         PhoneBook();
