@@ -1,12 +1,24 @@
-#include "PhoneBook.hpp"
-#include <string>
-#include <sstream>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PhoneBook.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/05 20:16:13 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/06/05 20:19:21 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-PhoneBook::PhoneBook(){
+#include "PhoneBook.hpp"
+#include <sstream>
+#include <cstdlib>
+
+PhoneBook::PhoneBook(void) {
     _old = 0;
 }
 
-PhoneBook::~PhoneBook(){
+PhoneBook::~PhoneBook(void) {
 }
 
 void PhoneBook::_printContact(int fields, int pos){
@@ -47,7 +59,7 @@ void PhoneBook::_printContactField(std::string field){
     std::cout << "|";
 }
 
-bool PhoneBook::addContact() {
+bool PhoneBook::addContact(void) {
     std::string newData;
     
     for (int i = 0; i < 5; i++){
@@ -68,12 +80,16 @@ bool PhoneBook::addContact() {
                 std::cout << "Darkest secret ";
                 break;
         }
-        std::cout << "of de new contact: ";
+        std::cout << "of the new contact: ";
         std::getline(std::cin, newData);
+        if (std::cin.eof()) {
+        	std::exit(0);
+        }
         newData = _trim(newData);
         if (newData.empty()){
-            std::cout << std::endl << "This field can't be empty, please try again" << std::endl;
-            i = -1;
+            std::cout << std::endl << "This field can't be empty, please try again" << std::endl << std::endl;
+            i--;
+            continue;
         }
         else if (std::cin.eof())
             return(false);
@@ -102,7 +118,7 @@ bool PhoneBook::addContact() {
     return (true);
 }    
 
-bool PhoneBook::searchContact(){
+bool PhoneBook::searchContact(void){
     int i = 0;
     int l;
     std::string index;
@@ -122,6 +138,9 @@ bool PhoneBook::searchContact(){
     while (true){
         std::cout << std::endl << "Select index to display contact information: ";
         std::getline(std::cin, index);
+        if (std::cin.eof()) {
+        	std::exit(0);
+        }
         std::stringstream conversor(index);
         conversor >> l;
         if (l < 1 || l > i)
@@ -134,6 +153,6 @@ bool PhoneBook::searchContact(){
     return (true);
 }
 
-void PhoneBook::exit(){
+void PhoneBook::exit(void){
     std::cout << "Good bye!" << std::endl;
 }

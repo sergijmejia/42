@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/05 20:14:15 by smejia-a          #+#    #+#             */
+/*   Updated: 2026/06/05 20:14:18 by smejia-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHONEBOOK_HPP
 # define PHONEBOOK_HPP
 
@@ -15,15 +27,15 @@ class PhoneBook {
 
     public:
         /*Constructor*/
-        PhoneBook();
+        PhoneBook(void);
 
         /*Destructor*/
-        ~PhoneBook();
+        ~PhoneBook(void);
 
         /*Functions*/
-        bool addContact();
-        bool searchContact();
-        void exit();
+        bool addContact(void);
+        bool searchContact(void);
+        void exit(void);
 };
 
 #endif
