@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-TARGET = PhoneBook
+TARGET = phonebook
 OBJ_DIR = ./obj
 INC_DIR = ./inc
 SRC_DIR = ./src

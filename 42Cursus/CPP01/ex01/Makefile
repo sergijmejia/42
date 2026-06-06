@@ -1,12 +1,11 @@
-TARGET = zombie
+TARGET = horde
 OBJ_DIR = ./obj
 INC_DIR = ./inc
 SRC_DIR = ./src
 
 SRCS = main.cpp \
 	   Zombie.cpp \
-       randomChump.cpp \
-       newZombie.cpp
+       zombieHorde.cpp
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 

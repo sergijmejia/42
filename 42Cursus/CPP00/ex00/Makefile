@@ -5,22 +5,21 @@
 #                                                     +:+ +:+         +:+      #
 #    By: smejia-a <smejia-a@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/06/05 20:30:58 by smejia-a          #+#    #+#              #
-#    Updated: 2026/06/05 20:31:06 by smejia-a         ###   ########.fr        #
+#    Created: 2026/06/05 17:22:42 by smejia-a          #+#    #+#              #
+#    Updated: 2026/06/05 17:27:18 by smejia-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-TARGET = account
+TARGET = megaphone
 OBJ_DIR = ./obj
 INC_DIR = ./inc
 SRC_DIR = ./src
 
-SRCS = tests.cpp \
-       Account.cpp
+SRCS = megaphone.cpp
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-HEADERS = $(addprefix $(INC_DIR)/, Account.hpp)
+HEADERS = 
 
 CXXFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -std=c++98 -g
 CXX = c++

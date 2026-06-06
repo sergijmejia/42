@@ -1,16 +1,13 @@
-TARGET = zombie
+TARGET = string
 OBJ_DIR = ./obj
 INC_DIR = ./inc
 SRC_DIR = ./src
 
-SRCS = main.cpp \
-	   Zombie.cpp \
-       randomChump.cpp \
-       newZombie.cpp
+SRCS = main.cpp 
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-HEADERS = $(addprefix $(INC_DIR)/, Zombie.hpp)
+HEADERS =
 
 CXXFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -std=c++98 -g
 CXX = c++
