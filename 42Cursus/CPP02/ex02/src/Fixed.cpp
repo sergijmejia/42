@@ -61,3 +61,32 @@ std::ostream& operator<< (std::ostream& os, const Fixed& obj) {
         os << obj.toFloat();
         return os;
 };
+
+Fixed operator+ (const Fixed& other) const {
+    Fixed result;
+    result.setRawBits(this->_numberValue + other._numberValue);
+    return result;
+};
+
+Fixed operator- (const Fixed& other) const {
+    Fixed result;
+    result.setRawBits(this->_numberValue - other._numberValue);
+    return result;
+};
+
+Fixed operator* (const Fixed& other) const {
+    Fixed result;
+    result.setRawBits(((long)(this->_numberValue) - (long)(other._numberValue)) >> _fractionalBits);
+    return result;
+}
+Fixed operator/ (const Fixed& other) const
+/*Increment/Decrement*/
+Fixed& operator++(void);
+Fixed operator++(int);
+Fixed& operator--(void);
+Fixed operator--(int)
+/*Overloaded Member Functions*/
+static Fixed& min(Fixed& first, Fixed& second);
+static const Fixed& min(const Fixed& first, const Fixed& second);
+static Fixed& max(Fixed& first, Fixed& second);
+static const Fixed& max(const Fixed& first, const Fixed& second;
