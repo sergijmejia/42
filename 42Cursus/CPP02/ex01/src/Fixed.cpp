@@ -2,6 +2,7 @@
 
 Fixed::Fixed() {
     std::cout << "Default constructor called" << std::endl;
+    this->_numberValue = 0;
 }
 
 Fixed::Fixed(const Fixed& other) {
@@ -60,4 +61,4 @@ int Fixed::toInt(void) const {
 std::ostream& operator<< (std::ostream& os, const Fixed& obj) {
         os << obj.toFloat();
         return os;
-};
+}

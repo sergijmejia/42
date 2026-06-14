@@ -2,6 +2,7 @@
 
 Fixed::Fixed() {
     std::cout << "Default constructor called" << std::endl;
+    this->_numberValue = 0;
 }
 
 Fixed::Fixed(const Fixed& other) {
