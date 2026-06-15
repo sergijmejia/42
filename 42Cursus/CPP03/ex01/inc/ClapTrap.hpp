@@ -5,7 +5,7 @@
 # include <string>
 
 class ClapTrap {
-    private:
+    protected:
         /*Data Members*/
         std::string _name;
         int _hitPoints;
