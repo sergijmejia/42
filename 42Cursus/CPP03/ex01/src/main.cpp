@@ -1,49 +1,40 @@
-#include "ClapTrap.hpp"
+#include "ScavTrap.hpp"
 
 int main(void) {
-    std::cout << "\n--- STARTING THE COMBAT ARENA ---" << std::endl;
-
-    // 1. Testing Constructors (Canonical Form)
-    std::cout << "\n[PHASE 1: FIGHTER CREATION]" << std::endl;
-    ClapTrap robot1("R2D2");
-    ClapTrap robot2("C3PO");
+    std::cout << "\n===== PHASE 1: CONSTRUCTION CHAIN =====" << std::endl;
+    // We create a basic ClapTrap to compare
+    ClapTrap basicBot("CLAP-99");
     
-    // Testing copy constructor and assignment operator
-    ClapTrap cloneOfR2D2(robot1); 
-    ClapTrap robot3;
-    robot3 = robot2;
+    // We create our new ScavTrap
+    // Expected: ClapTrap constructor is called FIRST, then ScavTrap constructor
+    ScavTrap advancedBot("SCAV-01");
 
-    // 2. Testing basic combat
-    std::cout << "\n[PHASE 2: BASIC COMBAT]" << std::endl;
-    // R2D2 attacks C3PO (R2D2 spends 1 energy point)
-    robot1.attack("C3PO"); 
-    // Since the default damage of a ClapTrap is 0, C3PO takes 0 damage, 
-    // but we will force manual damage to test the takeDamage function.
-    robot2.takeDamage(5); 
+    std::cout << "\n===== PHASE 2: TESTING CANONICAL FORM =====" << std::endl;
+    // Test Copy Constructor
+    ScavTrap cloneBot(advancedBot);
+    // Test Assignment Operator
+    ScavTrap assignBot("EMPTY");
+    assignBot = advancedBot;
 
-    // 3. Testing repair
-    std::cout << "\n[PHASE 3: REPAIR]" << std::endl;
-    // C3PO heals himself
-    robot2.beRepaired(3);
-
-    // 4. Pushing energy to the limit (Depletion)
-    std::cout << "\n[PHASE 4: ENERGY DEPLETION TEST]" << std::endl;
-    // R2D2 attacks 10 times in a row to deplete his initial battery
-    for (int i = 0; i < 10; i++) {
-        robot1.attack("a target dummy");
-    }
-
-    // 5. Testing lethal damage and death
-    std::cout << "\n[PHASE 5: LETHAL DAMAGE AND DEATH]" << std::endl;
-    // A giant missile hits C3PO
-    robot2.takeDamage(50);
+    std::cout << "\n===== PHASE 3: OVERRIDDEN ACTION (ATTACK) =====" << std::endl;
+    // ClapTrap attack (costs 1 energy, does 0 damage usually)
+    basicBot.attack("a training dummy");
     
-    // We try to make a dead robot do things (Protections should trigger)
-    robot2.attack("R2D2");
-    robot2.beRepaired(10);
-    robot2.takeDamage(10); // Post-mortem damage
+    // ScavTrap attack (costs 1 energy, does 20 damage, different message)
+    advancedBot.attack("a heavily armored dummy");
 
-    std::cout << "\n--- END OF SIMULATION ---" << std::endl;
+    std::cout << "\n===== PHASE 4: INHERITED ACTIONS =====" << std::endl;
+    // ScavTrap should be able to take damage and heal using ClapTrap's functions perfectly
+    // It starts with 100 HP. Let's hit it for 30.
+    advancedBot.takeDamage(30);
+    // Now it should heal (costs 1 energy, recovers HP)
+    advancedBot.beRepaired(10);
 
-    return 0; // Destructors will be called automatically here
+    std::cout << "\n===== PHASE 5: SPECIAL ABILITY =====" << std::endl;
+    // Only ScavTrap can do this. If you try basicBot.guardGate(), it would not compile!
+    advancedBot.guardGate();
+
+    std::cout << "\n===== PHASE 6: DESTRUCTION CHAIN =====" << std::endl;
+    // Expected: When they die, ScavTrap destructor is called FIRST, then ClapTrap destructor
+    return 0;
 }

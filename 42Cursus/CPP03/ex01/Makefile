@@ -4,11 +4,12 @@ INC_DIR = ./inc
 SRC_DIR = ./src
 
 SRCS = main.cpp \
-	   ClapTrap.cpp
+	   ClapTrap.cpp \
+	   ScavTrap.cpp
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-HEADERS = $(addprefix $(INC_DIR)/, ClapTrap.hpp)
+HEADERS = $(addprefix $(INC_DIR)/, ClapTrap.hpp ScavTrap.hpp)
 
 CXXFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -std=c++98 -g
 CXX = c++
