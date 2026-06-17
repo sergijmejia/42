@@ -40,7 +40,7 @@ void ScavTrap::attack(const std::string& target) {
     }
     _energyPoints--;
     std::cout << "ScavTrap " << _name << " attacks " << target << ", causing " << _attackDamage << " points of damage!" << std::endl;
-}
+} 
 
 void ScavTrap::guardGate(void) {
     std::cout << "ScavTrap " << _name << "  is now in Gate keeper mode " << std::endl;
