@@ -1,5 +1,5 @@
 # CPP00 - Basics of C++ 🚀
-Este es el primer módulo de la piscina de C++ de 42. El objetivo principal de **CPP00** es dar el salto definitivo de C a C++, abandonando herramientas clásicas como `printf`, `scanf` o `malloc` para abrazar la **Programación Orientada a Objetos (POO)** y los *streams* de entrada/salida.
+Este es el primer módulo de C++. El objetivo principal de **CPP00** es dar el salto definitivo de C a C++, abandonando herramientas clásicas como `printf`, `scanf` o `malloc` para abrazar la **Programación Orientada a Objetos (POO)** y los *streams* de entrada/salida.
 
 ## Conceptos Clave 🧠
 En este módulo se sientan las bases de C++98. A través de los ejercicios aprenderás y aplicarás:
